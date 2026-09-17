@@ -1,0 +1,37 @@
+<div class="entreprise-vehicules">
+  <table>
+    <thead>
+      <tr>
+        <th>Immatriculation</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let vehicule of vehicules">
+      <td>{{ vehicule.immatriculation }}</td>
+      <td>{{ vehicule.statut }}</td>
+      <td>
+        <button type="button" (click)="basculerStatut(vehicule)">
+          {{ vehicule.statut === 'DISPONIBLE' ? 'Mettre en maintenance' : 'Remettre en service' }}
+        </button>
+        <button type="button" (click)="supprimer(vehicule)">Supprimer</button>
+      </td>
+    </tr>
+  </table>
+
+  <h2>Ajouter un véhicule</h2>
+  <form [formGroup]="form" (ngSubmit)="ajouter()">
+    <label>
+      Type de véhicule
+      <select formControlName="id_type_vehicule">
+        <option [ngValue]="null" disabled>Sélectionner un type</option>
+        <option *ngFor="let type of typesVehicule" [ngValue]="type.id">{{ type.nom }}</option>
+      </select>
+    </label>
+    <label>
+      Immatriculation
+      <input type="text" formControlName="immatriculation" />
+    </label>
+    <button type="submit" [disabled]="form.invalid">Ajouter</button>
+  </form>
+</div>

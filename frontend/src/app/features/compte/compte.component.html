@@ -1,0 +1,82 @@
+<div class="compte-grille" *ngIf="auth.utilisateur() as utilisateur">
+
+  <div class="colonne-compte-gauche">
+    <section class="carte-identite">
+      <span class="avatar-rond avatar-rond-grand">
+        <img *ngIf="utilisateur.photo_url" [src]="utilisateur.photo_url" alt="" />
+        <ng-container *ngIf="!utilisateur.photo_url">{{ initiales }}</ng-container>
+      </span>
+      <strong>{{ utilisateur.nom }}</strong>
+      <small>{{ utilisateur.email }}</small>
+      <span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">{{ libelleRole }}</span>
+    </section>
+
+    <section class="zone-dangereuse">
+      <h2>Zone dangereuse</h2>
+      <p>La suppression de votre compte est irréversible.</p>
+      <button type="button" class="bouton-supprimer" (click)="supprimerMonCompte()" [disabled]="suppressionEnCours">
+        {{ suppressionEnCours ? 'Suppression…' : 'Supprimer mon compte' }}
+      </button>
+      <p class="erreur" *ngIf="erreurSuppression">{{ erreurSuppression }}</p>
+    </section>
+  </div>
+
+  <div class="colonne-compte-droite">
+    <section>
+      <h2>Modifier mes informations</h2>
+
+      <div class="champ-photo">
+        <span class="avatar-rond avatar-rond-grand">
+          <img *ngIf="utilisateur.photo_url" [src]="utilisateur.photo_url" alt="" />
+          <ng-container *ngIf="!utilisateur.photo_url">{{ initiales }}</ng-container>
+        </span>
+        <div>
+          <button type="button" (click)="declencherChoixPhoto()" [disabled]="photoEnCours">
+            {{ photoEnCours ? 'Envoi…' : 'Changer la photo' }}
+          </button>
+          <input #inputPhoto type="file" accept="image/*" hidden (change)="changerPhoto($event)" />
+          <p class="info-discrete" *ngIf="messagePhoto">{{ messagePhoto }}</p>
+        </div>
+      </div>
+
+      <form [formGroup]="formProfil" (ngSubmit)="enregistrerProfil()">
+        <label>
+          Nom
+          <input type="text" formControlName="nom" />
+        </label>
+        <label>
+          Email
+          <input type="email" formControlName="email" />
+        </label>
+        <label>
+          Téléphone
+          <input type="tel" formControlName="telephone" />
+        </label>
+        <label>
+          Ville
+          <input type="text" formControlName="ville" />
+        </label>
+        <label>
+          Adresse
+          <textarea formControlName="adresse" rows="2"></textarea>
+        </label>
+        <p>{{ messageProfil }}</p>
+        <button type="submit" [disabled]="formProfil.invalid">Enregistrer les modifications</button>
+      </form>
+
+      <h2>Changer mon mot de passe</h2>
+      <form [formGroup]="formMotDePasse" (ngSubmit)="changerMotDePasse()">
+        <label>
+          Mot de passe actuel
+          <input type="password" formControlName="ancien_mot_de_passe" />
+        </label>
+        <label>
+          Nouveau mot de passe
+          <input type="password" formControlName="nouveau_mot_de_passe" />
+        </label>
+        <p>{{ messageMotDePasse }}</p>
+        <button type="submit" [disabled]="formMotDePasse.invalid">Changer le mot de passe</button>
+      </form>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="admin-utilisateurs" *ngIf="stats">
+
+  <div class="stats-grid">
+    <div class="stat-carte">
+      <span class="stat-icone stat-icone-vert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4" /><path d="M2 21c0-4 3-6 7-6s7 2 7 6" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.clients }}</span>
+        <span class="stat-libelle">Clients</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone stat-icone-jaune">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1" /><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h6" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.entreprises }}</span>
+        <span class="stat-libelle">Entreprises</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone" style="background: rgba(37, 99, 235, 0.12); color: var(--couleur-primaire);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h1l2-6h12l2 6h1" /><path d="M6 17v2M18 17v2" /><path d="M6 11l1.5-4h9L18 11" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.livreurs }}</span>
+        <span class="stat-libelle">Livreurs</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="utilisateurs-barre">
+    <div class="onglets-role">
+      <button type="button" [class.actif]="onglet === ''" (click)="changerOnglet('')">Tous ({{ stats.total }})</button>
+      <button type="button" [class.actif]="onglet === 'CLIENT'" (click)="changerOnglet('CLIENT')">Clients ({{ stats.clients }})</button>
+      <button type="button" [class.actif]="onglet === 'ENTREPRISE'" (click)="changerOnglet('ENTREPRISE')">Entreprises ({{ stats.entreprises }})</button>
+      <button type="button" [class.actif]="onglet === 'LIVREUR'" (click)="changerOnglet('LIVREUR')">Livreurs ({{ stats.livreurs }})</button>
+      <button type="button" [class.actif]="onglet === 'ADMIN'" (click)="changerOnglet('ADMIN')">Admins ({{ stats.admins }})</button>
+    </div>
+
+    <form class="recherche-utilisateurs" (ngSubmit)="charger()">
+      <input type="search" [(ngModel)]="recherche" name="recherche" placeholder="Nom, email…" />
+      <button type="submit">Chercher</button>
+    </form>
+  </div>
+
+  <p class="nombre-resultats">{{ utilisateurs.length }} utilisateur(s)</p>
+  <p class="erreur" *ngIf="erreurSuppression">{{ erreurSuppression }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Utilisateur</th>
+        <th>Contact</th>
+        <th>Rôle</th>
+        <th>Activité</th>
+        <th>Statut</th>
+        <th>Inscription</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let utilisateur of utilisateurs">
+      <td>
+        <div class="cellule-utilisateur">
+          <span class="avatar-rond">{{ initiales(utilisateur.nom) }}</span>
+          <div>
+            <strong>{{ utilisateur.nom }}</strong>
+            <small>ID #{{ utilisateur.id }}</small>
+          </div>
+        </div>
+      </td>
+      <td>{{ utilisateur.email }}</td>
+      <td><span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">{{ libelleRole(utilisateur.role) }}</span></td>
+      <td>{{ utilisateur.activite ?? '—' }}</td>
+      <td>
+        <span class="badge-statut" [class.badge-statut-suspendu]="utilisateur.statut_compte === 'SUSPENDU'">
+          {{ utilisateur.statut_compte === 'ACTIF' ? 'Actif' : 'Suspendu' }}
+        </span>
+      </td>
+      <td>{{ utilisateur.date_creation | date: 'dd/MM/yyyy' }}</td>
+      <td>
+        <button type="button" *ngIf="utilisateur.statut_compte === 'ACTIF'" (click)="suspendre(utilisateur)">Suspendre</button>
+        <button type="button" *ngIf="utilisateur.statut_compte === 'SUSPENDU'" (click)="reactiver(utilisateur)">Réactiver</button>
+        <button type="button" class="bouton-supprimer" (click)="supprimer(utilisateur)">Supprimer</button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!utilisateurs.length">Aucun utilisateur ne correspond à cette recherche.</p>
+</div>

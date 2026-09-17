@@ -1,0 +1,28 @@
+<div class="admin-entreprises">
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>SIRET</th>
+        <th>Email</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let entreprise of entreprises">
+      <td>{{ entreprise.nom }}</td>
+      <td>{{ entreprise.siret }}</td>
+      <td>{{ entreprise.utilisateur?.email }}</td>
+      <td>{{ entreprise.statut_validation }}</td>
+      <td>
+        <button type="button" *ngIf="entreprise.statut_validation === 'EN_ATTENTE'" (click)="valider(entreprise, 'ACTIVE')">
+          Valider
+        </button>
+        <button type="button" *ngIf="entreprise.statut_validation === 'EN_ATTENTE'" (click)="valider(entreprise, 'REJETEE')">
+          Rejeter
+        </button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!entreprises.length">Aucune entreprise pour le moment.</p>
+</div>

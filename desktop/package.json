@@ -1,0 +1,66 @@
+{
+  "name": "livraison-app-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "author": "LivraisonApp",
+  "description": "Application de bureau LivraisonApp (Electron) - encapsule le frontend Angular et pilote le backend Laravel local.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win dir && npm run copy-installer",
+    "dist:nsis": "electron-builder --win nsis",
+    "copy-installer": "node -e \"require('fs').copyFileSync('build/Installer.bat','release/Installer.bat');require('fs').copyFileSync('build/Installer.ps1','release/Installer.ps1')\""
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.livraisonapp.desktop",
+    "productName": "LivraisonApp",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "../frontend/dist/livraison-app-frontend/browser",
+        "to": "frontend"
+      },
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!tests",
+          "!.env",
+          "!database/database.sqlite",
+          "!vendor/**/*.exe"
+        ]
+      },
+      {
+        "from": "build/composer.phar",
+        "to": "composer.phar"
+      },
+      {
+        "from": "build/premiere-installation.bat",
+        "to": "premiere-installation.bat"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LivraisonApp"
+    }
+  }
+}

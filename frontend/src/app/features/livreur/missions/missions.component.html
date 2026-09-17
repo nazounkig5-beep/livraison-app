@@ -1,0 +1,23 @@
+<div class="missions">
+  <table>
+    <thead>
+      <tr>
+        <th>Demande</th>
+        <th>Trajet</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let mission of missions">
+      <td>#{{ mission.id_demande }}</td>
+      <td>
+        <ng-container *ngIf="mission.demande as demande">{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</ng-container>
+      </td>
+      <td>{{ mission.statut_prise_en_charge }}</td>
+      <td>
+        <a [routerLink]="['/livreur/missions', mission.id]">Voir le détail</a>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!missions.length">Aucune mission pour le moment.</p>
+</div>

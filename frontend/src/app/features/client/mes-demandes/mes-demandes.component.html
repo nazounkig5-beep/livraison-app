@@ -1,0 +1,39 @@
+<div class="mes-demandes">
+
+  <div class="stats-grid" *ngIf="stats">
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.total_demandes }}</span>
+      <span class="stat-libelle">Demandes de livraison</span>
+    </div>
+    <div class="stat-carte" [class.stat-alerte]="stats.total_incidents > 0">
+      <span class="stat-valeur">{{ stats.total_incidents }}</span>
+      <span class="stat-libelle">Incidents enregistrés</span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.total_paiements }} FCFA</span>
+      <span class="stat-libelle">Total payé</span>
+    </div>
+  </div>
+
+  <p><a routerLink="/client/creer-demande">Nouvelle demande</a></p>
+  <table>
+    <thead>
+      <tr>
+        <th>N°</th>
+        <th>Trajet</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let demande of demandes">
+      <td>#{{ demande.id }}</td>
+      <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
+      <td>{{ demande.statut }}</td>
+      <td>
+        <a [routerLink]="['/client/mes-demandes', demande.id]">Détail</a>
+        <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="annuler(demande)">Annuler</button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!demandes.length">Aucune demande pour le moment.</p>
+</div>

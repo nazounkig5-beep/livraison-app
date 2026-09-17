@@ -1,0 +1,90 @@
+<div class="demandes-entreprise">
+  <table>
+    <thead>
+      <tr>
+        <th>N°</th>
+        <th>Trajet</th>
+        <th>Statut</th>
+        <th>Paiement</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let demande of demandes">
+      <td>#{{ demande.id }}</td>
+      <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
+      <td>{{ demande.statut }}</td>
+      <td>
+        <ng-container *ngIf="demande.paiement; else pasDePaiement">
+          {{ demande.paiement.mode === 'CASH' ? 'Espèces' : 'En ligne' }} —
+          {{ demande.paiement.statut === 'CONFIRME' ? 'Payé' : 'En attente' }}
+        </ng-container>
+        <ng-template #pasDePaiement>—</ng-template>
+      </td>
+      <td>
+        <button
+          type="button"
+          *ngIf="demande.paiement?.mode === 'CASH' && demande.paiement?.statut === 'EN_ATTENTE'"
+          (click)="confirmerPaiement(demande)"
+        >
+          Confirmer le paiement
+        </button>
+        <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="accepter(demande)">Accepter</button>
+        <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="refuser(demande)">Refuser</button>
+        <button
+          type="button"
+          *ngIf="demande.statut === 'ACCEPTEE' || demande.statut === 'PROGRAMMEE'"
+          (click)="ouvrirProgrammation(demande)"
+        >
+          {{ demande.date_programmee ? 'Reprogrammer' : 'Programmer la livraison' }}
+        </button>
+        <button
+          type="button"
+          *ngIf="demande.statut === 'ACCEPTEE' || demande.statut === 'PROGRAMMEE'"
+          (click)="ouvrirAssignation(demande)"
+        >
+          Assigner livreur/véhicule
+        </button>
+
+        <form
+          *ngIf="demandeEnProgrammation === demande.id"
+          [formGroup]="formProgrammation"
+          (ngSubmit)="programmer(demande)"
+        >
+          <label>
+            Date et heure de livraison
+            <input type="datetime-local" formControlName="date_programmee" />
+          </label>
+          <p class="erreur" *ngIf="erreurProgrammation">{{ erreurProgrammation }}</p>
+          <button type="submit" [disabled]="formProgrammation.invalid">Confirmer et notifier le client</button>
+          <button type="button" (click)="annulerProgrammation()">Annuler</button>
+        </form>
+
+        <form
+          *ngIf="demandeEnAssignation === demande.id"
+          [formGroup]="formAssignation"
+          (ngSubmit)="assigner(demande)"
+        >
+          <label>
+            Livreur
+            <select formControlName="id_livreur">
+              <option [ngValue]="null" disabled>Sélectionner un livreur</option>
+              <option *ngFor="let livreur of livreurs" [ngValue]="livreur.id" [disabled]="!livreur.disponible">
+                {{ livreur.utilisateur?.nom }} {{ livreur.disponible ? '' : '(occupé)' }}
+              </option>
+            </select>
+          </label>
+          <label>
+            Véhicule (optionnel)
+            <select formControlName="id_vehicule">
+              <option [ngValue]="null">Aucun</option>
+              <option *ngFor="let vehicule of vehicules" [ngValue]="vehicule.id">{{ vehicule.immatriculation }}</option>
+            </select>
+          </label>
+          <button type="submit" [disabled]="formAssignation.invalid">Confirmer</button>
+          <button type="button" (click)="annulerAssignation()">Annuler</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!demandes.length">Aucune demande pour le moment.</p>
+</div>

@@ -1,0 +1,39 @@
+<div class="entreprise-employes">
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Note</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let employe of employes">
+      <td>{{ employe.utilisateur?.nom }}</td>
+      <td>{{ employe.utilisateur?.email }}</td>
+      <td>{{ employe.note_moyenne }}/5</td>
+      <td>
+        <button type="button" (click)="detacher(employe)">Détacher</button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!employes.length">Aucun livreur employé pour le moment.</p>
+
+  <h2>Ajouter un livreur</h2>
+  <form [formGroup]="form" (ngSubmit)="ajouter()">
+    <label>
+      Nom
+      <input type="text" formControlName="nom" />
+    </label>
+    <label>
+      Email
+      <input type="email" formControlName="email" />
+    </label>
+    <label>
+      Mot de passe initial
+      <input type="password" formControlName="mot_de_passe" />
+    </label>
+    <p *ngIf="erreur">{{ erreur }}</p>
+    <button type="submit" [disabled]="form.invalid">Créer le compte livreur</button>
+  </form>
+</div>

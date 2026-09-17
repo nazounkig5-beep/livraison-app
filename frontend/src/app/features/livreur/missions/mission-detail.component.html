@@ -1,0 +1,64 @@
+<div class="mission-detail" *ngIf="mission">
+  <p><a routerLink="/livreur/missions">← Mes missions</a></p>
+  <h1>Mission #{{ mission.id }} — Demande #{{ mission.id_demande }}</h1>
+
+  <ul>
+    <li *ngIf="mission.demande as demande">Trajet : {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</li>
+    <li *ngIf="mission.demande?.client?.utilisateur as client">Client : {{ client.nom }}</li>
+    <li *ngIf="mission.demande?.entreprise as entreprise">Entreprise : {{ entreprise.nom }}</li>
+    <li *ngIf="mission.vehicule as vehicule">Véhicule : {{ vehicule.immatriculation }}</li>
+    <li *ngIf="mission.demande?.tarif_estime">Tarif : {{ mission.demande?.tarif_estime }} FCFA</li>
+    <li>Statut : {{ mission.statut_prise_en_charge }}</li>
+  </ul>
+
+  <section *ngIf="mission.statut_prise_en_charge === 'EN_ATTENTE'">
+    <button type="button" (click)="prendreEnCharge()">Prendre en charge</button>
+  </section>
+
+  <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'" class="suivi-temps-reel">
+    <h2><span class="point-live" *ngIf="suiviActif && !erreurGps"></span> Ma position</h2>
+    <p class="erreur" *ngIf="erreurGps">{{ erreurGps }}</p>
+    <p *ngIf="!dernierePosition && !erreurGps">Recherche de votre position GPS…</p>
+    <ul *ngIf="dernierePosition">
+      <li>Dernière position envoyée au client : {{ dernierePosition.horodatage | date: 'HH:mm:ss' }}</li>
+    </ul>
+    <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!dernierePosition"></div>
+    <p class="suivi-info" *ngIf="dernierePosition">Votre position est transmise en direct au client pendant la livraison.</p>
+  </section>
+
+  <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'">
+    <h2>Paiement</h2>
+    <button type="button" *ngIf="mission.demande?.entreprise?.numero_orange" (click)="afficherQrPaiement('ORANGE')">
+      QR Orange Money
+    </button>
+    <button type="button" *ngIf="mission.demande?.entreprise?.numero_moov" (click)="afficherQrPaiement('MOOV')">
+      QR Moov Money
+    </button>
+
+    <div *ngIf="operateurChoisi" class="paiement-mobile-money">
+      <p>Faites scanner ce QR code au client pour le paiement mobile money :</p>
+      <p class="code-ussd">{{ codeUssd }}</p>
+      <canvas #qrCanvas></canvas>
+      <br />
+      <button type="button" (click)="fermerQrPaiement()">Fermer</button>
+    </div>
+  </section>
+
+  <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'" class="confirmation-livraison">
+    <h2>Marquer livrée</h2>
+    <label>
+      Code de livraison communiqué par le client
+      <input type="text" [(ngModel)]="codeSaisi" name="codeSaisi" placeholder="Ex : 123456" />
+    </label>
+    <div class="confirmation-livraison-actions">
+      <button type="button" (click)="confirmerLivraison()" [disabled]="!codeSaisi">Confirmer la livraison</button>
+    </div>
+    <p class="erreur" *ngIf="erreurCode">{{ erreurCode }}</p>
+  </section>
+
+  <section *ngIf="mission.statut_prise_en_charge === 'TERMINEE'">
+    <p class="succes">Cette mission a été livrée.</p>
+  </section>
+</div>
+
+<p *ngIf="!mission && !chargement">Mission introuvable.</p>

@@ -1,0 +1,82 @@
+<div class="abonnements">
+
+  <section *ngIf="abonnementActif; else aucunAbonnementActif">
+    <h2>Mon abonnement</h2>
+    <div class="stats-grid">
+      <div class="stat-carte">
+        <span class="stat-valeur">{{ abonnementActif.tarif?.nom }}</span>
+        <span class="stat-libelle">Offre active</span>
+      </div>
+      <div class="stat-carte">
+        <span class="stat-valeur">{{ abonnementActif.date_fin | date: 'dd/MM/yyyy' }}</span>
+        <span class="stat-libelle">Valable jusqu'au</span>
+      </div>
+      <div class="stat-carte" [class.stat-alerte]="abonnementActif.statut_paiement !== 'CONFIRME'">
+        <span class="stat-valeur">{{ abonnementActif.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}</span>
+        <span class="stat-libelle">{{ abonnementActif.montant }} FCFA — {{ abonnementActif.mode_paiement }}</span>
+      </div>
+    </div>
+  </section>
+  <ng-template #aucunAbonnementActif>
+    <p>Aucun abonnement actif pour le moment — choisissez une offre ci-dessous.</p>
+  </ng-template>
+
+  <h2>Offres disponibles</h2>
+  <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Offre</th>
+        <th>Durée</th>
+        <th>Prix</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let tarif of tarifs">
+      <td>{{ tarif.nom }}</td>
+      <td>{{ tarif.duree }} mois</td>
+      <td>{{ tarif.prix }} FCFA</td>
+      <td>
+        <button
+          type="button"
+          *ngIf="!abonnementActif && tarifEnSouscription !== tarif.id"
+          (click)="choisir(tarif)"
+        >
+          Souscrire
+        </button>
+        <span *ngIf="abonnementActif">Indisponible (abonnement déjà actif)</span>
+      </td>
+    </tr>
+  </table>
+
+  <section *ngIf="tarifEnSouscription">
+    <h2>Choisir le mode de paiement</h2>
+    <ng-container *ngFor="let tarif of tarifs">
+      <ng-container *ngIf="tarif.id === tarifEnSouscription">
+        <p>{{ tarif.nom }} — {{ tarif.prix }} FCFA pour {{ tarif.duree }} mois</p>
+        <button type="button" (click)="souscrire(tarif, 'EN_LIGNE')">Payer en ligne</button>
+        <button type="button" (click)="souscrire(tarif, 'CASH')">Payer en espèces</button>
+        <button type="button" (click)="annulerChoix()">Annuler</button>
+      </ng-container>
+    </ng-container>
+  </section>
+
+  <h2>Historique de mes abonnements</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Offre</th>
+        <th>Période</th>
+        <th>Statut</th>
+        <th>Paiement</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let abonnement of mesAbonnements">
+      <td>{{ abonnement.tarif?.nom }}</td>
+      <td>{{ abonnement.date_debut | date: 'dd/MM/yyyy' }} → {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ abonnement.statut }}</td>
+      <td>{{ abonnement.montant }} FCFA — {{ abonnement.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}</td>
+    </tr>
+  </table>
+  <p *ngIf="!mesAbonnements.length">Aucun abonnement souscrit pour le moment.</p>
+</div>

@@ -1,0 +1,36 @@
+<div class="admin-abonnements">
+  <table>
+    <thead>
+      <tr>
+        <th>Abonné</th>
+        <th>Type</th>
+        <th>Offre</th>
+        <th>Période</th>
+        <th>Statut</th>
+        <th>Paiement</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let abonnement of abonnements">
+      <td>{{ abonnement.abonne_nom }}</td>
+      <td>{{ abonnement.abonne_type }}</td>
+      <td>{{ abonnement.tarif?.nom }}</td>
+      <td>{{ abonnement.date_debut | date: 'dd/MM/yyyy' }} → {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ abonnement.statut }}</td>
+      <td>
+        {{ abonnement.montant }} FCFA ({{ abonnement.mode_paiement === 'CASH' ? 'Espèces' : 'En ligne' }}) —
+        {{ abonnement.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}
+      </td>
+      <td>
+        <button
+          type="button"
+          *ngIf="abonnement.mode_paiement === 'CASH' && abonnement.statut_paiement === 'EN_ATTENTE'"
+          (click)="confirmerPaiement(abonnement)"
+        >
+          Confirmer le paiement
+        </button>
+      </td>
+    </tr>
+  </table>
+  <p *ngIf="!abonnements.length">Aucun abonnement souscrit pour le moment.</p>
+</div>

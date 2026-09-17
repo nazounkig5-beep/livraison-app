@@ -1,0 +1,37 @@
+<div class="creer-demande">
+  <form [formGroup]="form" (ngSubmit)="soumettre()">
+    <label>
+      Entreprise
+      <select formControlName="id_entreprise">
+        <option [ngValue]="null" disabled>Sélectionner l'entreprise qui recevra la demande</option>
+        <option *ngFor="let entreprise of entreprises" [ngValue]="entreprise.id">{{ entreprise.nom }}</option>
+      </select>
+    </label>
+    <p *ngIf="!entreprises.length">Aucune entreprise validée n'est disponible pour le moment.</p>
+    <label>
+      Type de service
+      <select formControlName="id_type_service">
+        <option [ngValue]="null" disabled>Sélectionner un type de service</option>
+        <option *ngFor="let type of typesService" [ngValue]="type.id">{{ type.nom }}</option>
+      </select>
+    </label>
+    <label>
+      Adresse de départ
+      <input type="text" formControlName="adresse_depart" />
+    </label>
+    <label>
+      Adresse d'arrivée
+      <input type="text" formControlName="adresse_arrivee" />
+    </label>
+    <label>
+      Distance estimée (km)
+      <input type="number" formControlName="distance" />
+    </label>
+    <label>
+      Programmer pour le (optionnel)
+      <input type="datetime-local" formControlName="date_programmee" />
+    </label>
+    <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+    <button type="submit" [disabled]="form.invalid || envoiEnCours">Valider la demande</button>
+  </form>
+</div>

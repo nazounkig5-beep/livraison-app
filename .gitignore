@@ -1,0 +1,26 @@
+# Dependencies (installed via npm/composer, not source)
+node_modules/
+frontend/node_modules/
+desktop/node_modules/
+
+# Build outputs / packaged installers
+frontend/dist/
+frontend/.angular/
+desktop/dist/
+desktop/release/
+
+# Bundled binary (fetch fresh from https://getcomposer.org when rebuilding the installer)
+desktop/build/composer.phar
+
+# Leftover SQLite artifact from before the switch to PostgreSQL (see backend/.env for the real DB config)
+backend/database/database.sqlite
+
+# Claude Code local project state (not app source)
+.claude/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

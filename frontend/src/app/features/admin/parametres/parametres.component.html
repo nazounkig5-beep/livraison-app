@@ -1,0 +1,59 @@
+<div class="admin-parametres">
+
+  <section>
+    <h2>Types de véhicule</h2>
+    <ul>
+      <li *ngFor="let type of typesVehicule">{{ type.nom }}</li>
+    </ul>
+    <form [formGroup]="formTypeVehicule" (ngSubmit)="ajouterTypeVehicule()">
+      <select formControlName="nom">
+        <option value="moto">Moto</option>
+        <option value="tricycle">Tricycle</option>
+        <option value="cargo">Cargo</option>
+        <option value="camion">Camion</option>
+      </select>
+      <button type="submit">Ajouter</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Types de service</h2>
+    <ul>
+      <li *ngFor="let type of typesService">{{ type.nom }}</li>
+    </ul>
+    <form [formGroup]="formTypeService" (ngSubmit)="ajouterTypeService()">
+      <select formControlName="nom">
+        <option value="livraison">Livraison</option>
+        <option value="demenagement">Déménagement</option>
+        <option value="transport_materiel">Transport de matériel</option>
+      </select>
+      <button type="submit">Ajouter</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Tarifs d'abonnement</h2>
+    <ul>
+      <li *ngFor="let tarif of tarifsAbonnement">{{ tarif.nom }} — {{ tarif.prix }} FCFA / {{ tarif.duree }} mois</li>
+    </ul>
+    <form [formGroup]="formTarif" (ngSubmit)="ajouterTarif()">
+      <label>
+        Nom
+        <input type="text" formControlName="nom" />
+      </label>
+      <label>
+        Durée (mois)
+        <input type="number" min="1" formControlName="duree" />
+      </label>
+      <label>
+        Prix (FCFA)
+        <input type="number" min="0" formControlName="prix" />
+      </label>
+      <label>
+        Description
+        <input type="text" formControlName="description" />
+      </label>
+      <button type="submit" [disabled]="formTarif.invalid">Ajouter</button>
+    </form>
+  </section>
+</div>

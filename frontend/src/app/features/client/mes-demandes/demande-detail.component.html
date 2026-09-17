@@ -1,0 +1,71 @@
+<div class="demande-detail" *ngIf="demande">
+  <p><a routerLink="/client/mes-demandes">← Mes demandes</a></p>
+  <h1>Demande #{{ demande.id }}</h1>
+
+  <ul>
+    <li>Trajet : {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</li>
+    <li>Statut : {{ demande.statut }}</li>
+    <li>Tarif estimé : {{ demande.tarif_estime }} FCFA</li>
+    <li *ngIf="demande.code_livraison">Code de livraison : {{ demande.code_livraison }}</li>
+    <li *ngIf="demande.date_programmee">Programmée le : {{ demande.date_programmee }}</li>
+  </ul>
+
+  <section *ngIf="demande.statut === 'EN_COURS'" class="suivi-temps-reel">
+    <h2><span class="point-live"></span> Suivi en temps réel</h2>
+    <p *ngIf="!suivi">Chargement du suivi…</p>
+    <ul *ngIf="suivi">
+      <li *ngIf="suivi.livreur_nom">Livreur : {{ suivi.livreur_nom }}</li>
+      <li>Statut de la mission : {{ suivi.statut_mission }}</li>
+      <li *ngIf="suivi.position">Dernière mise à jour : {{ suivi.position.timestamp | date: 'HH:mm:ss' }}</li>
+      <li *ngIf="!suivi.position">En attente de la première position GPS du livreur…</li>
+    </ul>
+    <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!suivi?.position"></div>
+    <p class="suivi-info" *ngIf="suivi">Mis à jour automatiquement toutes les 5 secondes.</p>
+  </section>
+
+  <section *ngIf="demande.statut !== 'ANNULEE' && demande.statut !== 'LIVREE'">
+    <button type="button" (click)="annuler()">Annuler la demande</button>
+  </section>
+
+  <section *ngIf="!demande.paiement || demande.paiement.statut !== 'CONFIRME'">
+    <h2>Paiement</h2>
+
+    <p *ngIf="demande.paiement?.mode === 'EN_LIGNE' && demande.paiement?.statut === 'EN_ATTENTE'">
+      Paiement en attente de confirmation par l'opérateur mobile money…
+    </p>
+
+    <button
+      type="button"
+      *ngIf="demande.entreprise?.paiement_en_ligne_configure"
+      (click)="payerEnLigne()"
+      [disabled]="paiementEnLigneEnCours"
+    >
+      {{ paiementEnLigneEnCours ? 'Redirection…' : 'Payer en ligne (Mobile Money)' }}
+    </button>
+    <p class="info-discrete" *ngIf="!demande.entreprise?.paiement_en_ligne_configure">
+      Le paiement en ligne n'est pas encore disponible pour cette entreprise.
+    </p>
+    <p *ngIf="erreurPaiement" class="erreur">{{ erreurPaiement }}</p>
+
+    <button type="button" (click)="payer('CASH')">Payer à la livraison (espèces)</button>
+  </section>
+  <section *ngIf="demande.paiement">
+    <p>Paiement : {{ demande.paiement.mode }} — {{ demande.paiement.statut }}</p>
+  </section>
+
+  <section *ngIf="demande.statut === 'LIVREE'">
+    <h2>Noter la livraison</h2>
+    <form [formGroup]="formNote" (ngSubmit)="noter()">
+      <label>
+        Note (1 à 5)
+        <input type="number" min="1" max="5" formControlName="note" />
+      </label>
+      <label>
+        Commentaire
+        <input type="text" formControlName="commentaire" />
+      </label>
+      <button type="submit" [disabled]="formNote.invalid">Envoyer la note</button>
+    </form>
+    <p *ngIf="demande.notation">Votre note : {{ demande.notation.note }}/5</p>
+  </section>
+</div>
