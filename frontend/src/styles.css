@@ -1241,12 +1241,11 @@ router-outlet ~ div.auth-page {
 }
 
 @media (max-width: 860px) {
-  .auth-page {
-    flex-direction: column;
-  }
-
+  /* Fenêtre étroite : le panneau de marque prend toute la hauteur et pousse le
+     formulaire hors de vue sans défiler. On le masque pour que Se connecter/S'inscrire
+     restent visibles immédiatement. */
   .auth-marque {
-    padding: 2.5rem 1.75rem;
+    display: none;
   }
 
   .auth-formulaire {

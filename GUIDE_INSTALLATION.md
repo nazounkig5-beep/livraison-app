@@ -20,10 +20,14 @@ Pour **développer ou construire l'installateur** :
 
 | Outil | Version | Rôle |
 |---|---|---|
-| PHP | 8.2 ou supérieur (avec `pdo_pgsql`, `pgsql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`) | Backend Laravel |
+| PHP | **8.2 ou 8.3 exactement** (avec `pdo_pgsql`, `pgsql`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`) | Backend Laravel |
 | Composer | 2.x | Dépendances PHP |
 | Node.js | 18+ (avec npm) | Frontend Angular + application Electron |
 | PostgreSQL | 14 ou supérieur, service démarré | Base de données |
+
+> ⚠️ **N'utilisez pas PHP 8.4 ou 8.5** : ces versions ont retiré `mb_split()`, dont dépend cette
+> version de Laravel. Les migrations échouent dès la première table avec
+> `Call to undefined function Illuminate\Support\mb_split()` — voir section 9 (Dépannage).
 
 Sur Windows, WAMP fournit PHP (`C:\wamp64\bin\php\phpX.Y.Z\php.exe`) — pensez à ajouter le
 dossier de la version voulue au PATH, ou utilisez le chemin complet dans les commandes ci-dessous.
@@ -193,6 +197,8 @@ LIVREUR et ENTREPRISE se créent depuis la page d'inscription publique.
 
 | Symptôme | Cause probable / solution |
 |---|---|
+| `Call to undefined function Illuminate\Support\mb_split()` pendant `php artisan migrate` | Vous utilisez PHP 8.4 ou 8.5, qui a retiré `mb_split()`. Installez PHP **8.2 ou 8.3** et relancez les commandes (`composer install`, `php artisan migrate`, `db:seed`) avec cette version — sur Windows/WAMP, plusieurs versions de PHP coexistent sous `C:\wamp64\bin\php\`, utilisez le chemin complet vers `php8.2.x\php.exe` ou `php8.3.x\php.exe`. Tant que les migrations n'ont pas réussi, **aucune table n'existe** : toute action (inscription, connexion...) échouera avec un message générique côté frontend. |
+| « Inscription impossible » / toute action échoue silencieusement dès la première utilisation | Signe quasi certain que les migrations n'ont jamais réussi (voir ligne ci-dessus) — vérifiez la sortie de `php artisan migrate`, ne vous fiez pas seulement à l'app. |
 | « PHP introuvable » au lancement | PHP n'est ni dans le PATH ni détecté sous `C:\wamp64\bin\php\...`. Installez PHP/WAMP ou ajoutez `php.exe` au PATH. |
 | « Backend indisponible » au lancement | PostgreSQL n'est probablement pas démarré. Démarrez le service (`services.msc` → `postgresql-x64-XX`), ou `pg_ctl -D "<data_dir>" start` si vous n'avez pas les droits administrateur pour gérer le service. |
 | « Configuration manquante » (`.env` introuvable) | Suivez la section 6 (première installation sur ce poste). |
