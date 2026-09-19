@@ -74,6 +74,24 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/profil/mot-de-passe`, { ancien_mot_de_passe, nouveau_mot_de_passe });
   }
 
+  demanderReinitialisation(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/mot-de-passe-oublie`, { email });
+  }
+
+  reinitialiserMotDePasse(
+    email: string,
+    token: string,
+    mot_de_passe: string,
+    mot_de_passe_confirmation: string
+  ): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/reinitialiser-mot-de-passe`, {
+      email,
+      token,
+      mot_de_passe,
+      mot_de_passe_confirmation,
+    });
+  }
+
   logout(): void {
     this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
       complete: () => this.deconnexionLocale(),

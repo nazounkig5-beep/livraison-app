@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
-class Utilisateur extends Authenticatable
+class Utilisateur extends Authenticatable implements CanResetPasswordContract
 {
-    use HasApiTokens;
+    use HasApiTokens, CanResetPassword;
 
     protected $table = 'utilisateurs';
     protected $fillable = [
@@ -57,6 +60,27 @@ class Utilisateur extends Authenticatable
     public function getAuthPassword()
     {
         return $this->mot_de_passe;
+    }
+
+    /**
+     * Envoie le lien de réinitialisation par email plutôt que de dépendre d'une route web
+     * "password.reset" (inexistante dans cette API) : on construit nous-mêmes l'URL vers le
+     * frontend Angular. Utilise Mail::raw (pas de vue Blade) car ce backend est API-only.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = rtrim(config('services.frontend_url'), '/')
+            . '/auth/reinitialiser-mot-de-passe?token=' . $token . '&email=' . urlencode($this->email);
+
+        Mail::raw(
+            "Bonjour {$this->nom},\n\n" .
+            "Vous avez demandé la réinitialisation de votre mot de passe LivraisonApp.\n" .
+            "Cliquez sur ce lien pour choisir un nouveau mot de passe (valable 60 minutes) :\n{$url}\n\n" .
+            "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.",
+            function ($message) {
+                $message->to($this->email)->subject('Réinitialisation de votre mot de passe');
+            }
+        );
     }
 
     public function client()

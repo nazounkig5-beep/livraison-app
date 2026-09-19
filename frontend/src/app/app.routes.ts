@@ -13,6 +13,20 @@ export const routes: Routes = [
     path: 'auth/register',
     loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
   },
+  {
+    path: 'auth/mot-de-passe-oublie',
+    loadComponent: () =>
+      import('./features/auth/mot-de-passe-oublie/mot-de-passe-oublie.component').then(
+        (m) => m.MotDePasseOublieComponent
+      ),
+  },
+  {
+    path: 'auth/reinitialiser-mot-de-passe',
+    loadComponent: () =>
+      import('./features/auth/reinitialiser-mot-de-passe/reinitialiser-mot-de-passe.component').then(
+        (m) => m.ReinitialiserMotDePasseComponent
+      ),
+  },
 
   // --- CLIENT ---
   {

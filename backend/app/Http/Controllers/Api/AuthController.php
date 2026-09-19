@@ -10,6 +10,7 @@ use App\Models\Utilisateur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -95,6 +96,49 @@ class AuthController extends Controller
         $token = $utilisateur->createToken('api-token')->plainTextToken;
 
         return response()->json(['utilisateur' => $utilisateur, 'token' => $token]);
+    }
+
+    /**
+     * Cas d'utilisation : "Mot de passe oublié". Message toujours identique, que l'email existe ou
+     * non, pour ne pas laisser deviner quels emails sont enregistrés (énumération de comptes).
+     */
+    public function envoyerLienReinitialisation(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        Password::sendResetLink($request->only('email'));
+
+        return response()->json([
+            'message' => "Si un compte existe avec cet email, un lien de réinitialisation vient d'être envoyé.",
+        ]);
+    }
+
+    /** Cas d'utilisation : "Réinitialiser le mot de passe" (à partir du lien reçu par email) */
+    public function reinitialiserMotDePasse(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'token' => 'required|string',
+            'mot_de_passe' => 'required|string|min:6|confirmed',
+        ]);
+
+        $statut = Password::reset(
+            [
+                'email' => $data['email'],
+                'token' => $data['token'],
+                'password' => $data['mot_de_passe'],
+                'password_confirmation' => $request->input('mot_de_passe_confirmation'),
+            ],
+            function (Utilisateur $utilisateur, string $motDePasse) {
+                $utilisateur->update(['mot_de_passe' => Hash::make($motDePasse)]);
+            }
+        );
+
+        if ($statut !== Password::PASSWORD_RESET) {
+            return response()->json(['message' => 'Ce lien de réinitialisation est invalide ou a expiré.'], 422);
+        }
+
+        return response()->json(['message' => 'Mot de passe réinitialisé avec succès.']);
     }
 
     public function logout(Request $request)

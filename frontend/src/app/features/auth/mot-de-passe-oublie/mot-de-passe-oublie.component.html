@@ -1,0 +1,25 @@
+<div class="auth-page">
+  <div class="auth-formulaire" style="width: 100%;">
+    <div class="auth-carte">
+      <h2>Mot de passe oublié</h2>
+      <p class="info-discrete">
+        Indiquez votre adresse email : si un compte existe, vous recevrez un lien pour choisir un nouveau mot de
+        passe.
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="soumettre()">
+        <label>
+          Adresse email
+          <input type="email" formControlName="email" placeholder="votre@email.com" />
+        </label>
+        <p class="succes" *ngIf="message">{{ message }}</p>
+        <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+        <button type="submit" [disabled]="form.invalid || envoiEnCours">
+          {{ envoiEnCours ? 'Envoi…' : 'Envoyer le lien' }}
+        </button>
+      </form>
+
+      <p><a routerLink="/auth/login">← Retour à la connexion</a></p>
+    </div>
+  </div>
+</div>

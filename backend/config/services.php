@@ -28,6 +28,9 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+    // URL du frontend Angular, utilisée pour construire les liens envoyés par email (ex: réinitialisation de mot de passe).
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:4200'),
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

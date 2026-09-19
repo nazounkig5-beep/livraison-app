@@ -1271,6 +1271,12 @@ router-outlet ~ div.auth-page {
   box-shadow: none;
 }
 
+.auth-lien-secondaire {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
 .auth-carte label {
   text-transform: uppercase;
   font-size: 0.72rem;

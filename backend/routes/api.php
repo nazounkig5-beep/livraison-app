@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 // --- Public ---
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/mot-de-passe-oublie', [AuthController::class, 'envoyerLienReinitialisation']);
+Route::post('/reinitialiser-mot-de-passe', [AuthController::class, 'reinitialiserMotDePasse']);
 
 // Webhook du fournisseur de paiement : appelé serveur-à-serveur par CinetPay, jamais par le client.
 // Le statut du paiement est revérifié auprès de CinetPay dans le contrôleur, pas déduit de ce POST.

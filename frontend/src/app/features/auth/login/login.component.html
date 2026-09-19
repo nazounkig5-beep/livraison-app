@@ -93,6 +93,7 @@
         <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
         <button type="submit" [disabled]="form.invalid">Se connecter</button>
       </form>
+      <p class="auth-lien-secondaire"><a routerLink="/auth/mot-de-passe-oublie">Mot de passe oublié ?</a></p>
     </div>
   </div>
 </div>
