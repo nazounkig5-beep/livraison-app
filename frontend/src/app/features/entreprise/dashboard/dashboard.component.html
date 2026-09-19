@@ -1,0 +1,84 @@
+<div class="entreprise-dashboard" *ngIf="stats">
+
+  <div class="stats-grid">
+    <div class="stat-carte" [class.stat-alerte]="stats.demandes_en_attente > 0">
+      <span class="stat-icone" [class.stat-icone-rouge]="stats.demandes_en_attente > 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-7h14l2 7" /><path d="M3 12v7a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-7" /><path d="M3 12h18" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.demandes_en_attente }}</span>
+        <span class="stat-libelle">Demandes en attente</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone" style="background: rgba(37, 99, 235, 0.12); color: var(--couleur-primaire);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.total_demandes }}</span>
+        <span class="stat-libelle">Total demandes</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone stat-icone-jaune">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10" rx="1" /><path d="M14 10h4l3 3v4h-7" /><circle cx="5.5" cy="18.5" r="1.5" /><circle cx="16.5" cy="18.5" r="1.5" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.total_vehicules }}</span>
+        <span class="stat-libelle">Véhicules</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone stat-icone-vert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3" /><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6" /><circle cx="18" cy="9" r="2.3" /><path d="M22 20c0-2.6-1.7-4.6-4-5.3" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ stats.total_employes }}</span>
+        <span class="stat-libelle">Employés</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="raccourcis-entreprise">
+    <a routerLink="/entreprise/demandes">Voir toutes les demandes</a>
+    <a routerLink="/entreprise/vehicules">Gérer les véhicules</a>
+    <a routerLink="/entreprise/employes">Gérer les employés</a>
+  </div>
+
+  <h2>Demandes en attente d'acceptation</h2>
+  <table *ngIf="stats.demandes_recentes.length; else aucuneDemandeRecente">
+    <thead>
+      <tr>
+        <th>N°</th>
+        <th>Client</th>
+        <th>Trajet</th>
+        <th>Tarif</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let demande of stats.demandes_recentes">
+      <td>#{{ demande.id }}</td>
+      <td>{{ demande.client?.utilisateur?.nom }}</td>
+      <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
+      <td>{{ demande.tarif_estime }} FCFA</td>
+      <td>
+        <button type="button" (click)="accepter(demande)">Accepter</button>
+        <button type="button" (click)="refuser(demande)">Refuser</button>
+      </td>
+    </tr>
+  </table>
+  <ng-template #aucuneDemandeRecente>
+    <p>Aucune demande en attente pour le moment.</p>
+  </ng-template>
+
+  <h2>Demandes par statut</h2>
+  <div class="stats-grid" *ngIf="(stats.demandes_par_statut | keyvalue)?.length; else aucuneDemande">
+    <div class="stat-carte" *ngFor="let entree of stats.demandes_par_statut | keyvalue">
+      <span class="stat-valeur">{{ entree.value }}</span>
+      <span class="stat-libelle">{{ entree.key }}</span>
+    </div>
+  </div>
+  <ng-template #aucuneDemande>
+    <p>Aucune demande enregistrée pour le moment.</p>
+  </ng-template>
+</div>

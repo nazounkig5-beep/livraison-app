@@ -16,6 +16,13 @@ export const routes: Routes = [
 
   // --- CLIENT ---
   {
+    path: 'client/dashboard',
+    canActivate: [authGuard, roleGuard(['CLIENT'])],
+    data: { title: 'Tableau de bord' },
+    loadComponent: () =>
+      import('./features/client/dashboard/dashboard.component').then((m) => m.ClientDashboardComponent),
+  },
+  {
     path: 'client/creer-demande',
     canActivate: [authGuard, roleGuard(['CLIENT'])],
     data: { title: 'Nouvelle demande de livraison' },
@@ -60,6 +67,13 @@ export const routes: Routes = [
   },
 
   // --- ENTREPRISE ---
+  {
+    path: 'entreprise/dashboard',
+    canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
+    data: { title: 'Tableau de bord' },
+    loadComponent: () =>
+      import('./features/entreprise/dashboard/dashboard.component').then((m) => m.EntrepriseDashboardComponent),
+  },
   {
     path: 'entreprise/demandes',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],

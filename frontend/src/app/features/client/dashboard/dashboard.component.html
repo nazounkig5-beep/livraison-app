@@ -1,0 +1,59 @@
+<div class="client-dashboard" *ngIf="stats">
+
+  <a routerLink="/client/creer-demande" class="raccourci-nouvelle-demande">
+    <span class="stat-icone" style="background: rgba(255,255,255,0.2); color: #fff;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></svg>
+    </span>
+    <span>
+      <strong>Nouvelle demande de livraison</strong>
+      <small>Créer une demande en quelques clics</small>
+    </span>
+  </a>
+
+  <div class="stats-grid">
+    <div class="stat-carte" [class.stat-alerte]="compteParStatut('EN_ATTENTE') > 0">
+      <span class="stat-icone" [class.stat-icone-rouge]="compteParStatut('EN_ATTENTE') > 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ compteParStatut('EN_ATTENTE') }}</span>
+        <span class="stat-libelle">En attente</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone" style="background: rgba(37, 99, 235, 0.12); color: var(--couleur-primaire);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10" rx="1" /><path d="M14 10h4l3 3v4h-7" /><circle cx="5.5" cy="18.5" r="1.5" /><circle cx="16.5" cy="18.5" r="1.5" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ compteParStatut('EN_COURS') }}</span>
+        <span class="stat-libelle">En cours</span>
+      </span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-icone stat-icone-vert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+      </span>
+      <span class="stat-texte">
+        <span class="stat-valeur">{{ compteParStatut('LIVREE') }}</span>
+        <span class="stat-libelle">Livrées</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.total_demandes }}</span>
+      <span class="stat-libelle">Total demandes</span>
+    </div>
+    <div class="stat-carte" [class.stat-alerte]="stats.total_incidents > 0">
+      <span class="stat-valeur">{{ stats.total_incidents }}</span>
+      <span class="stat-libelle">Incidents enregistrés</span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.total_paiements }} FCFA</span>
+      <span class="stat-libelle">Total payé</span>
+    </div>
+  </div>
+
+  <p><a routerLink="/client/mes-demandes">Voir toutes mes demandes</a></p>
+</div>

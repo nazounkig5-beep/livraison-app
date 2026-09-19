@@ -825,6 +825,57 @@ ul.erreurs {
   margin-bottom: 1.25rem;
 }
 
+/* ---------- Tableau de bord client ---------- */
+
+.raccourci-nouvelle-demande {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: var(--couleur-marque-fonce);
+  color: #fff;
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.raccourci-nouvelle-demande:hover {
+  background: #14304a;
+  text-decoration: none;
+}
+
+.raccourci-nouvelle-demande strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.raccourci-nouvelle-demande small {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---------- Tableau de bord entreprise ---------- */
+
+.raccourcis-entreprise {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+
+.raccourcis-entreprise a {
+  background: var(--couleur-surface);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--couleur-texte);
+}
+
+.raccourcis-entreprise a:hover {
+  background: var(--couleur-fond);
+  text-decoration: none;
+}
+
 /* ---------- Suivi en temps réel ---------- */
 
 .suivi-temps-reel h2 {

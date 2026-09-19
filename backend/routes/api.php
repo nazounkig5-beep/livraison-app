@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DemandeLivraisonController;
 use App\Http\Controllers\Api\EmployeController;
+use App\Http\Controllers\Api\EntrepriseDashboardController;
 use App\Http\Controllers\Api\EntrepriseDemandeController;
 use App\Http\Controllers\Api\EntrepriseProfilController;
 use App\Http\Controllers\Api\IncidentController;
@@ -63,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // --- ENTREPRISE ---
     Route::middleware('role:ENTREPRISE')->prefix('entreprise')->group(function () {
+        Route::get('/dashboard', [EntrepriseDashboardController::class, 'index']);
         Route::get('/demandes', [EntrepriseDemandeController::class, 'index']);
         Route::get('/demandes/historique', [EntrepriseDemandeController::class, 'historique']);
         Route::post('/demandes/{demande}/accepter', [EntrepriseDemandeController::class, 'accepter']);

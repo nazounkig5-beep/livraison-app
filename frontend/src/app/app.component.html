@@ -27,6 +27,10 @@
     <nav class="sidebar-nav" (click)="fermerMenuMobile()">
       <ng-container *ngIf="auth.aLeRole('CLIENT')">
         <p class="sidebar-groupe">Client</p>
+        <a routerLink="/client/dashboard" routerLinkActive="actif">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>
+          Tableau de bord
+        </a>
         <a routerLink="/client/mes-demandes" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /></svg>
           Mes demandes
@@ -51,6 +55,10 @@
 
       <ng-container *ngIf="auth.aLeRole('ENTREPRISE')">
         <p class="sidebar-groupe">Entreprise</p>
+        <a routerLink="/entreprise/dashboard" routerLinkActive="actif">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>
+          Tableau de bord
+        </a>
         <a routerLink="/entreprise/demandes" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-7h14l2 7" /><path d="M3 12v7a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-7" /><path d="M3 12h18" /></svg>
           Demandes reçues

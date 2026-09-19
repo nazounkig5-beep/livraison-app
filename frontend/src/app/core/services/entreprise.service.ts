@@ -5,6 +5,7 @@ import { DemandeLivraison } from '../models/demande.model';
 import { Vehicule } from '../models/vehicule.model';
 import { Livreur } from '../models/livreur.model';
 import { Entreprise } from '../models/entreprise.model';
+import { EntrepriseDashboardStats } from '../models/dashboard.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -12,6 +13,10 @@ export class EntrepriseService {
   private readonly apiUrl = `${environment.apiUrl}/entreprise`;
 
   constructor(private http: HttpClient) {}
+
+  dashboard(): Observable<EntrepriseDashboardStats> {
+    return this.http.get<EntrepriseDashboardStats>(`${this.apiUrl}/dashboard`);
+  }
 
   demandes(): Observable<DemandeLivraison[]> {
     return this.http.get<DemandeLivraison[]>(`${this.apiUrl}/demandes`);
