@@ -64,7 +64,10 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   private initialiserCarte(): void {
     if (!this.carteConteneur || this.carte) return;
 
-    this.carte = L.map(this.carteConteneur.nativeElement).setView(VUE_CARTE_PAR_DEFAUT, 13);
+    // Zoom rapproché par défaut : au niveau ville (13) les rues et lieux publics (écoles,
+    // marchés...) déjà cartographiés dans OpenStreetMap ne sont pas visibles, ce qui rend le
+    // pointage imprécis.
+    this.carte = L.map(this.carteConteneur.nativeElement).setView(VUE_CARTE_PAR_DEFAUT, 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -74,7 +77,7 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     // Recentre sur la position actuelle du client si disponible, pour faciliter le pointage.
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => this.carte?.setView([pos.coords.latitude, pos.coords.longitude], 15),
+        (pos) => this.carte?.setView([pos.coords.latitude, pos.coords.longitude], 17),
         () => {} // silencieux : la carte reste centrée sur la valeur par défaut
       );
     }
