@@ -80,13 +80,26 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     }
 
     this.carte.on('click', (evenement: L.LeafletMouseEvent) => this.placerPointArrivee(evenement.latlng));
+
+    // Le conteneur peut ne pas avoir sa taille finale au moment de l'initialisation (mise en page
+    // encore en cours) : Leaflet resterait alors mal dimensionné tant qu'aucun redimensionnement
+    // de fenêtre ne le corrige. On force une vérification une fois le rendu stabilisé.
+    setTimeout(() => this.carte?.invalidateSize(), 200);
   }
 
   private placerPointArrivee(latlng: L.LatLng): void {
     if (!this.carte) return;
 
     if (!this.marqueurArrivee) {
-      this.marqueurArrivee = L.marker(latlng, { draggable: true }).addTo(this.carte);
+      // Icône dessinée en CSS plutôt que l'icône Leaflet par défaut, dont les images ne se
+      // chargent pas correctement dans ce build Angular (même piège déjà contourné ailleurs).
+      const icone = L.divIcon({
+        className: 'marqueur-destination',
+        html: '<span class="marqueur-destination-point"></span>',
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+      });
+      this.marqueurArrivee = L.marker(latlng, { icon: icone, draggable: true }).addTo(this.carte);
       this.marqueurArrivee.on('dragend', () => {
         const position = this.marqueurArrivee!.getLatLng();
         this.enregistrerPosition(position);

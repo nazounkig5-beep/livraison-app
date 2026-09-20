@@ -24,16 +24,14 @@
       <input type="text" formControlName="adresse_arrivee" />
     </label>
 
-    <label>
-      Position exacte de livraison
-      <span class="info-discrete">
-        Cliquez sur la carte à l'endroit précis où le livreur doit vous retrouver (déplaçable ensuite par
-        glisser-déposer).
-      </span>
-    </label>
-    <div #carteConteneur class="carte-suivi"></div>
-    <p class="succes" *ngIf="positionArriveeChoisie">Position de livraison enregistrée.</p>
-    <p class="info-discrete" *ngIf="!positionArriveeChoisie">Aucune position placée pour le moment.</p>
+    <p><strong>Position exacte de livraison</strong></p>
+    <p class="info-discrete">
+      Cliquez sur la carte à l'endroit précis où le livreur doit vous retrouver (le point rouge peut ensuite
+      être déplacé par glisser-déposer).
+    </p>
+    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
+    <p class="succes" *ngIf="positionArriveeChoisie">✓ Position de livraison enregistrée.</p>
+    <p class="erreur" *ngIf="!positionArriveeChoisie">Aucune position placée pour le moment — cliquez sur la carte ci-dessus.</p>
 
     <label>
       Distance estimée (km)

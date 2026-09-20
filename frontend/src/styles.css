@@ -917,6 +917,10 @@ ul.erreurs {
   display: none;
 }
 
+.carte-cliquable {
+  cursor: crosshair;
+}
+
 /* Marqueur "point bleu" façon Google Maps, sans dépendre des images d'icône par défaut de Leaflet. */
 .marqueur-livreur-point {
   display: block;
