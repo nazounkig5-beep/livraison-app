@@ -32,6 +32,8 @@ export interface DemandeLivraison {
   id_type_service: number;
   adresse_depart: string;
   adresse_arrivee: string;
+  latitude_arrivee: number | null;
+  longitude_arrivee: number | null;
   distance: number | null;
   tarif_estime: number | null;
   code_livraison: string | null;

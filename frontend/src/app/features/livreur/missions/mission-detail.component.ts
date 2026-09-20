@@ -41,10 +41,12 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
   suiviActif = false;
   erreurGps: string | null = null;
   dernierePosition: PositionConnue | null = null;
+  distanceRestanteKm: number | null = null;
 
   private watchId: number | null = null;
   private carte: L.Map | null = null;
   private marqueur: L.Marker | null = null;
+  private marqueurDestination: L.Marker | null = null;
 
   constructor(private route: ActivatedRoute, private missionService: MissionService) {}
 
@@ -110,6 +112,7 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
           horodatage: new Date(),
         };
         this.missionService.mettreAJourPosition(this.id, pos.coords.latitude, pos.coords.longitude).subscribe();
+        this.calculerDistanceRestante();
         setTimeout(() => this.mettreAJourCarte(), 0);
       },
       (err) => {
@@ -149,10 +152,49 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
         iconAnchor: [9, 9],
       });
       this.marqueur = L.marker([latitude, longitude], { icon: icone }).addTo(this.carte);
+
+      // Position exacte du client (destination), placée une fois pour toutes lors de la création de la demande.
+      const destination = this.mission?.demande;
+      if (destination?.latitude_arrivee && destination?.longitude_arrivee) {
+        const iconeDestination = L.divIcon({
+          className: 'marqueur-destination',
+          html: '<span class="marqueur-destination-point"></span>',
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+        this.marqueurDestination = L.marker([destination.latitude_arrivee, destination.longitude_arrivee], {
+          icon: iconeDestination,
+        }).addTo(this.carte);
+        this.carte.fitBounds(
+          L.latLngBounds([latitude, longitude], [destination.latitude_arrivee, destination.longitude_arrivee]),
+          { padding: [40, 40] }
+        );
+      }
     } else {
       this.marqueur!.setLatLng([latitude, longitude]);
       this.carte.panTo([latitude, longitude]);
     }
+  }
+
+  /** Distance à vol d'oiseau (formule de Haversine) entre la position du livreur et celle du client. */
+  private calculerDistanceRestante(): void {
+    const destination = this.mission?.demande;
+    if (!this.dernierePosition || !destination?.latitude_arrivee || !destination?.longitude_arrivee) return;
+
+    const rayonTerreKm = 6371;
+    const dLat = this.enRadians(destination.latitude_arrivee - this.dernierePosition.latitude);
+    const dLon = this.enRadians(destination.longitude_arrivee - this.dernierePosition.longitude);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(this.enRadians(this.dernierePosition.latitude)) *
+        Math.cos(this.enRadians(destination.latitude_arrivee)) *
+        Math.sin(dLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    this.distanceRestanteKm = rayonTerreKm * c;
+  }
+
+  private enRadians(degres: number): number {
+    return (degres * Math.PI) / 180;
   }
 
   /** Affiche au client (via l'écran du livreur) le QR code de paiement mobile money de l'entreprise. */

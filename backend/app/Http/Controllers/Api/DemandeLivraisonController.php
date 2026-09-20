@@ -26,6 +26,8 @@ class DemandeLivraisonController extends Controller
             'id_type_service' => 'required|exists:type_services,id',
             'adresse_depart' => 'required|string',
             'adresse_arrivee' => 'required|string',
+            'latitude_arrivee' => 'required|numeric|between:-90,90',
+            'longitude_arrivee' => 'required|numeric|between:-180,180',
             'distance' => 'nullable|numeric',
             'date_programmee' => 'nullable|date',
         ]);
@@ -38,6 +40,8 @@ class DemandeLivraisonController extends Controller
             'id_type_service' => $data['id_type_service'],
             'adresse_depart' => $data['adresse_depart'],
             'adresse_arrivee' => $data['adresse_arrivee'],
+            'latitude_arrivee' => $data['latitude_arrivee'],
+            'longitude_arrivee' => $data['longitude_arrivee'],
             'distance' => $data['distance'] ?? null,
             'tarif_estime' => $tarif,
             'code_livraison' => (string) random_int(100000, 999999),

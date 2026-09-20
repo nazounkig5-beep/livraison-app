@@ -21,9 +21,18 @@
     <p *ngIf="!dernierePosition && !erreurGps">Recherche de votre position GPS…</p>
     <ul *ngIf="dernierePosition">
       <li>Dernière position envoyée au client : {{ dernierePosition.horodatage | date: 'HH:mm:ss' }}</li>
+      <li *ngIf="distanceRestanteKm !== null">
+        Distance jusqu'à la position du client :
+        {{ distanceRestanteKm < 1 ? (distanceRestanteKm * 1000 | number: '1.0-0') + ' m' : (distanceRestanteKm | number: '1.1-1') + ' km' }}
+      </li>
+      <li *ngIf="distanceRestanteKm === null" class="info-discrete">
+        Le client n'a pas placé de position exacte pour cette demande ; seule l'adresse texte est disponible.
+      </li>
     </ul>
     <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!dernierePosition"></div>
-    <p class="suivi-info" *ngIf="dernierePosition">Votre position est transmise en direct au client pendant la livraison.</p>
+    <p class="suivi-info" *ngIf="dernierePosition">
+      Votre position (point bleu) est transmise en direct au client ; le point rouge est la position exacte de livraison.
+    </p>
   </section>
 
   <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'">

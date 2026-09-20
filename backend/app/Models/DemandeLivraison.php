@@ -9,6 +9,7 @@ class DemandeLivraison extends Model
     protected $table = 'demande_livraisons';
     protected $fillable = [
         'id_client', 'id_entreprise', 'id_type_service', 'adresse_depart', 'adresse_arrivee',
+        'latitude_arrivee', 'longitude_arrivee',
         'distance', 'tarif_estime', 'code_livraison', 'statut', 'date_creation', 'date_programmee',
     ];
     protected $casts = ['date_creation' => 'datetime', 'date_programmee' => 'datetime'];
