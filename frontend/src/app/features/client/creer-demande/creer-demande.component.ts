@@ -35,8 +35,8 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   private marqueurArrivee: L.Marker | null = null;
 
   form = this.fb.group({
-    id_entreprise: [null, Validators.required],
-    id_type_service: [null, Validators.required],
+    id_entreprise: [null as number | null, Validators.required],
+    id_type_service: [null as number | null, Validators.required],
     adresse_depart: ['', Validators.required],
     adresse_arrivee: ['', Validators.required],
     latitude_arrivee: [null as number | null, Validators.required],
@@ -55,6 +55,29 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.parametreService.typesService().subscribe((data) => (this.typesService = data));
     this.parametreService.entreprisesActives().subscribe((data) => (this.entreprises = data));
+
+    this.form.get('id_type_service')!.valueChanges.subscribe(() => this.ajusterAdresseDepart());
+  }
+
+  /**
+   * Pour une simple "livraison", le point de départ est l'entreprise elle-même : le champ est
+   * masqué et non requis. Pour déménagement/transport de matériel, le client doit préciser où
+   * récupérer les biens, puisque l'entreprise n'en est pas le point de départ.
+   */
+  get typeServiceEstLivraison(): boolean {
+    const id = this.form.value.id_type_service;
+    return this.typesService.find((t) => t.id === id)?.nom === 'livraison';
+  }
+
+  private ajusterAdresseDepart(): void {
+    const champ = this.form.get('adresse_depart')!;
+    if (this.typeServiceEstLivraison) {
+      champ.clearValidators();
+      champ.setValue('');
+    } else {
+      champ.setValidators(Validators.required);
+    }
+    champ.updateValueAndValidity();
   }
 
   ngAfterViewInit(): void {

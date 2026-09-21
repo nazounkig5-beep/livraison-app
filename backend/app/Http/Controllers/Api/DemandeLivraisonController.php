@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DemandeLivraison;
+use App\Models\Entreprise;
 use App\Models\Incident;
 use App\Models\Paiement;
 use App\Models\Notation;
 use App\Models\SuiviLivraison;
+use App\Models\TypeService;
 use App\Services\CinetPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,7 +26,7 @@ class DemandeLivraisonController extends Controller
         $data = $request->validate([
             'id_entreprise' => ['required', Rule::exists('entreprises', 'id')->where('statut_validation', 'ACTIVE')],
             'id_type_service' => 'required|exists:type_services,id',
-            'adresse_depart' => 'required|string',
+            'adresse_depart' => 'nullable|string',
             'adresse_arrivee' => 'required|string',
             'latitude_arrivee' => 'required|numeric|between:-90,90',
             'longitude_arrivee' => 'required|numeric|between:-180,180',
@@ -32,13 +34,32 @@ class DemandeLivraisonController extends Controller
             'date_programmee' => 'nullable|date',
         ]);
 
+        $typeService = TypeService::find($data['id_type_service']);
+
+        // Pour une simple "livraison", le point de départ est l'entreprise elle-même : pas besoin
+        // que le client le précise. Pour déménagement/transport de matériel, le client doit
+        // indiquer où récupérer les biens, puisque l'entreprise n'en est pas le point de départ.
+        if ($typeService->nom === 'livraison') {
+            $entreprise = Entreprise::with('utilisateur')->find($data['id_entreprise']);
+            $adresseDepart = $entreprise->utilisateur?->adresse;
+
+            abort_unless(
+                $adresseDepart,
+                422,
+                "Cette entreprise n'a pas encore renseigné son adresse de retrait (dans son profil « Mon compte »). Contactez-la ou choisissez une autre entreprise."
+            );
+        } else {
+            $adresseDepart = $data['adresse_depart'] ?? null;
+            abort_unless($adresseDepart, 422, "L'adresse de départ est obligatoire pour ce type de service.");
+        }
+
         $tarif = $this->calculerTarif($data['distance'] ?? null);
 
         $demande = DemandeLivraison::create([
             'id_client' => $request->user()->id,
             'id_entreprise' => $data['id_entreprise'] ?? null,
             'id_type_service' => $data['id_type_service'],
-            'adresse_depart' => $data['adresse_depart'],
+            'adresse_depart' => $adresseDepart,
             'adresse_arrivee' => $data['adresse_arrivee'],
             'latitude_arrivee' => $data['latitude_arrivee'],
             'longitude_arrivee' => $data['longitude_arrivee'],

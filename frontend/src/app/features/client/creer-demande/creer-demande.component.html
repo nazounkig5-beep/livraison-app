@@ -15,10 +15,13 @@
         <option *ngFor="let type of typesService" [ngValue]="type.id">{{ type.nom }}</option>
       </select>
     </label>
-    <label>
+    <label *ngIf="!typeServiceEstLivraison">
       Adresse de départ
       <input type="text" formControlName="adresse_depart" />
     </label>
+    <p class="info-discrete" *ngIf="typeServiceEstLivraison">
+      Point de départ : adresse de l'entreprise sélectionnée (pas besoin de la préciser pour une simple livraison).
+    </p>
     <label>
       Adresse d'arrivée
       <input type="text" formControlName="adresse_arrivee" />
