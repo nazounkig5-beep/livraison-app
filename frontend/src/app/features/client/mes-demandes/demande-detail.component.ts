@@ -113,7 +113,9 @@ export class DemandeDetailComponent implements OnInit, AfterViewInit, OnDestroy 
     const { latitude, longitude } = this.suivi.position;
 
     if (!this.carte) {
-      this.carte = L.map(this.carteConteneur.nativeElement).setView([latitude, longitude], 15);
+      // Zoom rapproché (niveau rue) plutôt que le niveau ville par défaut de Leaflet, pour que
+      // les rues et bâtiments réels apparaissent, pas juste une vue d'ensemble abstraite.
+      this.carte = L.map(this.carteConteneur.nativeElement).setView([latitude, longitude], 17);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -128,6 +130,7 @@ export class DemandeDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       });
       this.marqueurLivreur = L.marker([latitude, longitude], { icon: iconeLivreur }).addTo(this.carte);
       this.traceParcours = L.polyline([], { color: '#2563eb', weight: 4, opacity: 0.7 }).addTo(this.carte);
+      setTimeout(() => this.carte?.invalidateSize(), 200);
     } else {
       this.marqueurLivreur!.setLatLng([latitude, longitude]);
       this.carte.panTo([latitude, longitude]);
