@@ -33,6 +33,8 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   positionArriveeChoisie = false;
   positionDepartChoisie = false;
   pointActif: 'depart' | 'arrivee' = 'arrivee';
+  recentrageEnCours = false;
+  erreurRecentrage = '';
 
   private carte: L.Map | null = null;
   private marqueurArrivee: L.Marker | null = null;
@@ -105,6 +107,28 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     this.pointActif = point;
   }
 
+  /** @param silencieux ne pas afficher d'erreur si le client n'a pas encore réagi au clic (chargement initial). */
+  recentrerSurMaPosition(silencieux = false): void {
+    this.erreurRecentrage = '';
+    if (!navigator.geolocation) {
+      if (!silencieux) this.erreurRecentrage = 'La géolocalisation n\'est pas disponible sur cet appareil.';
+      return;
+    }
+
+    this.recentrageEnCours = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.recentrageEnCours = false;
+        this.carte?.setView([pos.coords.latitude, pos.coords.longitude], 17);
+      },
+      () => {
+        this.recentrageEnCours = false;
+        if (!silencieux) this.erreurRecentrage = 'Impossible d\'obtenir votre position. Autorisez la géolocalisation puis réessayez.';
+      },
+      { timeout: 8000 }
+    );
+  }
+
   ngAfterViewInit(): void {
     setTimeout(() => this.initialiserCarte(), 0);
   }
@@ -123,12 +147,7 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     }).addTo(this.carte);
 
     // Recentre sur la position actuelle du client si disponible, pour faciliter le pointage.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => this.carte?.setView([pos.coords.latitude, pos.coords.longitude], 17),
-        () => {} // silencieux : la carte reste centrée sur la valeur par défaut
-      );
-    }
+    this.recentrerSurMaPosition(true);
 
     this.carte.on('click', (evenement: L.LeafletMouseEvent) => {
       if (this.pointActif === 'depart' && !this.typeServiceEstLivraison) {

@@ -16,7 +16,12 @@
       Cliquez sur la carte à l'emplacement précis de votre entreprise. Ce point sert de départ
       automatique pour le calcul de la distance sur les demandes de type « livraison ».
     </p>
-    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
+    <button type="button" class="bouton-recentrer" (click)="recentrerSurMaPosition()" [disabled]="recentrageEnCours">
+      {{ recentrageEnCours ? 'Localisation…' : '📍 Recentrer sur ma position' }}
+    </button>
+    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage }}</p>
+
+    <div #carteConteneur class="carte-suivi carte-pointage carte-cliquable"></div>
     <p class="succes" *ngIf="positionChoisie">✓ Position enregistrée.</p>
     <p class="erreur" *ngIf="!positionChoisie">Aucune position placée — cliquez sur la carte ci-dessus.</p>
 

@@ -46,7 +46,12 @@
       La distance et le tarif sont calculés automatiquement.
     </p>
 
-    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
+    <button type="button" class="bouton-recentrer" (click)="recentrerSurMaPosition()" [disabled]="recentrageEnCours">
+      {{ recentrageEnCours ? 'Localisation…' : '📍 Recentrer sur ma position' }}
+    </button>
+    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage }}</p>
+
+    <div #carteConteneur class="carte-suivi carte-pointage carte-cliquable"></div>
 
     <p class="succes" *ngIf="!typeServiceEstLivraison && positionDepartChoisie">✓ Position de départ enregistrée.</p>
     <p class="erreur" *ngIf="!typeServiceEstLivraison && !positionDepartChoisie">Aucune position de départ placée.</p>

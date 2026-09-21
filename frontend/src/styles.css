@@ -921,6 +921,23 @@ ul.erreurs {
   cursor: crosshair;
 }
 
+/* Cartes de pointage précis (création de demande, tarifs entreprise) : plus grandes que les
+   cartes de suivi en direct, pour limiter le besoin de faire défiler la carte manuellement. */
+.carte-pointage {
+  height: 480px;
+}
+
+.bouton-recentrer {
+  background: var(--couleur-surface);
+  color: var(--couleur-texte);
+  border: 1px solid var(--couleur-bordure);
+  margin: 0.5rem 0;
+}
+
+.bouton-recentrer:hover:not(:disabled) {
+  background: var(--couleur-fond);
+}
+
 /* Marqueur "point bleu" façon Google Maps, sans dépendre des images d'icône par défaut de Leaflet. */
 .marqueur-livreur-point {
   display: block;

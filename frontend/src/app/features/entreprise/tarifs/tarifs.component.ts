@@ -27,6 +27,8 @@ export class TarifsComponent implements OnInit, AfterViewInit {
   chargement = true;
   enregistrementReussi = false;
   positionChoisie = false;
+  recentrageEnCours = false;
+  erreurRecentrage = '';
 
   private carte: L.Map | null = null;
   private marqueur: L.Marker | null = null;
@@ -84,6 +86,27 @@ export class TarifsComponent implements OnInit, AfterViewInit {
     this.carte.on('click', (evenement: L.LeafletMouseEvent) => this.placerMarqueur(evenement.latlng));
 
     setTimeout(() => this.carte?.invalidateSize(), 200);
+  }
+
+  recentrerSurMaPosition(): void {
+    this.erreurRecentrage = '';
+    if (!navigator.geolocation) {
+      this.erreurRecentrage = "La géolocalisation n'est pas disponible sur cet appareil.";
+      return;
+    }
+
+    this.recentrageEnCours = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.recentrageEnCours = false;
+        this.carte?.setView([pos.coords.latitude, pos.coords.longitude], 17);
+      },
+      () => {
+        this.recentrageEnCours = false;
+        this.erreurRecentrage = "Impossible d'obtenir votre position. Autorisez la géolocalisation puis réessayez.";
+      },
+      { timeout: 8000 }
+    );
   }
 
   private placerMarqueur(latlng: L.LatLng): void {
