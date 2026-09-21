@@ -1,24 +1,24 @@
 <div class="mes-demandes">
 
-  <p><a routerLink="/client/creer-demande">Nouvelle demande</a></p>
+  <p><a routerLink="/client/creer-demande">{{ 'client.mesDemandes.nouvelleDemande' | translate }}</a></p>
   <table>
     <thead>
       <tr>
-        <th>N°</th>
-        <th>Trajet</th>
-        <th>Statut</th>
-        <th>Actions</th>
+        <th>{{ 'client.mesDemandes.colonneNumero' | translate }}</th>
+        <th>{{ 'client.mesDemandes.colonneTrajet' | translate }}</th>
+        <th>{{ 'client.mesDemandes.colonneStatut' | translate }}</th>
+        <th>{{ 'client.mesDemandes.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let demande of demandes">
       <td>#{{ demande.id }}</td>
       <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
-      <td>{{ demande.statut }}</td>
+      <td>{{ ('commun.statutDemande.' + demande.statut) | translate }}</td>
       <td>
-        <a [routerLink]="['/client/mes-demandes', demande.id]">Détail</a>
-        <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="annuler(demande)">Annuler</button>
+        <a [routerLink]="['/client/mes-demandes', demande.id]">{{ 'client.mesDemandes.lienDetail' | translate }}</a>
+        <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="annuler(demande)">{{ 'commun.action.annuler' | translate }}</button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!demandes.length">Aucune demande pour le moment.</p>
+  <p *ngIf="!demandes.length">{{ 'client.mesDemandes.aucuneDemande' | translate }}</p>
 </div>

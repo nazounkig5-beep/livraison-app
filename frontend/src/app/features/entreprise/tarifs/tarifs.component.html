@@ -1,30 +1,29 @@
 <div class="entreprise-tarifs" *ngIf="!chargement">
-  <p class="succes" *ngIf="enregistrementReussi">Tarifs mis à jour avec succès !</p>
+  <p class="succes" *ngIf="enregistrementReussi">{{ 'entreprise.tarifs.enregistrementReussi' | translate }}</p>
 
   <form [formGroup]="form" (ngSubmit)="enregistrer()">
     <label>
-      Frais de base (FCFA)
+      {{ 'entreprise.tarifs.fraisDeBase' | translate }}
       <input type="number" formControlName="frais_base" min="0" />
     </label>
     <label>
-      Prix par kilomètre (FCFA/km)
+      {{ 'entreprise.tarifs.prixParKilometre' | translate }}
       <input type="number" formControlName="prix_par_km" min="0" />
     </label>
 
-    <p><strong>Position exacte de l'entreprise</strong></p>
+    <p><strong>{{ 'entreprise.tarifs.positionExacte' | translate }}</strong></p>
     <p class="info-discrete">
-      Cliquez sur la carte à l'emplacement précis de votre entreprise. Ce point sert de départ
-      automatique pour le calcul de la distance sur les demandes de type « livraison ».
+      {{ 'entreprise.tarifs.infoPosition' | translate }}
     </p>
     <button type="button" class="bouton-recentrer" (click)="recentrerSurMaPosition()" [disabled]="recentrageEnCours">
-      {{ recentrageEnCours ? 'Localisation…' : '📍 Recentrer sur ma position' }}
+      {{ (recentrageEnCours ? 'entreprise.tarifs.localisationEnCours' : 'entreprise.tarifs.recentrerBouton') | translate }}
     </button>
-    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage }}</p>
+    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage | translate }}</p>
 
     <div #carteConteneur class="carte-suivi carte-pointage carte-cliquable"></div>
-    <p class="succes" *ngIf="positionChoisie">✓ Position enregistrée.</p>
-    <p class="erreur" *ngIf="!positionChoisie">Aucune position placée — cliquez sur la carte ci-dessus.</p>
+    <p class="succes" *ngIf="positionChoisie">{{ 'entreprise.tarifs.positionEnregistree' | translate }}</p>
+    <p class="erreur" *ngIf="!positionChoisie">{{ 'entreprise.tarifs.aucunePositionPlacee' | translate }}</p>
 
-    <button type="submit" [disabled]="form.invalid">Enregistrer</button>
+    <button type="submit" [disabled]="form.invalid">{{ 'commun.action.enregistrer' | translate }}</button>
   </form>
 </div>

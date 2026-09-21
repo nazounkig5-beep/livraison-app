@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { DemandeService } from '../../../core/services/demande.service';
 import { ParametreService } from '../../../core/services/parametre.service';
@@ -20,7 +21,7 @@ const VUE_CARTE_PAR_DEFAUT: L.LatLngExpression = [5.3599, -4.0083]; // Abidjan, 
 @Component({
   selector: 'app-creer-demande',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './creer-demande.component.html',
 })
 export class CreerDemandeComponent implements OnInit, AfterViewInit {
@@ -56,7 +57,8 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private demandeService: DemandeService,
     private parametreService: ParametreService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -111,7 +113,7 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   recentrerSurMaPosition(silencieux = false): void {
     this.erreurRecentrage = '';
     if (!navigator.geolocation) {
-      if (!silencieux) this.erreurRecentrage = 'La géolocalisation n\'est pas disponible sur cet appareil.';
+      if (!silencieux) this.erreurRecentrage = 'client.creerDemande.erreurGeolocalisationIndisponible';
       return;
     }
 
@@ -123,7 +125,7 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
       },
       () => {
         this.recentrageEnCours = false;
-        if (!silencieux) this.erreurRecentrage = 'Impossible d\'obtenir votre position. Autorisez la géolocalisation puis réessayez.';
+        if (!silencieux) this.erreurRecentrage = 'client.creerDemande.erreurGeolocalisationEchec';
       },
       { timeout: 8000 }
     );
@@ -210,7 +212,7 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
       next: (demande) => this.router.navigate(['/client/mes-demandes', demande.id]),
       error: (err) => {
         this.envoiEnCours = false;
-        this.erreur = err?.error?.message ?? "Impossible de créer la demande. Vérifiez les informations saisies.";
+        this.erreur = err?.error?.message ?? this.translate.instant('client.creerDemande.erreurCreationDefaut');
       },
     });
   }

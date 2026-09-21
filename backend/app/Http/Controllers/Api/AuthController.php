@@ -160,7 +160,7 @@ class AuthController extends Controller
         return response()->json($user);
     }
 
-    /** Cas d'utilisation : "Gérer mon compte" (nom / email / téléphone / ville / adresse) */
+    /** Cas d'utilisation : "Gérer mon compte" (nom / email / téléphone / ville / adresse / langue) */
     public function mettreAJourProfil(Request $request)
     {
         $utilisateur = $request->user();
@@ -171,8 +171,20 @@ class AuthController extends Controller
             'telephone' => 'nullable|string|max:30',
             'ville' => 'nullable|string|max:255',
             'adresse' => 'nullable|string|max:1000',
+            'langue' => 'nullable|in:fr,en',
         ]);
 
+        $utilisateur->update($data);
+
+        return response()->json($utilisateur);
+    }
+
+    /** Cas d'utilisation : "Changer ma langue préférée" (bascule rapide, sans repasser par tout le profil) */
+    public function changerLangue(Request $request)
+    {
+        $data = $request->validate(['langue' => 'required|in:fr,en']);
+
+        $utilisateur = $request->user();
         $utilisateur->update($data);
 
         return response()->json($utilisateur);

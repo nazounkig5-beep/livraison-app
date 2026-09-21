@@ -243,6 +243,50 @@ router-outlet ~ div {
   margin-left: auto;
 }
 
+.sidebar-langue {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.5rem 1rem;
+}
+
+.sidebar-langue button {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.sidebar-langue button.actif {
+  background: #fff;
+  color: var(--couleur-marque-fonce);
+  border-color: #fff;
+}
+
+.auth-langue {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 1;
+}
+
+.auth-langue button {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--couleur-texte);
+  border: 1px solid var(--couleur-bordure);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.auth-langue button.actif {
+  background: var(--couleur-marque-fonce);
+  color: #fff;
+  border-color: var(--couleur-marque-fonce);
+}
+
 .sidebar-deconnexion {
   display: flex;
   align-items: center;
@@ -1163,6 +1207,7 @@ router-outlet ~ div.auth-page {
 .auth-page {
   display: flex;
   min-height: 100vh;
+  position: relative;
 }
 
 .auth-marque {

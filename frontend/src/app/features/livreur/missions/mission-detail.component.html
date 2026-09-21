@@ -1,73 +1,73 @@
 <div class="mission-detail" *ngIf="mission">
-  <p><a routerLink="/livreur/missions">← Mes missions</a></p>
-  <h1>Mission #{{ mission.id }} — Demande #{{ mission.id_demande }}</h1>
+  <p><a routerLink="/livreur/missions">{{ 'livreur.missionDetail.retourMissions' | translate }}</a></p>
+  <h1>{{ 'livreur.missionDetail.titreMission' | translate:{ id: mission.id, idDemande: mission.id_demande } }}</h1>
 
   <ul>
-    <li *ngIf="mission.demande as demande">Trajet : {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</li>
-    <li *ngIf="mission.demande?.client?.utilisateur as client">Client : {{ client.nom }}</li>
-    <li *ngIf="mission.demande?.entreprise as entreprise">Entreprise : {{ entreprise.nom }}</li>
-    <li *ngIf="mission.vehicule as vehicule">Véhicule : {{ vehicule.immatriculation }}</li>
-    <li *ngIf="mission.demande?.tarif_estime">Tarif : {{ mission.demande?.tarif_estime }} FCFA</li>
-    <li>Statut : {{ mission.statut_prise_en_charge }}</li>
+    <li *ngIf="mission.demande as demande">{{ 'livreur.missionDetail.trajet' | translate:{ depart: demande.adresse_depart, arrivee: demande.adresse_arrivee } }}</li>
+    <li *ngIf="mission.demande?.client?.utilisateur as client">{{ 'livreur.missionDetail.client' | translate:{ nom: client.nom } }}</li>
+    <li *ngIf="mission.demande?.entreprise as entreprise">{{ 'livreur.missionDetail.entreprise' | translate:{ nom: entreprise.nom } }}</li>
+    <li *ngIf="mission.vehicule as vehicule">{{ 'livreur.missionDetail.vehicule' | translate:{ immatriculation: vehicule.immatriculation } }}</li>
+    <li *ngIf="mission.demande?.tarif_estime">{{ 'livreur.missionDetail.tarif' | translate:{ montant: mission.demande?.tarif_estime } }}</li>
+    <li>{{ 'livreur.missionDetail.statutLabel' | translate }} {{ ('livreur.missions.statutMission.' + mission.statut_prise_en_charge) | translate }}</li>
   </ul>
 
   <section *ngIf="mission.statut_prise_en_charge === 'EN_ATTENTE'">
-    <button type="button" (click)="prendreEnCharge()">Prendre en charge</button>
+    <button type="button" (click)="prendreEnCharge()">{{ 'livreur.missionDetail.boutonPrendreEnCharge' | translate }}</button>
   </section>
 
   <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'" class="suivi-temps-reel">
-    <h2><span class="point-live" *ngIf="suiviActif && !erreurGps"></span> Ma position</h2>
-    <p class="erreur" *ngIf="erreurGps">{{ erreurGps }}</p>
-    <p *ngIf="!dernierePosition && !erreurGps">Recherche de votre position GPS…</p>
+    <h2><span class="point-live" *ngIf="suiviActif && !erreurGps"></span> {{ 'livreur.missionDetail.maPosition' | translate }}</h2>
+    <p class="erreur" *ngIf="erreurGps">{{ erreurGps | translate }}</p>
+    <p *ngIf="!dernierePosition && !erreurGps">{{ 'livreur.missionDetail.rechercheGps' | translate }}</p>
     <ul *ngIf="dernierePosition">
-      <li>Dernière position envoyée au client : {{ dernierePosition.horodatage | date: 'HH:mm:ss' }}</li>
+      <li>{{ 'livreur.missionDetail.dernierePositionLabel' | translate }} {{ dernierePosition.horodatage | date: 'HH:mm:ss' }}</li>
       <li *ngIf="distanceRestanteKm !== null">
-        Distance jusqu'à la position du client :
+        {{ 'livreur.missionDetail.distanceLabel' | translate }}
         {{ distanceRestanteKm < 1 ? (distanceRestanteKm * 1000 | number: '1.0-0') + ' m' : (distanceRestanteKm | number: '1.1-1') + ' km' }}
       </li>
       <li *ngIf="distanceRestanteKm === null" class="info-discrete">
-        Le client n'a pas placé de position exacte pour cette demande ; seule l'adresse texte est disponible.
+        {{ 'livreur.missionDetail.positionExacteIndisponible' | translate }}
       </li>
     </ul>
     <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!dernierePosition"></div>
     <p class="suivi-info" *ngIf="dernierePosition">
-      Votre position (point bleu) est transmise en direct au client ; le point rouge est la position exacte de livraison.
+      {{ 'livreur.missionDetail.suiviInfo' | translate }}
     </p>
   </section>
 
   <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'">
-    <h2>Paiement</h2>
+    <h2>{{ 'livreur.missionDetail.paiement' | translate }}</h2>
     <button type="button" *ngIf="mission.demande?.entreprise?.numero_orange" (click)="afficherQrPaiement('ORANGE')">
-      QR Orange Money
+      {{ 'livreur.missionDetail.boutonQrOrange' | translate }}
     </button>
     <button type="button" *ngIf="mission.demande?.entreprise?.numero_moov" (click)="afficherQrPaiement('MOOV')">
-      QR Moov Money
+      {{ 'livreur.missionDetail.boutonQrMoov' | translate }}
     </button>
 
     <div *ngIf="operateurChoisi" class="paiement-mobile-money">
-      <p>Faites scanner ce QR code au client pour le paiement mobile money :</p>
+      <p>{{ 'livreur.missionDetail.consigneQr' | translate }}</p>
       <p class="code-ussd">{{ codeUssd }}</p>
       <canvas #qrCanvas></canvas>
       <br />
-      <button type="button" (click)="fermerQrPaiement()">Fermer</button>
+      <button type="button" (click)="fermerQrPaiement()">{{ 'commun.action.fermer' | translate }}</button>
     </div>
   </section>
 
   <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'" class="confirmation-livraison">
-    <h2>Marquer livrée</h2>
+    <h2>{{ 'livreur.missionDetail.marquerLivree' | translate }}</h2>
     <label>
-      Code de livraison communiqué par le client
-      <input type="text" [(ngModel)]="codeSaisi" name="codeSaisi" placeholder="Ex : 123456" />
+      {{ 'livreur.missionDetail.codeLivraisonLabel' | translate }}
+      <input type="text" [(ngModel)]="codeSaisi" name="codeSaisi" [attr.placeholder]="'livreur.missionDetail.codeLivraisonPlaceholder' | translate" />
     </label>
     <div class="confirmation-livraison-actions">
-      <button type="button" (click)="confirmerLivraison()" [disabled]="!codeSaisi">Confirmer la livraison</button>
+      <button type="button" (click)="confirmerLivraison()" [disabled]="!codeSaisi">{{ 'livreur.missionDetail.boutonConfirmerLivraison' | translate }}</button>
     </div>
-    <p class="erreur" *ngIf="erreurCode">{{ erreurCode }}</p>
+    <p class="erreur" *ngIf="erreurCode">{{ erreurCode | translate }}</p>
   </section>
 
   <section *ngIf="mission.statut_prise_en_charge === 'TERMINEE'">
-    <p class="succes">Cette mission a été livrée.</p>
+    <p class="succes">{{ 'livreur.missionDetail.livraisonReussie' | translate }}</p>
   </section>
 </div>
 
-<p *ngIf="!mission && !chargement">Mission introuvable.</p>
+<p *ngIf="!mission && !chargement">{{ 'livreur.missionDetail.missionIntrouvable' | translate }}</p>

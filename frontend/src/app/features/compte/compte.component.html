@@ -8,14 +8,16 @@
       </span>
       <strong>{{ utilisateur.nom }}</strong>
       <small>{{ utilisateur.email }}</small>
-      <span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">{{ libelleRole }}</span>
+      <span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">
+        {{ ('commun.role.' + utilisateur.role) | translate }}
+      </span>
     </section>
 
     <section class="zone-dangereuse">
-      <h2>Zone dangereuse</h2>
-      <p>La suppression de votre compte est irréversible.</p>
+      <h2>{{ 'partage.compte.zoneDangereuse' | translate }}</h2>
+      <p>{{ 'partage.compte.suppressionIrreversible' | translate }}</p>
       <button type="button" class="bouton-supprimer" (click)="supprimerMonCompte()" [disabled]="suppressionEnCours">
-        {{ suppressionEnCours ? 'Suppression…' : 'Supprimer mon compte' }}
+        {{ (suppressionEnCours ? 'partage.compte.suppressionEnCours' : 'partage.compte.supprimerMonCompte') | translate }}
       </button>
       <p class="erreur" *ngIf="erreurSuppression">{{ erreurSuppression }}</p>
     </section>
@@ -23,7 +25,7 @@
 
   <div class="colonne-compte-droite">
     <section>
-      <h2>Modifier mes informations</h2>
+      <h2>{{ 'partage.compte.modifierInfos' | translate }}</h2>
 
       <div class="champ-photo">
         <span class="avatar-rond avatar-rond-grand">
@@ -32,7 +34,7 @@
         </span>
         <div>
           <button type="button" (click)="declencherChoixPhoto()" [disabled]="photoEnCours">
-            {{ photoEnCours ? 'Envoi…' : 'Changer la photo' }}
+            {{ (photoEnCours ? 'partage.compte.envoiEnCours' : 'partage.compte.changerPhoto') | translate }}
           </button>
           <input #inputPhoto type="file" accept="image/*" hidden (change)="changerPhoto($event)" />
           <p class="info-discrete" *ngIf="messagePhoto">{{ messagePhoto }}</p>
@@ -41,41 +43,48 @@
 
       <form [formGroup]="formProfil" (ngSubmit)="enregistrerProfil()">
         <label>
-          Nom
+          {{ 'partage.compte.nom' | translate }}
           <input type="text" formControlName="nom" />
         </label>
         <label>
-          Email
+          {{ 'partage.compte.email' | translate }}
           <input type="email" formControlName="email" />
         </label>
         <label>
-          Téléphone
+          {{ 'partage.compte.telephone' | translate }}
           <input type="tel" formControlName="telephone" />
         </label>
         <label>
-          Ville
+          {{ 'partage.compte.ville' | translate }}
           <input type="text" formControlName="ville" />
         </label>
         <label>
-          Adresse
+          {{ 'partage.compte.adresse' | translate }}
           <textarea formControlName="adresse" rows="2"></textarea>
         </label>
+        <label>
+          {{ 'commun.langue.label' | translate }}
+          <select formControlName="langue">
+            <option value="fr">{{ 'commun.langue.fr' | translate }}</option>
+            <option value="en">{{ 'commun.langue.en' | translate }}</option>
+          </select>
+        </label>
         <p>{{ messageProfil }}</p>
-        <button type="submit" [disabled]="formProfil.invalid">Enregistrer les modifications</button>
+        <button type="submit" [disabled]="formProfil.invalid">{{ 'partage.compte.enregistrerModifications' | translate }}</button>
       </form>
 
-      <h2>Changer mon mot de passe</h2>
+      <h2>{{ 'partage.compte.changerMotDePasse' | translate }}</h2>
       <form [formGroup]="formMotDePasse" (ngSubmit)="changerMotDePasse()">
         <label>
-          Mot de passe actuel
+          {{ 'partage.compte.motDePasseActuel' | translate }}
           <input type="password" formControlName="ancien_mot_de_passe" />
         </label>
         <label>
-          Nouveau mot de passe
+          {{ 'partage.compte.nouveauMotDePasse' | translate }}
           <input type="password" formControlName="nouveau_mot_de_passe" />
         </label>
         <p>{{ messageMotDePasse }}</p>
-        <button type="submit" [disabled]="formMotDePasse.invalid">Changer le mot de passe</button>
+        <button type="submit" [disabled]="formMotDePasse.invalid">{{ 'partage.compte.changerMotDePasse' | translate }}</button>
       </form>
     </section>
   </div>

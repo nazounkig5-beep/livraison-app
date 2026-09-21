@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import * as QRCode from 'qrcode';
 import { AuthService } from '../../../core/services/auth.service';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
@@ -11,7 +12,7 @@ import { genererApercuUssd } from '../../../core/utils/paiement-mobile.util';
 @Component({
   selector: 'app-entreprise-paiement',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './paiement.component.html',
 })
 export class PaiementComponent implements OnInit {
@@ -34,7 +35,8 @@ export class PaiementComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private entrepriseService: EntrepriseService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -76,11 +78,11 @@ export class PaiementComponent implements OnInit {
     this.entrepriseService.envoyerQrLivreurs().subscribe({
       next: (res) => {
         this.envoiEnCours = false;
-        this.envoiMessage = `QR code envoyé à ${res.nombre_livreurs} livreur(s).`;
+        this.envoiMessage = this.translate.instant('entreprise.paiement.envoiSucces', { nombre: res.nombre_livreurs });
       },
       error: (err) => {
         this.envoiEnCours = false;
-        this.envoiErreur = err.error?.message ?? "Impossible d'envoyer le QR code pour le moment.";
+        this.envoiErreur = err.error?.message ?? this.translate.instant('entreprise.paiement.envoiErreurDefaut');
       },
     });
   }

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { DemandeService } from '../../../core/services/demande.service';
 import { DemandeLivraison, SuiviPosition } from '../../../core/models/demande.model';
@@ -13,7 +14,7 @@ const INTERVALLE_PAIEMENT_MS = 4000;
 @Component({
   selector: 'app-demande-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './demande-detail.component.html',
 })
 export class DemandeDetailComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -155,7 +156,7 @@ export class DemandeDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       next: ({ payment_url }) => (window.location.href = payment_url),
       error: () => {
         this.paiementEnLigneEnCours = false;
-        this.erreurPaiement = "Impossible d'initier le paiement en ligne. Réessayez ou payez à la livraison.";
+        this.erreurPaiement = 'client.demandeDetail.erreurPaiementEnLigne';
       },
     });
   }

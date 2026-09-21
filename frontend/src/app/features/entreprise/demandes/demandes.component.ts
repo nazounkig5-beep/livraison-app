@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { DemandeLivraison } from '../../../core/models/demande.model';
 import { Livreur } from '../../../core/models/livreur.model';
@@ -10,7 +11,7 @@ import { Vehicule } from '../../../core/models/vehicule.model';
 @Component({
   selector: 'app-entreprise-demandes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './demandes.component.html',
 })
 export class DemandesComponent implements OnInit {
@@ -30,7 +31,11 @@ export class DemandesComponent implements OnInit {
     date_programmee: ['', Validators.required],
   });
 
-  constructor(private entrepriseService: EntrepriseService, private fb: FormBuilder) {}
+  constructor(
+    private entrepriseService: EntrepriseService,
+    private fb: FormBuilder,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.charger();
@@ -70,7 +75,9 @@ export class DemandesComponent implements OnInit {
         this.demandeEnProgrammation = null;
         this.charger();
       },
-      error: (err) => (this.erreurProgrammation = err?.error?.message ?? 'Impossible de programmer cette date.'),
+      error: (err) =>
+        (this.erreurProgrammation =
+          err?.error?.message ?? this.translate.instant('entreprise.demandes.erreurProgrammationDefaut')),
     });
   }
 

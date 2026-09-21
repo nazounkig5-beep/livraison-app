@@ -2,6 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import * as QRCode from 'qrcode';
 import { MissionService } from '../../../core/services/mission.service';
@@ -22,7 +23,7 @@ interface PositionConnue {
 @Component({
   selector: 'app-mission-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
   templateUrl: './mission-detail.component.html',
 })
 export class MissionDetailComponent implements OnInit, OnDestroy {
@@ -98,7 +99,7 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
     if (this.watchId !== null) return;
 
     if (!navigator.geolocation) {
-      this.erreurGps = "La géolocalisation n'est pas disponible sur cet appareil.";
+      this.erreurGps = 'livreur.missionDetail.erreurGpsIndisponible';
       return;
     }
 
@@ -118,8 +119,8 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
       (err) => {
         this.erreurGps =
           err.code === err.PERMISSION_DENIED
-            ? 'Autorisez la géolocalisation dans les paramètres de votre navigateur/appareil pour partager votre position avec le client.'
-            : "Impossible d'obtenir votre position pour le moment. Nouvelle tentative automatique en cours…";
+            ? 'livreur.missionDetail.erreurGpsRefuse'
+            : 'livreur.missionDetail.erreurGpsAutre';
       },
       { timeout: 10000, enableHighAccuracy: true }
     );
@@ -231,7 +232,7 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
           this.charger();
         });
       } else {
-        this.erreurCode = 'Code invalide.';
+        this.erreurCode = 'livreur.missionDetail.codeInvalide';
       }
     });
   }

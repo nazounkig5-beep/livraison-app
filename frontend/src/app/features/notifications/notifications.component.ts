@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { NotificationService } from '../../core/services/notification.service';
 import { NotificationApp } from '../../core/models/notification.model';
 
@@ -7,7 +8,7 @@ import { NotificationApp } from '../../core/models/notification.model';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './notifications.component.html',
 })
 export class NotificationsComponent implements OnInit {

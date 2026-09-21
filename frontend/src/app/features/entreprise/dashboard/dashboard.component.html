@@ -7,7 +7,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.demandes_en_attente }}</span>
-        <span class="stat-libelle">Demandes en attente</span>
+        <span class="stat-libelle">{{ 'entreprise.dashboard.demandesEnAttente' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -16,7 +16,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.total_demandes }}</span>
-        <span class="stat-libelle">Total demandes</span>
+        <span class="stat-libelle">{{ 'entreprise.dashboard.totalDemandes' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -25,7 +25,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.total_vehicules }}</span>
-        <span class="stat-libelle">Véhicules</span>
+        <span class="stat-libelle">{{ 'entreprise.dashboard.vehicules' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -34,26 +34,26 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.total_employes }}</span>
-        <span class="stat-libelle">Employés</span>
+        <span class="stat-libelle">{{ 'entreprise.dashboard.employes' | translate }}</span>
       </span>
     </div>
   </div>
 
   <div class="raccourcis-entreprise">
-    <a routerLink="/entreprise/demandes">Voir toutes les demandes</a>
-    <a routerLink="/entreprise/vehicules">Gérer les véhicules</a>
-    <a routerLink="/entreprise/employes">Gérer les employés</a>
+    <a routerLink="/entreprise/demandes">{{ 'entreprise.dashboard.voirToutesLesDemandes' | translate }}</a>
+    <a routerLink="/entreprise/vehicules">{{ 'entreprise.dashboard.gererLesVehicules' | translate }}</a>
+    <a routerLink="/entreprise/employes">{{ 'entreprise.dashboard.gererLesEmployes' | translate }}</a>
   </div>
 
-  <h2>Demandes en attente d'acceptation</h2>
+  <h2>{{ 'entreprise.dashboard.demandesEnAttenteAcceptation' | translate }}</h2>
   <table *ngIf="stats.demandes_recentes.length; else aucuneDemandeRecente">
     <thead>
       <tr>
-        <th>N°</th>
-        <th>Client</th>
-        <th>Trajet</th>
-        <th>Tarif</th>
-        <th>Actions</th>
+        <th>{{ 'entreprise.dashboard.numero' | translate }}</th>
+        <th>{{ 'entreprise.dashboard.client' | translate }}</th>
+        <th>{{ 'entreprise.dashboard.trajet' | translate }}</th>
+        <th>{{ 'entreprise.dashboard.tarif' | translate }}</th>
+        <th>{{ 'entreprise.dashboard.actions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let demande of stats.demandes_recentes">
@@ -62,23 +62,23 @@
       <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
       <td>{{ demande.tarif_estime }} FCFA</td>
       <td>
-        <button type="button" (click)="accepter(demande)">Accepter</button>
-        <button type="button" (click)="refuser(demande)">Refuser</button>
+        <button type="button" (click)="accepter(demande)">{{ 'entreprise.dashboard.accepter' | translate }}</button>
+        <button type="button" (click)="refuser(demande)">{{ 'entreprise.dashboard.refuser' | translate }}</button>
       </td>
     </tr>
   </table>
   <ng-template #aucuneDemandeRecente>
-    <p>Aucune demande en attente pour le moment.</p>
+    <p>{{ 'entreprise.dashboard.aucuneDemandeRecente' | translate }}</p>
   </ng-template>
 
-  <h2>Demandes par statut</h2>
+  <h2>{{ 'entreprise.dashboard.demandesParStatut' | translate }}</h2>
   <div class="stats-grid" *ngIf="(stats.demandes_par_statut | keyvalue)?.length; else aucuneDemande">
     <div class="stat-carte" *ngFor="let entree of stats.demandes_par_statut | keyvalue">
       <span class="stat-valeur">{{ entree.value }}</span>
-      <span class="stat-libelle">{{ entree.key }}</span>
+      <span class="stat-libelle">{{ ('commun.statutDemande.' + entree.key) | translate }}</span>
     </div>
   </div>
   <ng-template #aucuneDemande>
-    <p>Aucune demande enregistrée pour le moment.</p>
+    <p>{{ 'entreprise.dashboard.aucuneDemande' | translate }}</p>
   </ng-template>
 </div>

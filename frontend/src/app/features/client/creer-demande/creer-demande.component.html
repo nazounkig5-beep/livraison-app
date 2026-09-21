@@ -1,68 +1,66 @@
 <div class="creer-demande">
   <form [formGroup]="form" (ngSubmit)="soumettre()">
     <label>
-      Entreprise
+      {{ 'client.creerDemande.labelEntreprise' | translate }}
       <select formControlName="id_entreprise">
-        <option [ngValue]="null" disabled>Sélectionner l'entreprise qui recevra la demande</option>
+        <option [ngValue]="null" disabled>{{ 'client.creerDemande.placeholderEntreprise' | translate }}</option>
         <option *ngFor="let entreprise of entreprises" [ngValue]="entreprise.id">{{ entreprise.nom }}</option>
       </select>
     </label>
-    <p *ngIf="!entreprises.length">Aucune entreprise validée n'est disponible pour le moment.</p>
+    <p *ngIf="!entreprises.length">{{ 'client.creerDemande.aucuneEntreprise' | translate }}</p>
     <label>
-      Type de service
+      {{ 'client.creerDemande.labelTypeService' | translate }}
       <select formControlName="id_type_service">
-        <option [ngValue]="null" disabled>Sélectionner un type de service</option>
+        <option [ngValue]="null" disabled>{{ 'client.creerDemande.placeholderTypeService' | translate }}</option>
         <option *ngFor="let type of typesService" [ngValue]="type.id">{{ type.nom }}</option>
       </select>
     </label>
     <label *ngIf="!typeServiceEstLivraison">
-      Adresse de départ
+      {{ 'client.creerDemande.labelAdresseDepart' | translate }}
       <input type="text" formControlName="adresse_depart" />
     </label>
     <p class="info-discrete" *ngIf="typeServiceEstLivraison">
-      Point de départ : adresse de l'entreprise sélectionnée (pas besoin de la préciser pour une simple livraison).
+      {{ 'client.creerDemande.infoPointDepartEntreprise' | translate }}
     </p>
     <label>
-      Adresse d'arrivée
+      {{ 'client.creerDemande.labelAdresseArrivee' | translate }}
       <input type="text" formControlName="adresse_arrivee" />
     </label>
 
-    <p><strong>Position{{ typeServiceEstLivraison ? ' exacte de livraison' : 's exactes' }}</strong></p>
+    <p><strong>{{ (typeServiceEstLivraison ? 'client.creerDemande.positionExacteLivraison' : 'client.creerDemande.positionsExactes') | translate }}</strong></p>
     <p class="info-discrete" *ngIf="typeServiceEstLivraison">
-      Cliquez sur la carte à l'endroit précis où le livreur doit vous retrouver (le point rouge peut ensuite
-      être déplacé par glisser-déposer). La distance et le tarif sont calculés automatiquement.
+      {{ 'client.creerDemande.infoCarteLivraison' | translate }}
     </p>
 
     <div class="onglets-role" *ngIf="!typeServiceEstLivraison">
       <button type="button" [class.actif]="pointActif === 'depart'" (click)="choisirPointActif('depart')">
-        Placer le départ (bleu)
+        {{ 'client.creerDemande.placerDepart' | translate }}
       </button>
       <button type="button" [class.actif]="pointActif === 'arrivee'" (click)="choisirPointActif('arrivee')">
-        Placer l'arrivée (rouge)
+        {{ 'client.creerDemande.placerArrivee' | translate }}
       </button>
     </div>
     <p class="info-discrete" *ngIf="!typeServiceEstLivraison">
-      Cliquez sur la carte pour placer le point sélectionné ci-dessus (déplaçable ensuite par glisser-déposer).
-      La distance et le tarif sont calculés automatiquement.
+      {{ 'client.creerDemande.infoCarteAutre' | translate }}
     </p>
 
     <button type="button" class="bouton-recentrer" (click)="recentrerSurMaPosition()" [disabled]="recentrageEnCours">
-      {{ recentrageEnCours ? 'Localisation…' : '📍 Recentrer sur ma position' }}
+      {{ (recentrageEnCours ? 'client.creerDemande.localisationEnCours' : 'client.creerDemande.recentrerPosition') | translate }}
     </button>
-    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage }}</p>
+    <p class="erreur" *ngIf="erreurRecentrage">{{ erreurRecentrage | translate }}</p>
 
     <div #carteConteneur class="carte-suivi carte-pointage carte-cliquable"></div>
 
-    <p class="succes" *ngIf="!typeServiceEstLivraison && positionDepartChoisie">✓ Position de départ enregistrée.</p>
-    <p class="erreur" *ngIf="!typeServiceEstLivraison && !positionDepartChoisie">Aucune position de départ placée.</p>
-    <p class="succes" *ngIf="positionArriveeChoisie">✓ Position d'arrivée enregistrée.</p>
-    <p class="erreur" *ngIf="!positionArriveeChoisie">Aucune position d'arrivée placée.</p>
+    <p class="succes" *ngIf="!typeServiceEstLivraison && positionDepartChoisie">{{ 'client.creerDemande.positionDepartEnregistree' | translate }}</p>
+    <p class="erreur" *ngIf="!typeServiceEstLivraison && !positionDepartChoisie">{{ 'client.creerDemande.positionDepartManquante' | translate }}</p>
+    <p class="succes" *ngIf="positionArriveeChoisie">{{ 'client.creerDemande.positionArriveeEnregistree' | translate }}</p>
+    <p class="erreur" *ngIf="!positionArriveeChoisie">{{ 'client.creerDemande.positionArriveeManquante' | translate }}</p>
 
     <label>
-      Programmer pour le (optionnel)
+      {{ 'client.creerDemande.labelDateProgrammee' | translate }}
       <input type="datetime-local" formControlName="date_programmee" />
     </label>
     <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
-    <button type="submit" [disabled]="form.invalid || envoiEnCours">Valider la demande</button>
+    <button type="submit" [disabled]="form.invalid || envoiEnCours">{{ 'client.creerDemande.boutonValider' | translate }}</button>
   </form>
 </div>

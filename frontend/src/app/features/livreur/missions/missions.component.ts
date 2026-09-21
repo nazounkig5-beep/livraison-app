@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { MissionService } from '../../../core/services/mission.service';
 import { Mission } from '../../../core/models/demande.model';
 
@@ -8,7 +9,7 @@ import { Mission } from '../../../core/models/demande.model';
 @Component({
   selector: 'app-missions',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './missions.component.html',
 })
 export class MissionsComponent implements OnInit {

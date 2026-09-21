@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/profil', [AuthController::class, 'mettreAJourProfil']);
+    Route::put('/profil/langue', [AuthController::class, 'changerLangue']);
     Route::post('/profil/photo', [AuthController::class, 'mettreAJourPhoto']);
     Route::put('/profil/mot-de-passe', [AuthController::class, 'changerMotDePasse']);
     Route::delete('/profil', [AuthController::class, 'supprimerMonCompte']);

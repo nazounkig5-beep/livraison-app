@@ -2,24 +2,25 @@
   <table>
     <thead>
       <tr>
-        <th>Abonné</th>
-        <th>Type</th>
-        <th>Offre</th>
-        <th>Période</th>
-        <th>Statut</th>
-        <th>Paiement</th>
-        <th>Actions</th>
+        <th>{{ 'admin.abonnements.colonneAbonne' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonneType' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonneOffre' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonnePeriode' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonneStatut' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonnePaiement' | translate }}</th>
+        <th>{{ 'admin.abonnements.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let abonnement of abonnements">
       <td>{{ abonnement.abonne_nom }}</td>
-      <td>{{ abonnement.abonne_type }}</td>
+      <td>{{ 'commun.role.' + abonnement.abonne_type | translate }}</td>
       <td>{{ abonnement.tarif?.nom }}</td>
       <td>{{ abonnement.date_debut | date: 'dd/MM/yyyy' }} → {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}</td>
-      <td>{{ abonnement.statut }}</td>
+      <td>{{ 'admin.abonnements.statut.' + abonnement.statut | translate }}</td>
       <td>
-        {{ abonnement.montant }} FCFA ({{ abonnement.mode_paiement === 'CASH' ? 'Espèces' : 'En ligne' }}) —
-        {{ abonnement.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}
+        {{ 'admin.abonnements.montantFcfa' | translate: { montant: abonnement.montant } }}
+        ({{ (abonnement.mode_paiement === 'CASH' ? 'admin.abonnements.modeEspeces' : 'admin.abonnements.modeEnLigne') | translate }}) —
+        {{ (abonnement.statut_paiement === 'CONFIRME' ? 'admin.abonnements.paiementPaye' : 'admin.abonnements.paiementEnAttente') | translate }}
       </td>
       <td>
         <button
@@ -27,10 +28,10 @@
           *ngIf="abonnement.mode_paiement === 'CASH' && abonnement.statut_paiement === 'EN_ATTENTE'"
           (click)="confirmerPaiement(abonnement)"
         >
-          Confirmer le paiement
+          {{ 'admin.abonnements.confirmerPaiement' | translate }}
         </button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!abonnements.length">Aucun abonnement souscrit pour le moment.</p>
+  <p *ngIf="!abonnements.length">{{ 'admin.abonnements.aucunAbonnement' | translate }}</p>
 </div>

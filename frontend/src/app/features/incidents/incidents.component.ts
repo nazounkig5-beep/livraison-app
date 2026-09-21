@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { IncidentService } from '../../core/services/incident.service';
 import { AuthService } from '../../core/services/auth.service';
 import { DemandeService } from '../../core/services/demande.service';
@@ -13,7 +14,7 @@ import { DemandeLivraison } from '../../core/models/demande.model';
 @Component({
   selector: 'app-incidents',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './incidents.component.html',
 })
 export class IncidentsComponent implements OnInit {

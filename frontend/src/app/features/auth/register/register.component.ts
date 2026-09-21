@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { Langue, LangueService } from '../../../core/services/langue.service';
 
 /** Cas d'utilisation : "S'inscrire" (CLIENT, LIVREUR ou ENTREPRISE) */
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './register.component.html',
 })
 export class RegisterComponent {
@@ -23,7 +25,17 @@ export class RegisterComponent {
     adresse_facturation: [''],
   });
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+    private translate: TranslateService,
+    public langueService: LangueService
+  ) {}
+
+  changerLangue(langue: Langue): void {
+    this.langueService.changer(langue);
+  }
 
   get estEntreprise(): boolean {
     return this.form.value.role === 'ENTREPRISE';
@@ -44,7 +56,9 @@ export class RegisterComponent {
       },
       error: (err) => {
         const messages = err?.error?.errors;
-        this.erreurs = messages ? Object.values(messages).flat() as string[] : ["Inscription impossible."];
+        this.erreurs = messages
+          ? (Object.values(messages).flat() as string[])
+          : [this.translate.instant('auth.register.erreurDefaut')];
       },
     });
   }

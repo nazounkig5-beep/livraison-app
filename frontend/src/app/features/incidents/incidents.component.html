@@ -2,10 +2,10 @@
   <table>
     <thead>
       <tr>
-        <th>Demande</th>
-        <th>Description</th>
-        <th>Statut</th>
-        <th>Actions</th>
+        <th>{{ 'partage.incidents.colonneDemande' | translate }}</th>
+        <th>{{ 'partage.incidents.colonneDescription' | translate }}</th>
+        <th>{{ 'partage.incidents.colonneStatut' | translate }}</th>
+        <th>{{ 'partage.incidents.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let incident of incidents">
@@ -14,31 +14,31 @@
         <ng-container *ngIf="incident.demande as demande"> — {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</ng-container>
       </td>
       <td>{{ incident.description }}</td>
-      <td>{{ incident.statut }}</td>
+      <td>{{ ('partage.incidents.statut.' + incident.statut) | translate }}</td>
       <td>
         <button type="button" *ngIf="auth.aLeRole('ADMIN') && incident.statut === 'OUVERT'" (click)="resoudre(incident)">
-          Marquer résolu
+          {{ 'partage.incidents.marquerResolu' | translate }}
         </button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!incidents.length">Aucun incident.</p>
+  <p *ngIf="!incidents.length">{{ 'partage.incidents.aucunIncident' | translate }}</p>
 
-  <h2 *ngIf="!auth.aLeRole('ADMIN')">Signaler un incident</h2>
+  <h2 *ngIf="!auth.aLeRole('ADMIN')">{{ 'partage.incidents.signalerUnIncident' | translate }}</h2>
   <form *ngIf="!auth.aLeRole('ADMIN')" [formGroup]="form" (ngSubmit)="signaler()">
     <label>
-      Demande concernée
+      {{ 'partage.incidents.demandeConcernee' | translate }}
       <select formControlName="id_demande">
-        <option [ngValue]="null" disabled>Sélectionner une demande</option>
+        <option [ngValue]="null" disabled>{{ 'partage.incidents.selectionnerUneDemande' | translate }}</option>
         <option *ngFor="let demande of mesDemandes" [ngValue]="demande.id">
           #{{ demande.id }} — {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}
         </option>
       </select>
     </label>
     <label>
-      Description
+      {{ 'partage.incidents.description' | translate }}
       <input type="text" formControlName="description" />
     </label>
-    <button type="submit" [disabled]="form.invalid">Signaler</button>
+    <button type="submit" [disabled]="form.invalid">{{ 'partage.incidents.signaler' | translate }}</button>
   </form>
 </div>

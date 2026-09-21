@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import * as QRCode from 'qrcode';
 import { MissionService } from '../../../core/services/mission.service';
 import { Entreprise } from '../../../core/models/entreprise.model';
@@ -8,7 +9,7 @@ import { Entreprise } from '../../../core/models/entreprise.model';
 @Component({
   selector: 'app-livreur-paiement',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './paiement.component.html',
 })
 export class LivreurPaiementComponent implements OnInit {
@@ -17,7 +18,7 @@ export class LivreurPaiementComponent implements OnInit {
   entreprise: Entreprise | null = null;
   chargement = true;
 
-  constructor(private missionService: MissionService) {}
+  constructor(private missionService: MissionService, private translate: TranslateService) {}
 
   ngOnInit(): void {
     // Un livreur indépendant (sans employeur) reçoit un 404 ici : traité comme "pas d'entreprise", pas une erreur.
@@ -57,8 +58,9 @@ export class LivreurPaiementComponent implements OnInit {
     const fenetre = window.open('');
     if (!fenetre) return;
     const nom = this.entreprise?.nom ?? '';
+    const texteScanner = this.translate.instant('livreur.paiement.impressionScanner');
     fenetre.document.write(
-      `<html><body style="text-align:center;padding:40px;"><h2>${nom}</h2><p>Scannez pour payer</p><img src="${canvas.toDataURL()}" style="width:250px;"/></body></html>`
+      `<html><body style="text-align:center;padding:40px;"><h2>${nom}</h2><p>${texteScanner}</p><img src="${canvas.toDataURL()}" style="width:250px;"/></body></html>`
     );
     fenetre.print();
   }

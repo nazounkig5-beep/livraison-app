@@ -2,27 +2,27 @@
   <table>
     <thead>
       <tr>
-        <th>Nom</th>
-        <th>SIRET</th>
-        <th>Email</th>
-        <th>Statut</th>
-        <th>Actions</th>
+        <th>{{ 'admin.entreprises.colonneNom' | translate }}</th>
+        <th>{{ 'admin.entreprises.colonneSiret' | translate }}</th>
+        <th>{{ 'admin.entreprises.colonneEmail' | translate }}</th>
+        <th>{{ 'admin.entreprises.colonneStatut' | translate }}</th>
+        <th>{{ 'admin.entreprises.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let entreprise of entreprises">
       <td>{{ entreprise.nom }}</td>
       <td>{{ entreprise.siret }}</td>
       <td>{{ entreprise.utilisateur?.email }}</td>
-      <td>{{ entreprise.statut_validation }}</td>
+      <td>{{ 'admin.entreprises.statut.' + entreprise.statut_validation | translate }}</td>
       <td>
         <button type="button" *ngIf="entreprise.statut_validation === 'EN_ATTENTE'" (click)="valider(entreprise, 'ACTIVE')">
-          Valider
+          {{ 'admin.entreprises.valider' | translate }}
         </button>
         <button type="button" *ngIf="entreprise.statut_validation === 'EN_ATTENTE'" (click)="valider(entreprise, 'REJETEE')">
-          Rejeter
+          {{ 'admin.entreprises.rejeter' | translate }}
         </button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!entreprises.length">Aucune entreprise pour le moment.</p>
+  <p *ngIf="!entreprises.length">{{ 'admin.entreprises.aucuneEntreprise' | translate }}</p>
 </div>

@@ -7,7 +7,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.total_utilisateurs }}</span>
-        <span class="stat-libelle">Utilisateurs</span>
+        <span class="stat-libelle">{{ 'admin.dashboard.statUtilisateurs' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -16,7 +16,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.total_entreprises }}</span>
-        <span class="stat-libelle">Entreprises</span>
+        <span class="stat-libelle">{{ 'admin.dashboard.statEntreprises' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte" [class.stat-alerte]="stats.entreprises_en_attente > 0">
@@ -25,7 +25,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.entreprises_en_attente }}</span>
-        <span class="stat-libelle">En attente de validation</span>
+        <span class="stat-libelle">{{ 'admin.dashboard.statEnAttenteValidation' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte" [class.stat-alerte]="stats.incidents_ouverts > 0">
@@ -34,19 +34,19 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.incidents_ouverts }}</span>
-        <span class="stat-libelle">Incidents ouverts</span>
+        <span class="stat-libelle">{{ 'admin.dashboard.statIncidentsOuverts' | translate }}</span>
       </span>
     </div>
   </div>
 
-  <h2>Demandes par statut</h2>
+  <h2>{{ 'admin.dashboard.demandesParStatut' | translate }}</h2>
   <div class="stats-grid" *ngIf="(stats.demandes_par_statut | keyvalue)?.length; else aucuneDemande">
     <div class="stat-carte" *ngFor="let entree of stats.demandes_par_statut | keyvalue">
       <span class="stat-valeur">{{ entree.value }}</span>
-      <span class="stat-libelle">{{ entree.key }}</span>
+      <span class="stat-libelle">{{ 'commun.statutDemande.' + entree.key | translate }}</span>
     </div>
   </div>
   <ng-template #aucuneDemande>
-    <p>Aucune demande enregistrée pour le moment.</p>
+    <p>{{ 'admin.dashboard.aucuneDemande' | translate }}</p>
   </ng-template>
 </div>

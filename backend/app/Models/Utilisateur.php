@@ -15,7 +15,7 @@ class Utilisateur extends Authenticatable implements CanResetPasswordContract
     protected $table = 'utilisateurs';
     protected $fillable = [
         'nom', 'email', 'mot_de_passe', 'role', 'statut_compte', 'date_creation',
-        'telephone', 'ville', 'adresse', 'photo',
+        'telephone', 'ville', 'adresse', 'photo', 'langue',
     ];
     protected $hidden = ['mot_de_passe', 'remember_token', 'photo'];
     protected $casts = ['date_creation' => 'datetime'];

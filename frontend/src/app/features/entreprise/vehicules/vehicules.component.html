@@ -2,9 +2,9 @@
   <table>
     <thead>
       <tr>
-        <th>Immatriculation</th>
-        <th>Statut</th>
-        <th>Actions</th>
+        <th>{{ 'entreprise.vehicules.immatriculation' | translate }}</th>
+        <th>{{ 'entreprise.vehicules.statut' | translate }}</th>
+        <th>{{ 'entreprise.vehicules.actions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let vehicule of vehicules">
@@ -12,26 +12,26 @@
       <td>{{ vehicule.statut }}</td>
       <td>
         <button type="button" (click)="basculerStatut(vehicule)">
-          {{ vehicule.statut === 'DISPONIBLE' ? 'Mettre en maintenance' : 'Remettre en service' }}
+          {{ (vehicule.statut === 'DISPONIBLE' ? 'entreprise.vehicules.mettreEnMaintenance' : 'entreprise.vehicules.remettreEnService') | translate }}
         </button>
-        <button type="button" (click)="supprimer(vehicule)">Supprimer</button>
+        <button type="button" (click)="supprimer(vehicule)">{{ 'commun.action.supprimer' | translate }}</button>
       </td>
     </tr>
   </table>
 
-  <h2>Ajouter un véhicule</h2>
+  <h2>{{ 'entreprise.vehicules.ajouterUnVehicule' | translate }}</h2>
   <form [formGroup]="form" (ngSubmit)="ajouter()">
     <label>
-      Type de véhicule
+      {{ 'entreprise.vehicules.typeDeVehicule' | translate }}
       <select formControlName="id_type_vehicule">
-        <option [ngValue]="null" disabled>Sélectionner un type</option>
+        <option [ngValue]="null" disabled>{{ 'entreprise.vehicules.selectionnerUnType' | translate }}</option>
         <option *ngFor="let type of typesVehicule" [ngValue]="type.id">{{ type.nom }}</option>
       </select>
     </label>
     <label>
-      Immatriculation
+      {{ 'entreprise.vehicules.immatriculation' | translate }}
       <input type="text" formControlName="immatriculation" />
     </label>
-    <button type="submit" [disabled]="form.invalid">Ajouter</button>
+    <button type="submit" [disabled]="form.invalid">{{ 'entreprise.vehicules.ajouter' | translate }}</button>
   </form>
 </div>

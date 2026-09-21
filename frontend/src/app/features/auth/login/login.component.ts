@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { Langue, LangueService } from '../../../core/services/langue.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -18,7 +20,16 @@ export class LoginComponent {
     mot_de_passe: ['', Validators.required],
   });
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router,
+    public langueService: LangueService
+  ) {}
+
+  changerLangue(langue: Langue): void {
+    this.langueService.changer(langue);
+  }
 
   soumettre(): void {
     if (this.form.invalid) return;
@@ -35,7 +46,7 @@ export class LoginComponent {
         };
         this.router.navigate([routesParRole[res.utilisateur.role] ?? '/']);
       },
-      error: () => (this.erreur = 'Identifiants invalides.'),
+      error: () => (this.erreur = 'auth.login.erreur'),
     });
   }
 }

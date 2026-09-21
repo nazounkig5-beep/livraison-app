@@ -2,10 +2,10 @@
   <table>
     <thead>
       <tr>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Note</th>
-        <th>Actions</th>
+        <th>{{ 'entreprise.employes.nom' | translate }}</th>
+        <th>{{ 'entreprise.employes.email' | translate }}</th>
+        <th>{{ 'entreprise.employes.note' | translate }}</th>
+        <th>{{ 'entreprise.employes.actions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let employe of employes">
@@ -13,27 +13,27 @@
       <td>{{ employe.utilisateur?.email }}</td>
       <td>{{ employe.note_moyenne }}/5</td>
       <td>
-        <button type="button" (click)="detacher(employe)">Détacher</button>
+        <button type="button" (click)="detacher(employe)">{{ 'entreprise.employes.detacher' | translate }}</button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!employes.length">Aucun livreur employé pour le moment.</p>
+  <p *ngIf="!employes.length">{{ 'entreprise.employes.aucunEmploye' | translate }}</p>
 
-  <h2>Ajouter un livreur</h2>
+  <h2>{{ 'entreprise.employes.ajouterUnLivreur' | translate }}</h2>
   <form [formGroup]="form" (ngSubmit)="ajouter()">
     <label>
-      Nom
+      {{ 'entreprise.employes.nom' | translate }}
       <input type="text" formControlName="nom" />
     </label>
     <label>
-      Email
+      {{ 'entreprise.employes.email' | translate }}
       <input type="email" formControlName="email" />
     </label>
     <label>
-      Mot de passe initial
+      {{ 'entreprise.employes.motDePasseInitial' | translate }}
       <input type="password" formControlName="mot_de_passe" />
     </label>
     <p *ngIf="erreur">{{ erreur }}</p>
-    <button type="submit" [disabled]="form.invalid">Créer le compte livreur</button>
+    <button type="submit" [disabled]="form.invalid">{{ 'entreprise.employes.creerLeCompteLivreur' | translate }}</button>
   </form>
 </div>

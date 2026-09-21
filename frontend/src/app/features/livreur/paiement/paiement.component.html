@@ -6,28 +6,27 @@
     <div class="qr-apercu">
       <canvas #qrCanvas [hidden]="!entreprise.qr_code"></canvas>
       <div class="qr-vide" *ngIf="!entreprise.qr_code">
-        <p>Votre entreprise n'a pas encore configuré de numéro de paiement.</p>
+        <p>{{ 'livreur.paiement.pasDeNumeroConfigure' | translate }}</p>
       </div>
     </div>
 
     <ul *ngIf="entreprise.numero_orange || entreprise.numero_moov">
-      <li *ngIf="entreprise.numero_orange">Orange Money : {{ entreprise.numero_orange }}</li>
-      <li *ngIf="entreprise.numero_moov">Moov Money : {{ entreprise.numero_moov }}</li>
+      <li *ngIf="entreprise.numero_orange">{{ 'livreur.paiement.orangeMoney' | translate:{ numero: entreprise.numero_orange } }}</li>
+      <li *ngIf="entreprise.numero_moov">{{ 'livreur.paiement.moovMoney' | translate:{ numero: entreprise.numero_moov } }}</li>
     </ul>
 
     <p class="info-discrete" *ngIf="entreprise.qr_code">
-      Présentez ce QR code au client au moment de la livraison pour qu'il paie directement.
+      {{ 'livreur.paiement.consignePresenter' | translate }}
     </p>
     <div class="qr-actions" *ngIf="entreprise.qr_code">
-      <button type="button" (click)="imprimerQr()">Imprimer</button>
-      <button type="button" (click)="telechargerQr()">Télécharger</button>
+      <button type="button" (click)="imprimerQr()">{{ 'livreur.paiement.boutonImprimer' | translate }}</button>
+      <button type="button" (click)="telechargerQr()">{{ 'livreur.paiement.boutonTelecharger' | translate }}</button>
     </div>
   </section>
 
   <ng-template #pasEntreprise>
     <p class="info-discrete">
-      Vous n'êtes employé par aucune entreprise : aucun QR code de paiement n'est disponible ici. Le
-      QR de paiement d'une entreprise reste accessible depuis chaque mission en cours.
+      {{ 'livreur.paiement.pasEntreprise' | translate }}
     </p>
   </ng-template>
 </div>

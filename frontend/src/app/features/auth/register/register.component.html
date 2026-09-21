@@ -1,4 +1,9 @@
 <div class="auth-page">
+  <div class="auth-langue">
+    <button type="button" [class.actif]="langueService.langueActuelle === 'fr'" (click)="changerLangue('fr')">FR</button>
+    <button type="button" [class.actif]="langueService.langueActuelle === 'en'" (click)="changerLangue('en')">EN</button>
+  </div>
+
   <aside class="auth-marque">
     <div class="auth-marque-entete">
       <div class="auth-marque-logo">
@@ -8,11 +13,11 @@
           <path d="M12 13v8" />
         </svg>
       </div>
-      <h1>LivraisonApp</h1>
+      <h1>{{ 'commun.app.nom' | translate }}</h1>
     </div>
 
     <p class="auth-marque-tagline">
-      Rejoignez la plateforme et commandez, livrez ou gérez vos livraisons en Côte d'Ivoire.
+      {{ 'auth.marque.taglineRegister' | translate }}
     </p>
 
     <div class="auth-fonctionnalites">
@@ -24,8 +29,8 @@
           </svg>
         </span>
         <div>
-          <h3>Suivi en temps réel</h3>
-          <p>Suivez votre livreur sur la carte, en direct.</p>
+          <h3>{{ 'auth.marque.suiviTitre' | translate }}</h3>
+          <p>{{ 'auth.marque.suiviTexte' | translate }}</p>
         </div>
       </div>
 
@@ -37,8 +42,8 @@
           </svg>
         </span>
         <div>
-          <h3>Paiement Mobile Money</h3>
-          <p>Orange Money, Moov Money — code USSD automatique.</p>
+          <h3>{{ 'auth.marque.paiementTitre' | translate }}</h3>
+          <p>{{ 'auth.marque.paiementTexte' | translate }}</p>
         </div>
       </div>
 
@@ -52,8 +57,8 @@
           </svg>
         </span>
         <div>
-          <h3>Livraison rapide</h3>
-          <p>Des entreprises partenaires prêtes à livrer partout.</p>
+          <h3>{{ 'auth.marque.livraisonTitre' | translate }}</h3>
+          <p>{{ 'auth.marque.livraisonTexte' | translate }}</p>
         </div>
       </div>
 
@@ -67,8 +72,8 @@
           </svg>
         </span>
         <div>
-          <h3>Tableau de bord complet</h3>
-          <p>Suivez vos demandes, incidents et paiements.</p>
+          <h3>{{ 'auth.marque.dashboardTitre' | translate }}</h3>
+          <p>{{ 'auth.marque.dashboardTexte' | translate }}</p>
         </div>
       </div>
     </div>
@@ -77,43 +82,43 @@
   <div class="auth-formulaire">
     <div class="auth-carte">
       <nav class="auth-onglets">
-        <a routerLink="/auth/login" routerLinkActive="actif">Se connecter</a>
-        <a routerLink="/auth/register" routerLinkActive="actif">S'inscrire</a>
+        <a routerLink="/auth/login" routerLinkActive="actif">{{ 'auth.onglets.connexion' | translate }}</a>
+        <a routerLink="/auth/register" routerLinkActive="actif">{{ 'auth.onglets.inscription' | translate }}</a>
       </nav>
 
       <form [formGroup]="form" (ngSubmit)="soumettre()">
         <label>
-          Nom
+          {{ 'auth.register.nom' | translate }}
           <input type="text" formControlName="nom" />
         </label>
         <label>
-          Adresse email
+          {{ 'auth.register.email' | translate }}
           <input type="email" formControlName="email" placeholder="votre@email.com" />
         </label>
         <label>
-          Mot de passe
+          {{ 'auth.register.motDePasse' | translate }}
           <input type="password" formControlName="mot_de_passe" />
         </label>
         <label>
-          Je m'inscris en tant que
+          {{ 'auth.register.jeMinscris' | translate }}
           <select formControlName="role">
-            <option value="CLIENT">Client</option>
-            <option value="LIVREUR">Livreur</option>
-            <option value="ENTREPRISE">Entreprise</option>
+            <option value="CLIENT">{{ 'auth.register.roleClient' | translate }}</option>
+            <option value="LIVREUR">{{ 'auth.register.roleLivreur' | translate }}</option>
+            <option value="ENTREPRISE">{{ 'auth.register.roleEntreprise' | translate }}</option>
           </select>
         </label>
         <label *ngIf="estEntreprise">
-          SIRET
+          {{ 'auth.register.siret' | translate }}
           <input type="text" formControlName="siret" />
         </label>
         <label>
-          Adresse de facturation (optionnel)
+          {{ 'auth.register.adresseFacturation' | translate }}
           <input type="text" formControlName="adresse_facturation" />
         </label>
         <ul class="erreurs" *ngIf="erreurs.length">
           <li *ngFor="let erreur of erreurs">{{ erreur }}</li>
         </ul>
-        <button type="submit" [disabled]="form.invalid">S'inscrire</button>
+        <button type="submit" [disabled]="form.invalid">{{ 'auth.register.bouton' | translate }}</button>
       </form>
     </div>
   </div>

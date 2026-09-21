@@ -36,9 +36,21 @@ export class AuthService {
     email: string,
     telephone?: string | null,
     ville?: string | null,
-    adresse?: string | null
+    adresse?: string | null,
+    langue?: string | null
   ): Observable<Utilisateur> {
-    return this.http.put<Utilisateur>(`${this.apiUrl}/profil`, { nom, email, telephone, ville, adresse }).pipe(
+    return this.http
+      .put<Utilisateur>(`${this.apiUrl}/profil`, { nom, email, telephone, ville, adresse, langue })
+      .pipe(
+        tap((utilisateur) => {
+          localStorage.setItem('utilisateur', JSON.stringify(utilisateur));
+          this.utilisateur.set(utilisateur);
+        })
+      );
+  }
+
+  changerLangue(langue: 'fr' | 'en'): Observable<Utilisateur> {
+    return this.http.put<Utilisateur>(`${this.apiUrl}/profil/langue`, { langue }).pipe(
       tap((utilisateur) => {
         localStorage.setItem('utilisateur', JSON.stringify(utilisateur));
         this.utilisateur.set(utilisateur);

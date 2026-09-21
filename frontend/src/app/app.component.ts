@@ -1,25 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 import { NotificationService } from './core/services/notification.service';
+import { Langue, LangueService } from './core/services/langue.service';
 
 const INTERVALLE_NOTIFICATIONS_MS = 30000;
 const INTERVALLE_HORLOGE_MS = 30000;
 
 const LIBELLES_ROLE: Record<string, string> = {
-  ADMIN: 'Administrateur',
-  CLIENT: 'Client',
-  LIVREUR: 'Livreur',
-  ENTREPRISE: 'Entreprise',
-  EMPLOYE: 'Livreur employé',
+  ADMIN: 'commun.role.ADMIN',
+  CLIENT: 'commun.role.CLIENT',
+  LIVREUR: 'commun.role.LIVREUR',
+  ENTREPRISE: 'commun.role.ENTREPRISE',
+  EMPLOYE: 'commun.role.EMPLOYE',
 };
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -32,6 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     public auth: AuthService,
+    public langueService: LangueService,
     private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute
@@ -42,9 +45,12 @@ export class AppComponent implements OnInit, OnDestroy {
       this.menuMobileOuvert = false;
       this.titrePage = this.lireTitrePage();
     });
+
+    // La langue préférée du compte (connue seulement après connexion) prime sur le choix local.
+    effect(() => this.langueService.initialiser(this.auth.utilisateur()?.langue));
   }
 
-  /** Descend jusqu'à la route active la plus profonde pour lire son `data.title` (cf. app.routes.ts). */
+  /** Descend jusqu'à la route active la plus profonde pour lire sa clé de traduction `data.title`. */
   private lireTitrePage(): string {
     let route = this.route.snapshot;
     while (route.firstChild) route = route.firstChild;
@@ -71,6 +77,13 @@ export class AppComponent implements OnInit, OnDestroy {
       .slice(0, 2)
       .map((mot) => mot[0]?.toUpperCase())
       .join('');
+  }
+
+  changerLangue(langue: Langue): void {
+    this.langueService.changer(langue);
+    if (this.auth.estConnecte()) {
+      this.auth.changerLangue(langue).subscribe();
+    }
   }
 
   ngOnInit(): void {

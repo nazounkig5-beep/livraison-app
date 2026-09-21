@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { TarifAbonnement, TypeService, TypeVehicule } from '../../../core/models/parametre.model';
 
@@ -8,7 +9,7 @@ import { TarifAbonnement, TypeService, TypeVehicule } from '../../../core/models
 @Component({
   selector: 'app-admin-parametres',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './parametres.component.html',
 })
 export class ParametresComponent implements OnInit {

@@ -2,10 +2,10 @@
   <table>
     <thead>
       <tr>
-        <th>Demande</th>
-        <th>Trajet</th>
-        <th>Statut</th>
-        <th>Actions</th>
+        <th>{{ 'livreur.missions.colonneDemande' | translate }}</th>
+        <th>{{ 'livreur.missions.colonneTrajet' | translate }}</th>
+        <th>{{ 'livreur.missions.colonneStatut' | translate }}</th>
+        <th>{{ 'livreur.missions.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let mission of missions">
@@ -13,11 +13,11 @@
       <td>
         <ng-container *ngIf="mission.demande as demande">{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</ng-container>
       </td>
-      <td>{{ mission.statut_prise_en_charge }}</td>
+      <td>{{ ('livreur.missions.statutMission.' + mission.statut_prise_en_charge) | translate }}</td>
       <td>
-        <a [routerLink]="['/livreur/missions', mission.id]">Voir le détail</a>
+        <a [routerLink]="['/livreur/missions', mission.id]">{{ 'commun.action.voirDetail' | translate }}</a>
       </td>
     </tr>
   </table>
-  <p *ngIf="!missions.length">Aucune mission pour le moment.</p>
+  <p *ngIf="!missions.length">{{ 'livreur.missions.aucuneMission' | translate }}</p>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, KeyValuePipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { DashboardStats } from '../../../core/models/dashboard.model';
 
@@ -7,7 +8,7 @@ import { DashboardStats } from '../../../core/models/dashboard.model';
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, KeyValuePipe],
+  imports: [CommonModule, KeyValuePipe, TranslateModule],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {

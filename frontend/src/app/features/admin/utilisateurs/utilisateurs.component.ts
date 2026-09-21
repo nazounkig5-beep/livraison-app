@@ -1,21 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { StatistiquesUtilisateurs, Utilisateur } from '../../../core/models/utilisateur.model';
-
-const LIBELLES_ROLE: Record<string, string> = {
-  ADMIN: 'Admin',
-  CLIENT: 'Client',
-  LIVREUR: 'Livreur',
-  ENTREPRISE: 'Entreprise',
-};
 
 /** Cas d'utilisation Admin : "Gérer utilisateurs" */
 @Component({
   selector: 'app-admin-utilisateurs',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './utilisateurs.component.html',
 })
 export class UtilisateursComponent implements OnInit {
@@ -25,7 +19,7 @@ export class UtilisateursComponent implements OnInit {
   recherche = '';
   erreurSuppression: string | null = null;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.charger();
@@ -54,20 +48,16 @@ export class UtilisateursComponent implements OnInit {
   supprimer(utilisateur: Utilisateur): void {
     this.erreurSuppression = null;
     const confirmation = window.confirm(
-      `Supprimer définitivement le compte de ${utilisateur.nom} ? Cette action est irréversible.`
+      this.translate.instant('admin.utilisateurs.confirmerSuppression', { nom: utilisateur.nom })
     );
     if (!confirmation) return;
 
     this.adminService.supprimerUtilisateur(utilisateur.id).subscribe({
       next: () => this.charger(),
       error: (err) => {
-        this.erreurSuppression = err.error?.message ?? 'Impossible de supprimer ce compte pour le moment.';
+        this.erreurSuppression = err.error?.message ?? this.translate.instant('admin.utilisateurs.erreurSuppression');
       },
     });
-  }
-
-  libelleRole(role: string): string {
-    return LIBELLES_ROLE[role] ?? role;
   }
 
   initiales(nom: string): string {

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { AuthService } from '../../../core/services/auth.service';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
@@ -17,7 +18,7 @@ const VUE_CARTE_PAR_DEFAUT: L.LatLngExpression = [5.3599, -4.0083]; // Abidjan, 
 @Component({
   selector: 'app-entreprise-tarifs',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './tarifs.component.html',
 })
 export class TarifsComponent implements OnInit, AfterViewInit {
@@ -91,7 +92,7 @@ export class TarifsComponent implements OnInit, AfterViewInit {
   recentrerSurMaPosition(): void {
     this.erreurRecentrage = '';
     if (!navigator.geolocation) {
-      this.erreurRecentrage = "La géolocalisation n'est pas disponible sur cet appareil.";
+      this.erreurRecentrage = 'entreprise.tarifs.erreurGeolocalisationIndisponible';
       return;
     }
 
@@ -103,7 +104,7 @@ export class TarifsComponent implements OnInit, AfterViewInit {
       },
       () => {
         this.recentrageEnCours = false;
-        this.erreurRecentrage = "Impossible d'obtenir votre position. Autorisez la géolocalisation puis réessayez.";
+        this.erreurRecentrage = 'entreprise.tarifs.erreurGeolocalisationEchec';
       },
       { timeout: 8000 }
     );

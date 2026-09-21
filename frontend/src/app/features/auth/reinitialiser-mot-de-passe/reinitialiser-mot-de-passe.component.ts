@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 
 /** Cas d'utilisation : "Réinitialiser le mot de passe" (à partir du lien reçu par email) */
 @Component({
   selector: 'app-reinitialiser-mot-de-passe',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './reinitialiser-mot-de-passe.component.html',
 })
 export class ReinitialiserMotDePasseComponent implements OnInit {
@@ -42,12 +43,12 @@ export class ReinitialiserMotDePasseComponent implements OnInit {
     const { mot_de_passe, mot_de_passe_confirmation } = this.form.value;
 
     if (mot_de_passe !== mot_de_passe_confirmation) {
-      this.erreur = 'Les deux mots de passe ne correspondent pas.';
+      this.erreur = 'auth.reinitialiser.erreurConfirmation';
       return;
     }
 
     if (!this.email || !this.token) {
-      this.erreur = 'Lien de réinitialisation invalide. Redemandez un nouveau lien.';
+      this.erreur = 'auth.reinitialiser.erreurLienInvalide';
       return;
     }
 
@@ -58,9 +59,9 @@ export class ReinitialiserMotDePasseComponent implements OnInit {
         this.succes = true;
         setTimeout(() => this.router.navigate(['/auth/login']), 2500);
       },
-      error: (err) => {
+      error: () => {
         this.envoiEnCours = false;
-        this.erreur = err?.error?.message ?? 'Ce lien est invalide ou a expiré.';
+        this.erreur = 'auth.reinitialiser.erreurDefaut';
       },
     });
   }

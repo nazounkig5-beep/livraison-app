@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { ParametreService } from '../../../core/services/parametre.service';
 import { Vehicule } from '../../../core/models/vehicule.model';
@@ -10,7 +11,7 @@ import { TypeVehicule } from '../../../core/models/parametre.model';
 @Component({
   selector: 'app-entreprise-vehicules',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
   templateUrl: './vehicules.component.html',
 })
 export class VehiculesComponent implements OnInit {

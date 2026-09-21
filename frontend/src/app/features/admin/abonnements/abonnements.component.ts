@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { AdminService } from '../../../core/services/admin.service';
 import { Abonnement } from '../../../core/models/abonnement.model';
 
@@ -7,7 +8,7 @@ import { Abonnement } from '../../../core/models/abonnement.model';
 @Component({
   selector: 'app-admin-abonnements',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './abonnements.component.html',
 })
 export class AdminAbonnementsComponent implements OnInit {

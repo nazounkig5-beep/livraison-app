@@ -11,8 +11,8 @@
         </svg>
       </span>
       <div>
-        <strong>LivraisonApp</strong>
-        <small>Gestion de livraisons</small>
+        <strong>{{ 'commun.app.nom' | translate }}</strong>
+        <small>{{ 'commun.app.tagline' | translate }}</small>
       </div>
     </div>
 
@@ -20,119 +20,124 @@
       <span class="sidebar-avatar">{{ initiales }}</span>
       <div>
         <strong>{{ auth.utilisateur()?.nom }}</strong>
-        <small>{{ libelleRole }}</small>
+        <small>{{ libelleRole | translate }}</small>
       </div>
     </div>
 
     <nav class="sidebar-nav" (click)="fermerMenuMobile()">
       <ng-container *ngIf="auth.aLeRole('CLIENT')">
-        <p class="sidebar-groupe">Client</p>
+        <p class="sidebar-groupe">{{ 'commun.sidebar.groupeClient' | translate }}</p>
         <a routerLink="/client/dashboard" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>
-          Tableau de bord
+          {{ 'commun.sidebar.tableauDeBord' | translate }}
         </a>
         <a routerLink="/client/mes-demandes" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /></svg>
-          Mes demandes
+          {{ 'commun.sidebar.mesDemandes' | translate }}
         </a>
         <a routerLink="/client/creer-demande" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></svg>
-          Nouvelle demande
+          {{ 'commun.sidebar.nouvelleDemande' | translate }}
         </a>
       </ng-container>
 
       <ng-container *ngIf="auth.aLeRole('LIVREUR')">
-        <p class="sidebar-groupe">Livreur</p>
+        <p class="sidebar-groupe">{{ 'commun.sidebar.groupeLivreur' | translate }}</p>
         <a routerLink="/livreur/missions" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10" rx="1" /><path d="M14 10h4l3 3v4h-7" /><circle cx="5.5" cy="18.5" r="1.5" /><circle cx="16.5" cy="18.5" r="1.5" /></svg>
-          Mes missions
+          {{ 'commun.sidebar.mesMissions' | translate }}
         </a>
         <a routerLink="/livreur/paiement" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2" /><line x1="11" y1="18" x2="13" y2="18" /></svg>
-          Paiement
+          {{ 'commun.sidebar.paiement' | translate }}
         </a>
       </ng-container>
 
       <ng-container *ngIf="auth.aLeRole('ENTREPRISE')">
-        <p class="sidebar-groupe">Entreprise</p>
+        <p class="sidebar-groupe">{{ 'commun.sidebar.groupeEntreprise' | translate }}</p>
         <a routerLink="/entreprise/dashboard" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>
-          Tableau de bord
+          {{ 'commun.sidebar.tableauDeBord' | translate }}
         </a>
         <a routerLink="/entreprise/demandes" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-7h14l2 7" /><path d="M3 12v7a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-7" /><path d="M3 12h18" /></svg>
-          Demandes reçues
+          {{ 'commun.sidebar.demandesRecues' | translate }}
         </a>
         <a routerLink="/entreprise/vehicules" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="13" height="10" rx="1" /><path d="M14 10h4l3 3v4h-7" /><circle cx="5.5" cy="18.5" r="1.5" /><circle cx="16.5" cy="18.5" r="1.5" /></svg>
-          Véhicules
+          {{ 'commun.sidebar.vehicules' | translate }}
         </a>
         <a routerLink="/entreprise/employes" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3" /><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6" /><circle cx="18" cy="9" r="2.3" /><path d="M22 20c0-2.6-1.7-4.6-4-5.3" /></svg>
-          Employés
+          {{ 'commun.sidebar.employes' | translate }}
         </a>
         <a routerLink="/entreprise/historique" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></svg>
-          Historique
+          {{ 'commun.sidebar.historique' | translate }}
         </a>
         <a routerLink="/entreprise/paiement" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2" /><line x1="11" y1="18" x2="13" y2="18" /></svg>
-          Paiement
+          {{ 'commun.sidebar.paiement' | translate }}
         </a>
         <a routerLink="/entreprise/tarifs" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v10M8 10h5a2 2 0 1 1 0 4H9" /></svg>
-          Tarifs
+          {{ 'commun.sidebar.tarifs' | translate }}
         </a>
       </ng-container>
 
       <ng-container *ngIf="auth.aLeRole('ADMIN')">
-        <p class="sidebar-groupe">Administration</p>
+        <p class="sidebar-groupe">{{ 'commun.sidebar.groupeAdministration' | translate }}</p>
         <a routerLink="/admin/dashboard" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>
-          Tableau de bord
+          {{ 'commun.sidebar.tableauDeBord' | translate }}
         </a>
         <a routerLink="/admin/entreprises" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1" /><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01M9 16h6" /></svg>
-          Entreprises
+          {{ 'commun.sidebar.entreprises' | translate }}
         </a>
         <a routerLink="/admin/utilisateurs" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3" /><path d="M2 20c0-3.5 3-6 7-6s7 2.5 7 6" /><circle cx="18" cy="9" r="2.3" /><path d="M22 20c0-2.6-1.7-4.6-4-5.3" /></svg>
-          Utilisateurs
+          {{ 'commun.sidebar.utilisateurs' | translate }}
         </a>
         <a routerLink="/admin/parametres" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z" /></svg>
-          Paramètres
+          {{ 'commun.sidebar.parametres' | translate }}
         </a>
         <a routerLink="/admin/abonnements" routerLinkActive="actif">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
-          Abonnements
+          {{ 'commun.sidebar.abonnements' | translate }}
         </a>
       </ng-container>
 
       <a *ngIf="auth.aLeRole('ENTREPRISE', 'LIVREUR')" routerLink="/abonnements" routerLinkActive="actif">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
-        Abonnements
+        {{ 'commun.sidebar.abonnements' | translate }}
       </a>
 
-      <p class="sidebar-groupe">Compte</p>
+      <p class="sidebar-groupe">{{ 'commun.sidebar.groupeCompte' | translate }}</p>
       <a routerLink="/notifications" routerLinkActive="actif">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
-        Notifications
+        {{ 'commun.sidebar.notifications' | translate }}
         <span class="pastille" *ngIf="notificationsNonLues">{{ notificationsNonLues }}</span>
       </a>
       <a routerLink="/incidents" routerLinkActive="actif">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z" /><line x1="12" y1="9" x2="12" y2="14" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-        Incidents
+        {{ 'commun.sidebar.incidents' | translate }}
       </a>
       <a routerLink="/compte" routerLinkActive="actif">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" /></svg>
-        Mon compte
+        {{ 'commun.sidebar.monCompte' | translate }}
       </a>
     </nav>
 
+    <div class="sidebar-langue">
+      <button type="button" [class.actif]="langueService.langueActuelle === 'fr'" (click)="changerLangue('fr')">FR</button>
+      <button type="button" [class.actif]="langueService.langueActuelle === 'en'" (click)="changerLangue('en')">EN</button>
+    </div>
+
     <button type="button" class="sidebar-deconnexion" (click)="deconnexion()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
-      Se déconnecter
+      {{ 'commun.sidebar.seDeconnecter' | translate }}
     </button>
   </aside>
 
@@ -148,7 +153,7 @@
       <span class="topbar-etoile">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7-5.4-4.7 7.1-.6z" /></svg>
       </span>
-      <h1 class="topbar-titre">{{ titrePage }}</h1>
+      <h1 class="topbar-titre">{{ titrePage | translate }}</h1>
       <span class="topbar-date">{{ maintenant | date: 'dd/MM/yyyy HH:mm' }}</span>
     </div>
 

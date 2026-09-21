@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AbonnementService } from '../../core/services/abonnement.service';
 import { ParametreService } from '../../core/services/parametre.service';
 import { Abonnement } from '../../core/models/abonnement.model';
@@ -9,7 +10,7 @@ import { TarifAbonnement } from '../../core/models/parametre.model';
 @Component({
   selector: 'app-abonnements',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './abonnements.component.html',
 })
 export class AbonnementsComponent implements OnInit {
@@ -18,7 +19,11 @@ export class AbonnementsComponent implements OnInit {
   erreur = '';
   tarifEnSouscription: number | null = null;
 
-  constructor(private abonnementService: AbonnementService, private parametreService: ParametreService) {}
+  constructor(
+    private abonnementService: AbonnementService,
+    private parametreService: ParametreService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.charger();
@@ -49,7 +54,7 @@ export class AbonnementsComponent implements OnInit {
         this.tarifEnSouscription = null;
         this.charger();
       },
-      error: (err) => (this.erreur = err?.error?.message ?? 'Impossible de souscrire à cet abonnement.'),
+      error: (err) => (this.erreur = err?.error?.message ?? this.translate.instant('partage.abonnements.erreurSouscription')),
     });
   }
 }

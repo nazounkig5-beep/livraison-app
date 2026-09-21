@@ -1,37 +1,37 @@
 <div class="demande-detail" *ngIf="demande">
-  <p><a routerLink="/client/mes-demandes">← Mes demandes</a></p>
-  <h1>Demande #{{ demande.id }}</h1>
+  <p><a routerLink="/client/mes-demandes">{{ 'client.demandeDetail.lienRetour' | translate }}</a></p>
+  <h1>{{ 'client.demandeDetail.titreDemande' | translate }} #{{ demande.id }}</h1>
 
   <ul>
-    <li>Trajet : {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</li>
-    <li>Statut : {{ demande.statut }}</li>
-    <li>Tarif estimé : {{ demande.tarif_estime }} FCFA</li>
-    <li *ngIf="demande.code_livraison">Code de livraison : {{ demande.code_livraison }}</li>
-    <li *ngIf="demande.date_programmee">Programmée le : {{ demande.date_programmee }}</li>
+    <li>{{ 'client.demandeDetail.labelTrajet' | translate }} : {{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</li>
+    <li>{{ 'client.demandeDetail.labelStatut' | translate }} : {{ ('commun.statutDemande.' + demande.statut) | translate }}</li>
+    <li>{{ 'client.demandeDetail.labelTarifEstime' | translate }} : {{ demande.tarif_estime }} FCFA</li>
+    <li *ngIf="demande.code_livraison">{{ 'client.demandeDetail.labelCodeLivraison' | translate }} : {{ demande.code_livraison }}</li>
+    <li *ngIf="demande.date_programmee">{{ 'client.demandeDetail.labelProgrammeele' | translate }} : {{ demande.date_programmee }}</li>
   </ul>
 
   <section *ngIf="demande.statut === 'EN_COURS'" class="suivi-temps-reel">
-    <h2><span class="point-live"></span> Suivi en temps réel</h2>
-    <p *ngIf="!suivi">Chargement du suivi…</p>
+    <h2><span class="point-live"></span> {{ 'client.demandeDetail.suiviTitre' | translate }}</h2>
+    <p *ngIf="!suivi">{{ 'client.demandeDetail.suiviChargement' | translate }}</p>
     <ul *ngIf="suivi">
-      <li *ngIf="suivi.livreur_nom">Livreur : {{ suivi.livreur_nom }}</li>
-      <li>Statut de la mission : {{ suivi.statut_mission }}</li>
-      <li *ngIf="suivi.position">Dernière mise à jour : {{ suivi.position.timestamp | date: 'HH:mm:ss' }}</li>
-      <li *ngIf="!suivi.position">En attente de la première position GPS du livreur…</li>
+      <li *ngIf="suivi.livreur_nom">{{ 'client.demandeDetail.labelLivreur' | translate }} : {{ suivi.livreur_nom }}</li>
+      <li>{{ 'client.demandeDetail.labelStatutMission' | translate }} : {{ suivi.statut_mission }}</li>
+      <li *ngIf="suivi.position">{{ 'client.demandeDetail.labelDerniereMaj' | translate }} : {{ suivi.position.timestamp | date: 'HH:mm:ss' }}</li>
+      <li *ngIf="!suivi.position">{{ 'client.demandeDetail.attentePositionGps' | translate }}</li>
     </ul>
     <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!suivi?.position"></div>
-    <p class="suivi-info" *ngIf="suivi">Mis à jour automatiquement toutes les 5 secondes.</p>
+    <p class="suivi-info" *ngIf="suivi">{{ 'client.demandeDetail.suiviAutoMaj' | translate }}</p>
   </section>
 
   <section *ngIf="demande.statut !== 'ANNULEE' && demande.statut !== 'LIVREE'">
-    <button type="button" (click)="annuler()">Annuler la demande</button>
+    <button type="button" (click)="annuler()">{{ 'client.demandeDetail.boutonAnnuler' | translate }}</button>
   </section>
 
   <section *ngIf="!demande.paiement || demande.paiement.statut !== 'CONFIRME'">
-    <h2>Paiement</h2>
+    <h2>{{ 'client.demandeDetail.paiementTitre' | translate }}</h2>
 
     <p *ngIf="demande.paiement?.mode === 'EN_LIGNE' && demande.paiement?.statut === 'EN_ATTENTE'">
-      Paiement en attente de confirmation par l'opérateur mobile money…
+      {{ 'client.demandeDetail.paiementEnAttente' | translate }}
     </p>
 
     <button
@@ -40,32 +40,32 @@
       (click)="payerEnLigne()"
       [disabled]="paiementEnLigneEnCours"
     >
-      {{ paiementEnLigneEnCours ? 'Redirection…' : 'Payer en ligne (Mobile Money)' }}
+      {{ (paiementEnLigneEnCours ? 'client.demandeDetail.redirectionEnCours' : 'client.demandeDetail.boutonPayerEnLigne') | translate }}
     </button>
     <p class="info-discrete" *ngIf="!demande.entreprise?.paiement_en_ligne_configure">
-      Le paiement en ligne n'est pas encore disponible pour cette entreprise.
+      {{ 'client.demandeDetail.paiementEnLigneIndisponible' | translate }}
     </p>
-    <p *ngIf="erreurPaiement" class="erreur">{{ erreurPaiement }}</p>
+    <p *ngIf="erreurPaiement" class="erreur">{{ erreurPaiement | translate }}</p>
 
-    <button type="button" (click)="payer('CASH')">Payer à la livraison (espèces)</button>
+    <button type="button" (click)="payer('CASH')">{{ 'client.demandeDetail.boutonPayerCash' | translate }}</button>
   </section>
   <section *ngIf="demande.paiement">
-    <p>Paiement : {{ demande.paiement.mode }} — {{ demande.paiement.statut }}</p>
+    <p>{{ 'client.demandeDetail.labelPaiementRecap' | translate }} : {{ demande.paiement.mode }} — {{ demande.paiement.statut }}</p>
   </section>
 
   <section *ngIf="demande.statut === 'LIVREE'">
-    <h2>Noter la livraison</h2>
+    <h2>{{ 'client.demandeDetail.noterTitre' | translate }}</h2>
     <form [formGroup]="formNote" (ngSubmit)="noter()">
       <label>
-        Note (1 à 5)
+        {{ 'client.demandeDetail.labelNote' | translate }}
         <input type="number" min="1" max="5" formControlName="note" />
       </label>
       <label>
-        Commentaire
+        {{ 'client.demandeDetail.labelCommentaire' | translate }}
         <input type="text" formControlName="commentaire" />
       </label>
-      <button type="submit" [disabled]="formNote.invalid">Envoyer la note</button>
+      <button type="submit" [disabled]="formNote.invalid">{{ 'client.demandeDetail.boutonEnvoyerNote' | translate }}</button>
     </form>
-    <p *ngIf="demande.notation">Votre note : {{ demande.notation.note }}/5</p>
+    <p *ngIf="demande.notation">{{ 'client.demandeDetail.labelVotreNote' | translate }} : {{ demande.notation.note }}/5</p>
   </section>
 </div>

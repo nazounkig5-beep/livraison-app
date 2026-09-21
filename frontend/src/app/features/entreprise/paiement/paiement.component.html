@@ -1,67 +1,67 @@
 <div class="entreprise-paiement" *ngIf="!chargement">
 
-  <p class="succes" *ngIf="enregistrementReussi">Numéros de paiement mis à jour avec succès !</p>
+  <p class="succes" *ngIf="enregistrementReussi">{{ 'entreprise.paiement.enregistrementReussi' | translate }}</p>
 
   <div class="paiement-grille">
     <section>
-      <h2>Numéros qui reçoivent les paiements</h2>
-      <p class="info-discrete">Ces numéros seront utilisés pour recevoir les paiements de vos clients.</p>
+      <h2>{{ 'entreprise.paiement.numerosQuiRecoiventLesPaiements' | translate }}</h2>
+      <p class="info-discrete">{{ 'entreprise.paiement.infoNumeros' | translate }}</p>
 
       <form [formGroup]="form" (ngSubmit)="enregistrer()">
         <label class="champ-operateur">
           <span class="pastille-couleur pastille-orange"></span> Orange Money
           <input type="tel" formControlName="numero_orange" placeholder="07XXXXXXXX" />
         </label>
-        <p class="apercu-ussd" *ngIf="apercuUssd('ORANGE') as code">Code USSD : {{ code }}</p>
+        <p class="apercu-ussd" *ngIf="apercuUssd('ORANGE') as code">{{ 'entreprise.paiement.codeUssd' | translate }} {{ code }}</p>
 
         <label class="champ-operateur">
           <span class="pastille-couleur pastille-moov"></span> Moov Money
           <input type="tel" formControlName="numero_moov" placeholder="07XXXXXXXX" />
         </label>
-        <p class="apercu-ussd" *ngIf="apercuUssd('MOOV') as code">Code USSD : {{ code }}</p>
+        <p class="apercu-ussd" *ngIf="apercuUssd('MOOV') as code">{{ 'entreprise.paiement.codeUssd' | translate }} {{ code }}</p>
 
-        <h2>Paiement en ligne (CinetPay)</h2>
+        <h2>{{ 'entreprise.paiement.paiementEnLigneCinetpay' | translate }}</h2>
         <p class="info-discrete">
-          Pour que vos clients puissent payer en ligne par mobile money, renseignez votre compte marchand CinetPay
-          (<a href="https://cinetpay.com" target="_blank" rel="noopener">créer un compte</a>).
+          {{ 'entreprise.paiement.cinetpayInfo' | translate }}
+          (<a href="https://cinetpay.com" target="_blank" rel="noopener">{{ 'entreprise.paiement.cinetpayCreerCompte' | translate }}</a>).
         </p>
-        <p class="succes" *ngIf="entreprise?.paiement_en_ligne_configure">✓ Compte de paiement en ligne configuré.</p>
-        <p class="info-discrete" *ngIf="!entreprise?.paiement_en_ligne_configure">Aucun compte configuré pour le moment.</p>
+        <p class="succes" *ngIf="entreprise?.paiement_en_ligne_configure">{{ 'entreprise.paiement.compteConfigure' | translate }}</p>
+        <p class="info-discrete" *ngIf="!entreprise?.paiement_en_ligne_configure">{{ 'entreprise.paiement.aucunCompteConfigure' | translate }}</p>
 
         <label class="champ-operateur">
-          Site ID CinetPay
-          <input type="text" formControlName="cinetpay_site_id" placeholder="Ex : 123456" />
+          {{ 'entreprise.paiement.siteIdCinetpay' | translate }}
+          <input type="text" formControlName="cinetpay_site_id" [placeholder]="'entreprise.paiement.placeholderSiteId' | translate" />
         </label>
         <label class="champ-operateur">
-          Clé API CinetPay
+          {{ 'entreprise.paiement.cleApiCinetpay' | translate }}
           <input
             type="password"
             formControlName="cinetpay_api_key"
-            [placeholder]="entreprise?.paiement_en_ligne_configure ? 'Déjà enregistrée — laisser vide pour ne pas changer' : 'Votre clé API'"
+            [placeholder]="(entreprise?.paiement_en_ligne_configure ? 'entreprise.paiement.clePlaceholderDejaEnregistree' : 'entreprise.paiement.clePlaceholderDefaut') | translate"
           />
         </label>
 
-        <button type="submit">Enregistrer &amp; générer le QR Code</button>
+        <button type="submit">{{ 'entreprise.paiement.enregistrerEtGenererLeQrCode' | translate }}</button>
       </form>
     </section>
 
     <div class="colonne-qr">
       <section>
-        <h2>QR Code de paiement</h2>
+        <h2>{{ 'entreprise.paiement.qrCodeDePaiement' | translate }}</h2>
         <div class="qr-apercu">
           <canvas #qrCanvas [hidden]="!entreprise?.qr_code"></canvas>
           <div class="qr-vide" *ngIf="!entreprise?.qr_code">
-            <p>Entrez vos numéros pour générer votre QR Code</p>
+            <p>{{ 'entreprise.paiement.qrVide' | translate }}</p>
           </div>
         </div>
-        <p class="info-discrete" *ngIf="entreprise?.qr_code">Vos clients scannent ce code pour payer directement.</p>
+        <p class="info-discrete" *ngIf="entreprise?.qr_code">{{ 'entreprise.paiement.qrInfo' | translate }}</p>
         <div class="qr-actions" *ngIf="entreprise?.qr_code">
-          <button type="button" (click)="imprimerQr()">Imprimer</button>
-          <button type="button" (click)="telechargerQr()">Télécharger</button>
+          <button type="button" (click)="imprimerQr()">{{ 'entreprise.paiement.imprimer' | translate }}</button>
+          <button type="button" (click)="telechargerQr()">{{ 'entreprise.paiement.telecharger' | translate }}</button>
         </div>
         <div class="qr-envoi" *ngIf="entreprise?.qr_code">
           <button type="button" (click)="envoyerAuxLivreurs()" [disabled]="envoiEnCours">
-            {{ envoiEnCours ? 'Envoi en cours…' : 'Envoyer aux livreurs' }}
+            {{ (envoiEnCours ? 'entreprise.paiement.envoiEnCours' : 'entreprise.paiement.envoyerAuxLivreurs') | translate }}
           </button>
           <p class="succes" *ngIf="envoiMessage">{{ envoiMessage }}</p>
           <p class="erreur" *ngIf="envoiErreur">{{ envoiErreur }}</p>
@@ -69,12 +69,12 @@
       </section>
 
       <section>
-        <h2>Comment ça marche</h2>
+        <h2>{{ 'entreprise.paiement.commentCaMarche' | translate }}</h2>
         <ol class="etapes-paiement">
-          <li>Le client choisit sa méthode (Orange ou Moov).</li>
-          <li>Il entre son numéro et le montant.</li>
-          <li>Le code USSD est composé automatiquement.</li>
-          <li>Il valide avec son code secret → vous recevez le paiement.</li>
+          <li>{{ 'entreprise.paiement.etape1' | translate }}</li>
+          <li>{{ 'entreprise.paiement.etape2' | translate }}</li>
+          <li>{{ 'entreprise.paiement.etape3' | translate }}</li>
+          <li>{{ 'entreprise.paiement.etape4' | translate }}</li>
         </ol>
       </section>
     </div>

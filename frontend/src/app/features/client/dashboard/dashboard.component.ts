@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { DemandeService } from '../../../core/services/demande.service';
 import { StatistiquesClient } from '../../../core/models/demande.model';
 
@@ -8,7 +9,7 @@ import { StatistiquesClient } from '../../../core/models/demande.model';
 @Component({
   selector: 'app-client-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './dashboard.component.html',
 })
 export class ClientDashboardComponent implements OnInit {

@@ -13,6 +13,7 @@ export interface Utilisateur {
   ville?: string | null;
   adresse?: string | null;
   photo_url?: string | null;
+  langue?: 'fr' | 'en';
   /** Résumé d'activité selon le rôle (ex: "3 demande(s)"), fourni par GET /admin/utilisateurs. */
   activite?: string | null;
   entreprise?: Entreprise;

@@ -7,7 +7,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.clients }}</span>
-        <span class="stat-libelle">Clients</span>
+        <span class="stat-libelle">{{ 'admin.utilisateurs.statClients' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -16,7 +16,7 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.entreprises }}</span>
-        <span class="stat-libelle">Entreprises</span>
+        <span class="stat-libelle">{{ 'admin.utilisateurs.statEntreprises' | translate }}</span>
       </span>
     </div>
     <div class="stat-carte">
@@ -25,39 +25,39 @@
       </span>
       <span class="stat-texte">
         <span class="stat-valeur">{{ stats.livreurs }}</span>
-        <span class="stat-libelle">Livreurs</span>
+        <span class="stat-libelle">{{ 'admin.utilisateurs.statLivreurs' | translate }}</span>
       </span>
     </div>
   </div>
 
   <div class="utilisateurs-barre">
     <div class="onglets-role">
-      <button type="button" [class.actif]="onglet === ''" (click)="changerOnglet('')">Tous ({{ stats.total }})</button>
-      <button type="button" [class.actif]="onglet === 'CLIENT'" (click)="changerOnglet('CLIENT')">Clients ({{ stats.clients }})</button>
-      <button type="button" [class.actif]="onglet === 'ENTREPRISE'" (click)="changerOnglet('ENTREPRISE')">Entreprises ({{ stats.entreprises }})</button>
-      <button type="button" [class.actif]="onglet === 'LIVREUR'" (click)="changerOnglet('LIVREUR')">Livreurs ({{ stats.livreurs }})</button>
-      <button type="button" [class.actif]="onglet === 'ADMIN'" (click)="changerOnglet('ADMIN')">Admins ({{ stats.admins }})</button>
+      <button type="button" [class.actif]="onglet === ''" (click)="changerOnglet('')">{{ 'admin.utilisateurs.tousAvecCompte' | translate: { compte: stats.total } }}</button>
+      <button type="button" [class.actif]="onglet === 'CLIENT'" (click)="changerOnglet('CLIENT')">{{ 'admin.utilisateurs.clientsAvecCompte' | translate: { compte: stats.clients } }}</button>
+      <button type="button" [class.actif]="onglet === 'ENTREPRISE'" (click)="changerOnglet('ENTREPRISE')">{{ 'admin.utilisateurs.entreprisesAvecCompte' | translate: { compte: stats.entreprises } }}</button>
+      <button type="button" [class.actif]="onglet === 'LIVREUR'" (click)="changerOnglet('LIVREUR')">{{ 'admin.utilisateurs.livreursAvecCompte' | translate: { compte: stats.livreurs } }}</button>
+      <button type="button" [class.actif]="onglet === 'ADMIN'" (click)="changerOnglet('ADMIN')">{{ 'admin.utilisateurs.adminsAvecCompte' | translate: { compte: stats.admins } }}</button>
     </div>
 
     <form class="recherche-utilisateurs" (ngSubmit)="charger()">
-      <input type="search" [(ngModel)]="recherche" name="recherche" placeholder="Nom, email…" />
-      <button type="submit">Chercher</button>
+      <input type="search" [(ngModel)]="recherche" name="recherche" [attr.placeholder]="'admin.utilisateurs.rechercherPlaceholder' | translate" />
+      <button type="submit">{{ 'commun.action.chercher' | translate }}</button>
     </form>
   </div>
 
-  <p class="nombre-resultats">{{ utilisateurs.length }} utilisateur(s)</p>
+  <p class="nombre-resultats">{{ 'admin.utilisateurs.nombreResultats' | translate: { nombre: utilisateurs.length } }}</p>
   <p class="erreur" *ngIf="erreurSuppression">{{ erreurSuppression }}</p>
 
   <table>
     <thead>
       <tr>
-        <th>Utilisateur</th>
-        <th>Contact</th>
-        <th>Rôle</th>
-        <th>Activité</th>
-        <th>Statut</th>
-        <th>Inscription</th>
-        <th>Actions</th>
+        <th>{{ 'admin.utilisateurs.colonneUtilisateur' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneContact' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneRole' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneActivite' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneStatut' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneInscription' | translate }}</th>
+        <th>{{ 'admin.utilisateurs.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let utilisateur of utilisateurs">
@@ -66,25 +66,25 @@
           <span class="avatar-rond">{{ initiales(utilisateur.nom) }}</span>
           <div>
             <strong>{{ utilisateur.nom }}</strong>
-            <small>ID #{{ utilisateur.id }}</small>
+            <small>{{ 'admin.utilisateurs.idNumero' | translate: { id: utilisateur.id } }}</small>
           </div>
         </div>
       </td>
       <td>{{ utilisateur.email }}</td>
-      <td><span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">{{ libelleRole(utilisateur.role) }}</span></td>
+      <td><span class="badge-role" [class]="'badge-role-' + utilisateur.role.toLowerCase()">{{ 'commun.role.' + utilisateur.role | translate }}</span></td>
       <td>{{ utilisateur.activite ?? '—' }}</td>
       <td>
         <span class="badge-statut" [class.badge-statut-suspendu]="utilisateur.statut_compte === 'SUSPENDU'">
-          {{ utilisateur.statut_compte === 'ACTIF' ? 'Actif' : 'Suspendu' }}
+          {{ (utilisateur.statut_compte === 'ACTIF' ? 'admin.utilisateurs.statutActif' : 'admin.utilisateurs.statutSuspendu') | translate }}
         </span>
       </td>
       <td>{{ utilisateur.date_creation | date: 'dd/MM/yyyy' }}</td>
       <td>
-        <button type="button" *ngIf="utilisateur.statut_compte === 'ACTIF'" (click)="suspendre(utilisateur)">Suspendre</button>
-        <button type="button" *ngIf="utilisateur.statut_compte === 'SUSPENDU'" (click)="reactiver(utilisateur)">Réactiver</button>
-        <button type="button" class="bouton-supprimer" (click)="supprimer(utilisateur)">Supprimer</button>
+        <button type="button" *ngIf="utilisateur.statut_compte === 'ACTIF'" (click)="suspendre(utilisateur)">{{ 'admin.utilisateurs.suspendre' | translate }}</button>
+        <button type="button" *ngIf="utilisateur.statut_compte === 'SUSPENDU'" (click)="reactiver(utilisateur)">{{ 'admin.utilisateurs.reactiver' | translate }}</button>
+        <button type="button" class="bouton-supprimer" (click)="supprimer(utilisateur)">{{ 'commun.action.supprimer' | translate }}</button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!utilisateurs.length">Aucun utilisateur ne correspond à cette recherche.</p>
+  <p *ngIf="!utilisateurs.length">{{ 'admin.utilisateurs.aucunResultatRecherche' | translate }}</p>
 </div>

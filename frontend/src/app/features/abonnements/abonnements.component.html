@@ -1,40 +1,40 @@
 <div class="abonnements">
 
   <section *ngIf="abonnementActif; else aucunAbonnementActif">
-    <h2>Mon abonnement</h2>
+    <h2>{{ 'partage.abonnements.monAbonnement' | translate }}</h2>
     <div class="stats-grid">
       <div class="stat-carte">
         <span class="stat-valeur">{{ abonnementActif.tarif?.nom }}</span>
-        <span class="stat-libelle">Offre active</span>
+        <span class="stat-libelle">{{ 'partage.abonnements.offreActive' | translate }}</span>
       </div>
       <div class="stat-carte">
         <span class="stat-valeur">{{ abonnementActif.date_fin | date: 'dd/MM/yyyy' }}</span>
-        <span class="stat-libelle">Valable jusqu'au</span>
+        <span class="stat-libelle">{{ 'partage.abonnements.valableJusquAu' | translate }}</span>
       </div>
       <div class="stat-carte" [class.stat-alerte]="abonnementActif.statut_paiement !== 'CONFIRME'">
-        <span class="stat-valeur">{{ abonnementActif.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}</span>
+        <span class="stat-valeur">{{ (abonnementActif.statut_paiement === 'CONFIRME' ? 'partage.abonnements.paye' : 'partage.abonnements.enAttente') | translate }}</span>
         <span class="stat-libelle">{{ abonnementActif.montant }} FCFA — {{ abonnementActif.mode_paiement }}</span>
       </div>
     </div>
   </section>
   <ng-template #aucunAbonnementActif>
-    <p>Aucun abonnement actif pour le moment — choisissez une offre ci-dessous.</p>
+    <p>{{ 'partage.abonnements.aucunAbonnementActif' | translate }}</p>
   </ng-template>
 
-  <h2>Offres disponibles</h2>
+  <h2>{{ 'partage.abonnements.offresDisponibles' | translate }}</h2>
   <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
   <table>
     <thead>
       <tr>
-        <th>Offre</th>
-        <th>Durée</th>
-        <th>Prix</th>
-        <th>Actions</th>
+        <th>{{ 'partage.abonnements.colonneOffre' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonneDuree' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonnePrix' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonneActions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let tarif of tarifs">
       <td>{{ tarif.nom }}</td>
-      <td>{{ tarif.duree }} mois</td>
+      <td>{{ tarif.duree }} {{ 'partage.abonnements.mois' | translate }}</td>
       <td>{{ tarif.prix }} FCFA</td>
       <td>
         <button
@@ -42,41 +42,41 @@
           *ngIf="!abonnementActif && tarifEnSouscription !== tarif.id"
           (click)="choisir(tarif)"
         >
-          Souscrire
+          {{ 'partage.abonnements.souscrire' | translate }}
         </button>
-        <span *ngIf="abonnementActif">Indisponible (abonnement déjà actif)</span>
+        <span *ngIf="abonnementActif">{{ 'partage.abonnements.indisponibleDejaActif' | translate }}</span>
       </td>
     </tr>
   </table>
 
   <section *ngIf="tarifEnSouscription">
-    <h2>Choisir le mode de paiement</h2>
+    <h2>{{ 'partage.abonnements.choisirModePaiement' | translate }}</h2>
     <ng-container *ngFor="let tarif of tarifs">
       <ng-container *ngIf="tarif.id === tarifEnSouscription">
-        <p>{{ tarif.nom }} — {{ tarif.prix }} FCFA pour {{ tarif.duree }} mois</p>
-        <button type="button" (click)="souscrire(tarif, 'EN_LIGNE')">Payer en ligne</button>
-        <button type="button" (click)="souscrire(tarif, 'CASH')">Payer en espèces</button>
-        <button type="button" (click)="annulerChoix()">Annuler</button>
+        <p>{{ tarif.nom }} — {{ tarif.prix }} FCFA {{ 'partage.abonnements.pour' | translate }} {{ tarif.duree }} {{ 'partage.abonnements.mois' | translate }}</p>
+        <button type="button" (click)="souscrire(tarif, 'EN_LIGNE')">{{ 'partage.abonnements.payerEnLigne' | translate }}</button>
+        <button type="button" (click)="souscrire(tarif, 'CASH')">{{ 'partage.abonnements.payerEnEspeces' | translate }}</button>
+        <button type="button" (click)="annulerChoix()">{{ 'commun.action.annuler' | translate }}</button>
       </ng-container>
     </ng-container>
   </section>
 
-  <h2>Historique de mes abonnements</h2>
+  <h2>{{ 'partage.abonnements.historiqueDeMesAbonnements' | translate }}</h2>
   <table>
     <thead>
       <tr>
-        <th>Offre</th>
-        <th>Période</th>
-        <th>Statut</th>
-        <th>Paiement</th>
+        <th>{{ 'partage.abonnements.colonneOffre' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonnePeriode' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonneStatut' | translate }}</th>
+        <th>{{ 'partage.abonnements.colonnePaiement' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let abonnement of mesAbonnements">
       <td>{{ abonnement.tarif?.nom }}</td>
       <td>{{ abonnement.date_debut | date: 'dd/MM/yyyy' }} → {{ abonnement.date_fin | date: 'dd/MM/yyyy' }}</td>
-      <td>{{ abonnement.statut }}</td>
-      <td>{{ abonnement.montant }} FCFA — {{ abonnement.statut_paiement === 'CONFIRME' ? 'Payé' : 'En attente' }}</td>
+      <td>{{ ('partage.abonnements.statut.' + abonnement.statut) | translate }}</td>
+      <td>{{ abonnement.montant }} FCFA — {{ (abonnement.statut_paiement === 'CONFIRME' ? 'partage.abonnements.paye' : 'partage.abonnements.enAttente') | translate }}</td>
     </tr>
   </table>
-  <p *ngIf="!mesAbonnements.length">Aucun abonnement souscrit pour le moment.</p>
+  <p *ngIf="!mesAbonnements.length">{{ 'partage.abonnements.aucunAbonnementSouscrit' | translate }}</p>
 </div>

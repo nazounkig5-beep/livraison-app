@@ -1,28 +1,28 @@
 <div class="auth-page">
   <div class="auth-formulaire" style="width: 100%;">
     <div class="auth-carte">
-      <h2>Choisir un nouveau mot de passe</h2>
+      <h2>{{ 'auth.reinitialiser.titre' | translate }}</h2>
 
       <div *ngIf="succes; else formulaire">
-        <p class="succes">Mot de passe réinitialisé avec succès. Redirection vers la connexion…</p>
+        <p class="succes">{{ 'auth.reinitialiser.succes' | translate }}</p>
       </div>
 
       <ng-template #formulaire>
         <form [formGroup]="form" (ngSubmit)="soumettre()">
           <label>
-            Nouveau mot de passe
+            {{ 'auth.reinitialiser.nouveauMotDePasse' | translate }}
             <input type="password" formControlName="mot_de_passe" />
           </label>
           <label>
-            Confirmer le mot de passe
+            {{ 'auth.reinitialiser.confirmerMotDePasse' | translate }}
             <input type="password" formControlName="mot_de_passe_confirmation" />
           </label>
-          <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+          <p class="erreur" *ngIf="erreur">{{ erreur | translate }}</p>
           <button type="submit" [disabled]="form.invalid || envoiEnCours">
-            {{ envoiEnCours ? 'Enregistrement…' : 'Réinitialiser le mot de passe' }}
+            {{ (envoiEnCours ? 'auth.reinitialiser.boutonEnCours' : 'auth.reinitialiser.bouton') | translate }}
           </button>
         </form>
-        <p><a routerLink="/auth/login">← Retour à la connexion</a></p>
+        <p><a routerLink="/auth/login">{{ 'auth.reinitialiser.retour' | translate }}</a></p>
       </ng-template>
     </div>
   </div>

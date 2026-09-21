@@ -2,25 +2,25 @@
   <table>
     <thead>
       <tr>
-        <th>N°</th>
-        <th>Trajet</th>
-        <th>Statut</th>
-        <th>Livreur</th>
-        <th>Date</th>
-        <th>Paiement</th>
-        <th>Actions</th>
+        <th>{{ 'entreprise.historique.numero' | translate }}</th>
+        <th>{{ 'entreprise.historique.trajet' | translate }}</th>
+        <th>{{ 'entreprise.historique.statut' | translate }}</th>
+        <th>{{ 'entreprise.historique.livreur' | translate }}</th>
+        <th>{{ 'entreprise.historique.date' | translate }}</th>
+        <th>{{ 'entreprise.historique.paiement' | translate }}</th>
+        <th>{{ 'entreprise.historique.actions' | translate }}</th>
       </tr>
     </thead>
     <tr *ngFor="let demande of demandes">
       <td>#{{ demande.id }}</td>
       <td>{{ demande.adresse_depart }} → {{ demande.adresse_arrivee }}</td>
-      <td>{{ demande.statut }}</td>
+      <td>{{ ('commun.statutDemande.' + demande.statut) | translate }}</td>
       <td>{{ demande.mission?.livreur?.utilisateur?.nom ?? '—' }}</td>
       <td>{{ demande.date_creation }}</td>
       <td>
         <ng-container *ngIf="demande.paiement; else pasDePaiement">
-          {{ demande.paiement.mode === 'CASH' ? 'Espèces' : 'En ligne' }} —
-          {{ demande.paiement.statut === 'CONFIRME' ? 'Payé' : 'En attente' }}
+          {{ (demande.paiement.mode === 'CASH' ? 'entreprise.historique.modeEspeces' : 'entreprise.historique.modeEnLigne') | translate }} —
+          {{ (demande.paiement.statut === 'CONFIRME' ? 'entreprise.historique.paiementPaye' : 'entreprise.historique.paiementEnAttente') | translate }}
         </ng-container>
         <ng-template #pasDePaiement>—</ng-template>
       </td>
@@ -30,10 +30,10 @@
           *ngIf="demande.paiement?.mode === 'CASH' && demande.paiement?.statut === 'EN_ATTENTE'"
           (click)="confirmerPaiement(demande)"
         >
-          Confirmer le paiement
+          {{ 'entreprise.historique.confirmerLePaiement' | translate }}
         </button>
       </td>
     </tr>
   </table>
-  <p *ngIf="!demandes.length">Aucune demande dans l'historique.</p>
+  <p *ngIf="!demandes.length">{{ 'entreprise.historique.aucuneDemande' | translate }}</p>
 </div>

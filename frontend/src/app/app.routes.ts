@@ -32,28 +32,28 @@ export const routes: Routes = [
   {
     path: 'client/dashboard',
     canActivate: [authGuard, roleGuard(['CLIENT'])],
-    data: { title: 'Tableau de bord' },
+    data: { title: 'client.dashboard.titrePage' },
     loadComponent: () =>
       import('./features/client/dashboard/dashboard.component').then((m) => m.ClientDashboardComponent),
   },
   {
     path: 'client/creer-demande',
     canActivate: [authGuard, roleGuard(['CLIENT'])],
-    data: { title: 'Nouvelle demande de livraison' },
+    data: { title: 'client.creerDemande.titrePage' },
     loadComponent: () =>
       import('./features/client/creer-demande/creer-demande.component').then((m) => m.CreerDemandeComponent),
   },
   {
     path: 'client/mes-demandes',
     canActivate: [authGuard, roleGuard(['CLIENT'])],
-    data: { title: 'Mes demandes de livraison' },
+    data: { title: 'client.mesDemandes.titrePage' },
     loadComponent: () =>
       import('./features/client/mes-demandes/mes-demandes.component').then((m) => m.MesDemandesComponent),
   },
   {
     path: 'client/mes-demandes/:id',
     canActivate: [authGuard, roleGuard(['CLIENT'])],
-    data: { title: 'Détail de la demande' },
+    data: { title: 'client.demandeDetail.titrePage' },
     loadComponent: () =>
       import('./features/client/mes-demandes/demande-detail.component').then((m) => m.DemandeDetailComponent),
   },
@@ -62,20 +62,20 @@ export const routes: Routes = [
   {
     path: 'livreur/missions',
     canActivate: [authGuard, roleGuard(['LIVREUR'])],
-    data: { title: 'Mes missions' },
+    data: { title: 'livreur.missions.titrePage' },
     loadComponent: () => import('./features/livreur/missions/missions.component').then((m) => m.MissionsComponent),
   },
   {
     path: 'livreur/missions/:id',
     canActivate: [authGuard, roleGuard(['LIVREUR'])],
-    data: { title: 'Détail de la mission' },
+    data: { title: 'livreur.missionDetail.titrePage' },
     loadComponent: () =>
       import('./features/livreur/missions/mission-detail.component').then((m) => m.MissionDetailComponent),
   },
   {
     path: 'livreur/paiement',
     canActivate: [authGuard, roleGuard(['LIVREUR'])],
-    data: { title: 'QR code de paiement' },
+    data: { title: 'livreur.paiement.titrePage' },
     loadComponent: () =>
       import('./features/livreur/paiement/paiement.component').then((m) => m.LivreurPaiementComponent),
   },
@@ -84,48 +84,48 @@ export const routes: Routes = [
   {
     path: 'entreprise/dashboard',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Tableau de bord' },
+    data: { title: 'entreprise.dashboard.titrePage' },
     loadComponent: () =>
       import('./features/entreprise/dashboard/dashboard.component').then((m) => m.EntrepriseDashboardComponent),
   },
   {
     path: 'entreprise/demandes',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Demandes reçues' },
+    data: { title: 'entreprise.demandes.titrePage' },
     loadComponent: () =>
       import('./features/entreprise/demandes/demandes.component').then((m) => m.DemandesComponent),
   },
   {
     path: 'entreprise/vehicules',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Mes véhicules' },
+    data: { title: 'entreprise.vehicules.titrePage' },
     loadComponent: () =>
       import('./features/entreprise/vehicules/vehicules.component').then((m) => m.VehiculesComponent),
   },
   {
     path: 'entreprise/employes',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Mes livreurs employés' },
+    data: { title: 'entreprise.employes.titrePage' },
     loadComponent: () => import('./features/entreprise/employes/employes.component').then((m) => m.EmployesComponent),
   },
   {
     path: 'entreprise/historique',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Historique des demandes' },
+    data: { title: 'entreprise.historique.titrePage' },
     loadComponent: () =>
       import('./features/entreprise/historique/historique.component').then((m) => m.HistoriqueComponent),
   },
   {
     path: 'entreprise/paiement',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Numéros de paiement & QR Code' },
+    data: { title: 'entreprise.paiement.titrePage' },
     loadComponent: () =>
       import('./features/entreprise/paiement/paiement.component').then((m) => m.PaiementComponent),
   },
   {
     path: 'entreprise/tarifs',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
-    data: { title: 'Tarifs de livraison' },
+    data: { title: 'entreprise.tarifs.titrePage' },
     loadComponent: () => import('./features/entreprise/tarifs/tarifs.component').then((m) => m.TarifsComponent),
   },
 
@@ -133,34 +133,34 @@ export const routes: Routes = [
   {
     path: 'admin/dashboard',
     canActivate: [authGuard, roleGuard(['ADMIN'])],
-    data: { title: 'Administration' },
+    data: { title: 'admin.dashboard.titrePage' },
     loadComponent: () => import('./features/admin/dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
     path: 'admin/entreprises',
     canActivate: [authGuard, roleGuard(['ADMIN'])],
-    data: { title: 'Entreprises' },
+    data: { title: 'admin.entreprises.titrePage' },
     loadComponent: () =>
       import('./features/admin/entreprises/entreprises.component').then((m) => m.EntreprisesComponent),
   },
   {
     path: 'admin/utilisateurs',
     canActivate: [authGuard, roleGuard(['ADMIN'])],
-    data: { title: 'Utilisateurs' },
+    data: { title: 'admin.utilisateurs.titrePage' },
     loadComponent: () =>
       import('./features/admin/utilisateurs/utilisateurs.component').then((m) => m.UtilisateursComponent),
   },
   {
     path: 'admin/parametres',
     canActivate: [authGuard, roleGuard(['ADMIN'])],
-    data: { title: 'Paramètres' },
+    data: { title: 'admin.parametres.titrePage' },
     loadComponent: () =>
       import('./features/admin/parametres/parametres.component').then((m) => m.ParametresComponent),
   },
   {
     path: 'admin/abonnements',
     canActivate: [authGuard, roleGuard(['ADMIN'])],
-    data: { title: 'Abonnements' },
+    data: { title: 'admin.abonnements.titrePage' },
     loadComponent: () =>
       import('./features/admin/abonnements/abonnements.component').then((m) => m.AdminAbonnementsComponent),
   },
@@ -169,26 +169,26 @@ export const routes: Routes = [
   {
     path: 'compte',
     canActivate: [authGuard],
-    data: { title: 'Mon compte' },
+    data: { title: 'partage.compte.titrePage' },
     loadComponent: () => import('./features/compte/compte.component').then((m) => m.CompteComponent),
   },
   {
     path: 'notifications',
     canActivate: [authGuard],
-    data: { title: 'Notifications' },
+    data: { title: 'partage.notifications.titrePage' },
     loadComponent: () =>
       import('./features/notifications/notifications.component').then((m) => m.NotificationsComponent),
   },
   {
     path: 'incidents',
     canActivate: [authGuard],
-    data: { title: 'Incidents' },
+    data: { title: 'partage.incidents.titrePage' },
     loadComponent: () => import('./features/incidents/incidents.component').then((m) => m.IncidentsComponent),
   },
   {
     path: 'abonnements',
     canActivate: [authGuard, roleGuard(['ENTREPRISE', 'LIVREUR'])],
-    data: { title: 'Abonnements' },
+    data: { title: 'partage.abonnements.titrePage' },
     loadComponent: () =>
       import('./features/abonnements/abonnements.component').then((m) => m.AbonnementsComponent),
   },
