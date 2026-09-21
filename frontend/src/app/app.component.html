@@ -79,6 +79,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2" /><line x1="11" y1="18" x2="13" y2="18" /></svg>
           Paiement
         </a>
+        <a routerLink="/entreprise/tarifs" routerLinkActive="actif">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v10M8 10h5a2 2 0 1 1 0 4H9" /></svg>
+          Tarifs
+        </a>
       </ng-container>
 
       <ng-container *ngIf="auth.aLeRole('ADMIN')">

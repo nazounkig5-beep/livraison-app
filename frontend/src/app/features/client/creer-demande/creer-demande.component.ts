@@ -12,9 +12,10 @@ const VUE_CARTE_PAR_DEFAUT: L.LatLngExpression = [5.3599, -4.0083]; // Abidjan, 
 
 /**
  * Cas d'utilisation Client : "Créer demande de livraison"
- * Reprend le flux MCT : choisir l'entreprise -> type de service -> adresses -> tarif calculé côté serveur.
- * Le point de livraison (position exacte du client) est placé sur une carte, pour que le livreur
- * puisse ensuite s'y repérer précisément plutôt que sur la seule adresse texte.
+ * Reprend le flux MCT : choisir l'entreprise -> type de service -> adresses -> tarif calculé côté serveur
+ * à partir de positions GPS réelles (plus de saisie manuelle de distance).
+ * Pour "livraison", le départ est l'entreprise elle-même (rien à pointer) ; pour déménagement/transport
+ * de matériel, le client place aussi son point de départ, en plus du point d'arrivée.
  */
 @Component({
   selector: 'app-creer-demande',
@@ -30,18 +31,22 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   typesService: TypeService[] = [];
   entreprises: Entreprise[] = [];
   positionArriveeChoisie = false;
+  positionDepartChoisie = false;
+  pointActif: 'depart' | 'arrivee' = 'arrivee';
 
   private carte: L.Map | null = null;
   private marqueurArrivee: L.Marker | null = null;
+  private marqueurDepart: L.Marker | null = null;
 
   form = this.fb.group({
     id_entreprise: [null as number | null, Validators.required],
     id_type_service: [null as number | null, Validators.required],
     adresse_depart: ['', Validators.required],
     adresse_arrivee: ['', Validators.required],
+    latitude_depart: [null as number | null, Validators.required],
+    longitude_depart: [null as number | null, Validators.required],
     latitude_arrivee: [null as number | null, Validators.required],
     longitude_arrivee: [null as number | null, Validators.required],
-    distance: [null as number | null],
     date_programmee: [null as string | null],
   });
 
@@ -56,28 +61,48 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     this.parametreService.typesService().subscribe((data) => (this.typesService = data));
     this.parametreService.entreprisesActives().subscribe((data) => (this.entreprises = data));
 
-    this.form.get('id_type_service')!.valueChanges.subscribe(() => this.ajusterAdresseDepart());
+    this.form.get('id_type_service')!.valueChanges.subscribe(() => this.ajusterSelonTypeService());
   }
 
   /**
-   * Pour une simple "livraison", le point de départ est l'entreprise elle-même : le champ est
-   * masqué et non requis. Pour déménagement/transport de matériel, le client doit préciser où
-   * récupérer les biens, puisque l'entreprise n'en est pas le point de départ.
+   * Pour une simple "livraison", le point de départ est l'entreprise elle-même : les champs
+   * adresse/position de départ sont masqués et non requis. Pour déménagement/transport de
+   * matériel, le client doit préciser où récupérer les biens, puisque l'entreprise n'en est pas
+   * le point de départ.
    */
   get typeServiceEstLivraison(): boolean {
     const id = this.form.value.id_type_service;
     return this.typesService.find((t) => t.id === id)?.nom === 'livraison';
   }
 
-  private ajusterAdresseDepart(): void {
-    const champ = this.form.get('adresse_depart')!;
+  private ajusterSelonTypeService(): void {
+    const champAdresse = this.form.get('adresse_depart')!;
+    const champLat = this.form.get('latitude_depart')!;
+    const champLon = this.form.get('longitude_depart')!;
+
     if (this.typeServiceEstLivraison) {
-      champ.clearValidators();
-      champ.setValue('');
+      champAdresse.clearValidators();
+      champAdresse.setValue('');
+      champLat.clearValidators();
+      champLon.clearValidators();
+      champLat.setValue(null);
+      champLon.setValue(null);
+      this.positionDepartChoisie = false;
+      this.pointActif = 'arrivee';
+      this.marqueurDepart?.remove();
+      this.marqueurDepart = null;
     } else {
-      champ.setValidators(Validators.required);
+      champAdresse.setValidators(Validators.required);
+      champLat.setValidators(Validators.required);
+      champLon.setValidators(Validators.required);
     }
-    champ.updateValueAndValidity();
+    champAdresse.updateValueAndValidity();
+    champLat.updateValueAndValidity();
+    champLon.updateValueAndValidity();
+  }
+
+  choisirPointActif(point: 'depart' | 'arrivee'): void {
+    this.pointActif = point;
   }
 
   ngAfterViewInit(): void {
@@ -105,7 +130,13 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
       );
     }
 
-    this.carte.on('click', (evenement: L.LeafletMouseEvent) => this.placerPointArrivee(evenement.latlng));
+    this.carte.on('click', (evenement: L.LeafletMouseEvent) => {
+      if (this.pointActif === 'depart' && !this.typeServiceEstLivraison) {
+        this.placerPoint(evenement.latlng, 'depart');
+      } else {
+        this.placerPoint(evenement.latlng, 'arrivee');
+      }
+    });
 
     // Le conteneur peut ne pas avoir sa taille finale au moment de l'initialisation (mise en page
     // encore en cours) : Leaflet resterait alors mal dimensionné tant qu'aucun redimensionnement
@@ -113,33 +144,42 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     setTimeout(() => this.carte?.invalidateSize(), 200);
   }
 
-  private placerPointArrivee(latlng: L.LatLng): void {
+  private placerPoint(latlng: L.LatLng, point: 'depart' | 'arrivee'): void {
     if (!this.carte) return;
 
-    if (!this.marqueurArrivee) {
-      // Icône dessinée en CSS plutôt que l'icône Leaflet par défaut, dont les images ne se
-      // chargent pas correctement dans ce build Angular (même piège déjà contourné ailleurs).
-      const icone = L.divIcon({
-        className: 'marqueur-destination',
-        html: '<span class="marqueur-destination-point"></span>',
-        iconSize: [18, 18],
-        iconAnchor: [9, 9],
-      });
-      this.marqueurArrivee = L.marker(latlng, { icon: icone, draggable: true }).addTo(this.carte);
-      this.marqueurArrivee.on('dragend', () => {
-        const position = this.marqueurArrivee!.getLatLng();
-        this.enregistrerPosition(position);
-      });
-    } else {
-      this.marqueurArrivee.setLatLng(latlng);
-    }
+    // Icône dessinée en CSS plutôt que l'icône Leaflet par défaut, dont les images ne se
+    // chargent pas correctement dans ce build Angular (même piège déjà contourné ailleurs).
+    // Bleu pour le départ, rouge pour l'arrivée — même convention que les cartes de suivi.
+    const creerIcone = (classe: string) =>
+      L.divIcon({ className: classe, html: `<span class="${classe}-point"></span>`, iconSize: [18, 18], iconAnchor: [9, 9] });
 
-    this.enregistrerPosition(latlng);
+    if (point === 'depart') {
+      if (!this.marqueurDepart) {
+        this.marqueurDepart = L.marker(latlng, { icon: creerIcone('marqueur-livreur'), draggable: true }).addTo(this.carte);
+        this.marqueurDepart.on('dragend', () => this.enregistrerPosition(this.marqueurDepart!.getLatLng(), 'depart'));
+      } else {
+        this.marqueurDepart.setLatLng(latlng);
+      }
+      this.enregistrerPosition(latlng, 'depart');
+    } else {
+      if (!this.marqueurArrivee) {
+        this.marqueurArrivee = L.marker(latlng, { icon: creerIcone('marqueur-destination'), draggable: true }).addTo(this.carte);
+        this.marqueurArrivee.on('dragend', () => this.enregistrerPosition(this.marqueurArrivee!.getLatLng(), 'arrivee'));
+      } else {
+        this.marqueurArrivee.setLatLng(latlng);
+      }
+      this.enregistrerPosition(latlng, 'arrivee');
+    }
   }
 
-  private enregistrerPosition(latlng: L.LatLng): void {
-    this.positionArriveeChoisie = true;
-    this.form.patchValue({ latitude_arrivee: latlng.lat, longitude_arrivee: latlng.lng });
+  private enregistrerPosition(latlng: L.LatLng, point: 'depart' | 'arrivee'): void {
+    if (point === 'depart') {
+      this.positionDepartChoisie = true;
+      this.form.patchValue({ latitude_depart: latlng.lat, longitude_depart: latlng.lng });
+    } else {
+      this.positionArriveeChoisie = true;
+      this.form.patchValue({ latitude_arrivee: latlng.lat, longitude_arrivee: latlng.lng });
+    }
   }
 
   soumettre(): void {
@@ -149,9 +189,9 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     this.erreur = '';
     this.demandeService.creer(this.form.value as any).subscribe({
       next: (demande) => this.router.navigate(['/client/mes-demandes', demande.id]),
-      error: () => {
+      error: (err) => {
         this.envoiEnCours = false;
-        this.erreur = "Impossible de créer la demande. Vérifiez les informations saisies.";
+        this.erreur = err?.error?.message ?? "Impossible de créer la demande. Vérifiez les informations saisies.";
       },
     });
   }

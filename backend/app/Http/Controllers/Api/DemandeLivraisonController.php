@@ -28,32 +28,57 @@ class DemandeLivraisonController extends Controller
             'id_type_service' => 'required|exists:type_services,id',
             'adresse_depart' => 'nullable|string',
             'adresse_arrivee' => 'required|string',
+            'latitude_depart' => 'nullable|numeric|between:-90,90',
+            'longitude_depart' => 'nullable|numeric|between:-180,180',
             'latitude_arrivee' => 'required|numeric|between:-90,90',
             'longitude_arrivee' => 'required|numeric|between:-180,180',
-            'distance' => 'nullable|numeric',
             'date_programmee' => 'nullable|date',
         ]);
 
         $typeService = TypeService::find($data['id_type_service']);
+        $entreprise = Entreprise::with('utilisateur')->find($data['id_entreprise']);
 
-        // Pour une simple "livraison", le point de départ est l'entreprise elle-même : pas besoin
-        // que le client le précise. Pour déménagement/transport de matériel, le client doit
-        // indiquer où récupérer les biens, puisque l'entreprise n'en est pas le point de départ.
+        // Pour une simple "livraison", le point de départ est l'entreprise elle-même (adresse ET
+        // position exacte) : pas besoin que le client les précise. Pour déménagement/transport de
+        // matériel, le client doit indiquer où récupérer les biens, puisque l'entreprise n'en est
+        // pas le point de départ.
         if ($typeService->nom === 'livraison') {
-            $entreprise = Entreprise::with('utilisateur')->find($data['id_entreprise']);
             $adresseDepart = $entreprise->utilisateur?->adresse;
-
             abort_unless(
                 $adresseDepart,
                 422,
                 "Cette entreprise n'a pas encore renseigné son adresse de retrait (dans son profil « Mon compte »). Contactez-la ou choisissez une autre entreprise."
             );
+
+            abort_unless(
+                $entreprise->latitude !== null && $entreprise->longitude !== null,
+                422,
+                "Cette entreprise n'a pas encore renseigné sa position exacte (section « Tarifs »). Contactez-la ou choisissez une autre entreprise."
+            );
+            $latitudeDepart = (float) $entreprise->latitude;
+            $longitudeDepart = (float) $entreprise->longitude;
         } else {
             $adresseDepart = $data['adresse_depart'] ?? null;
             abort_unless($adresseDepart, 422, "L'adresse de départ est obligatoire pour ce type de service.");
+
+            abort_unless(
+                isset($data['latitude_depart'], $data['longitude_depart']),
+                422,
+                'La position exacte de départ est obligatoire pour ce type de service (à placer sur la carte).'
+            );
+            $latitudeDepart = (float) $data['latitude_depart'];
+            $longitudeDepart = (float) $data['longitude_depart'];
         }
 
-        $tarif = $this->calculerTarif($data['distance'] ?? null);
+        // La distance n'est jamais saisie par le client : elle est calculée à partir des positions
+        // GPS réelles, pour que le tarif facturé ne dépende pas d'une estimation manuelle.
+        $distanceKm = $this->distanceKm(
+            $latitudeDepart,
+            $longitudeDepart,
+            (float) $data['latitude_arrivee'],
+            (float) $data['longitude_arrivee']
+        );
+        $tarif = $this->calculerTarif($entreprise, $distanceKm);
 
         $demande = DemandeLivraison::create([
             'id_client' => $request->user()->id,
@@ -61,10 +86,12 @@ class DemandeLivraisonController extends Controller
             'id_type_service' => $data['id_type_service'],
             'adresse_depart' => $adresseDepart,
             'adresse_arrivee' => $data['adresse_arrivee'],
+            'latitude_depart' => $latitudeDepart,
+            'longitude_depart' => $longitudeDepart,
             'latitude_arrivee' => $data['latitude_arrivee'],
             'longitude_arrivee' => $data['longitude_arrivee'],
-            'distance' => $data['distance'] ?? null,
-            'tarif_estime' => $tarif,
+            'distance' => round($distanceKm, 2),
+            'tarif_estime' => round($tarif, 2),
             'code_livraison' => (string) random_int(100000, 999999),
             'statut' => $data['date_programmee'] ?? null ? 'PROGRAMMEE' : 'EN_ATTENTE',
             'date_creation' => now(),
@@ -74,12 +101,23 @@ class DemandeLivraisonController extends Controller
         return response()->json($demande, 201);
     }
 
-    /** Calcul tarif simplifié : base + distance (FCFA) — à ajuster selon la grille réelle */
-    private function calculerTarif(?float $distanceKm): float
+    /** Tarif = frais de base + prix/km propres à l'entreprise (valeurs par défaut si non configurés). */
+    private function calculerTarif(Entreprise $entreprise, float $distanceKm): float
     {
-        $base = 1000; // FCFA
-        $prixParKm = 200; // FCFA
-        return $base + ($distanceKm ?? 0) * $prixParKm;
+        $base = $entreprise->frais_base ?? 1000;
+        $prixParKm = $entreprise->prix_par_km ?? 200;
+        return $base + $distanceKm * $prixParKm;
+    }
+
+    /** Distance à vol d'oiseau (formule de Haversine) entre deux points GPS. */
+    private function distanceKm(float $lat1, float $lon1, float $lat2, float $lon2): float
+    {
+        $rayonTerreKm = 6371;
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+        $a = sin($dLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        return $rayonTerreKm * $c;
     }
 
     public function mesDemandes(Request $request)

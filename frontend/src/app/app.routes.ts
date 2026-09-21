@@ -122,6 +122,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/entreprise/paiement/paiement.component').then((m) => m.PaiementComponent),
   },
+  {
+    path: 'entreprise/tarifs',
+    canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
+    data: { title: 'Tarifs de livraison' },
+    loadComponent: () => import('./features/entreprise/tarifs/tarifs.component').then((m) => m.TarifsComponent),
+  },
 
   // --- ADMIN ---
   {

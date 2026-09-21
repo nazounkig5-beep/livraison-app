@@ -27,19 +27,32 @@
       <input type="text" formControlName="adresse_arrivee" />
     </label>
 
-    <p><strong>Position exacte de livraison</strong></p>
-    <p class="info-discrete">
+    <p><strong>Position{{ typeServiceEstLivraison ? ' exacte de livraison' : 's exactes' }}</strong></p>
+    <p class="info-discrete" *ngIf="typeServiceEstLivraison">
       Cliquez sur la carte à l'endroit précis où le livreur doit vous retrouver (le point rouge peut ensuite
-      être déplacé par glisser-déposer).
+      être déplacé par glisser-déposer). La distance et le tarif sont calculés automatiquement.
     </p>
-    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
-    <p class="succes" *ngIf="positionArriveeChoisie">✓ Position de livraison enregistrée.</p>
-    <p class="erreur" *ngIf="!positionArriveeChoisie">Aucune position placée pour le moment — cliquez sur la carte ci-dessus.</p>
 
-    <label>
-      Distance estimée (km)
-      <input type="number" formControlName="distance" />
-    </label>
+    <div class="onglets-role" *ngIf="!typeServiceEstLivraison">
+      <button type="button" [class.actif]="pointActif === 'depart'" (click)="choisirPointActif('depart')">
+        Placer le départ (bleu)
+      </button>
+      <button type="button" [class.actif]="pointActif === 'arrivee'" (click)="choisirPointActif('arrivee')">
+        Placer l'arrivée (rouge)
+      </button>
+    </div>
+    <p class="info-discrete" *ngIf="!typeServiceEstLivraison">
+      Cliquez sur la carte pour placer le point sélectionné ci-dessus (déplaçable ensuite par glisser-déposer).
+      La distance et le tarif sont calculés automatiquement.
+    </p>
+
+    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
+
+    <p class="succes" *ngIf="!typeServiceEstLivraison && positionDepartChoisie">✓ Position de départ enregistrée.</p>
+    <p class="erreur" *ngIf="!typeServiceEstLivraison && !positionDepartChoisie">Aucune position de départ placée.</p>
+    <p class="succes" *ngIf="positionArriveeChoisie">✓ Position d'arrivée enregistrée.</p>
+    <p class="erreur" *ngIf="!positionArriveeChoisie">Aucune position d'arrivée placée.</p>
+
     <label>
       Programmer pour le (optionnel)
       <input type="datetime-local" formControlName="date_programmee" />

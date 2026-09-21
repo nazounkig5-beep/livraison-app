@@ -50,6 +50,27 @@ class EntrepriseProfilController extends Controller
         return response()->json($entreprise);
     }
 
+    /**
+     * Cas d'utilisation Entreprise : "Configurer mes tarifs de livraison".
+     * Chaque entreprise fixe son propre prix/km (et frais de base) ainsi que sa position exacte,
+     * utilisée comme point de départ pour le calcul automatique de la distance sur les demandes
+     * de type "livraison" (voir DemandeLivraisonController::store).
+     */
+    public function mettreAJourTarifs(Request $request)
+    {
+        $data = $request->validate([
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'frais_base' => 'nullable|numeric|min:0',
+            'prix_par_km' => 'nullable|numeric|min:0',
+        ]);
+
+        $entreprise = $request->user()->entreprise;
+        $entreprise->update($data);
+
+        return response()->json($entreprise);
+    }
+
     /** Cas d'utilisation Entreprise : "Envoyer mon QR code de paiement à mes livreurs employés" */
     public function envoyerQrLivreurs(Request $request)
     {

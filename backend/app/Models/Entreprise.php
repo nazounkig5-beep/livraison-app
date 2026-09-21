@@ -11,7 +11,7 @@ class Entreprise extends Model
     public $incrementing = false;
     protected $fillable = [
         'id', 'siret', 'nom', 'numero_orange', 'numero_moov', 'qr_code', 'statut_validation', 'date_validation',
-        'cinetpay_site_id', 'cinetpay_api_key',
+        'cinetpay_site_id', 'cinetpay_api_key', 'latitude', 'longitude', 'frais_base', 'prix_par_km',
     ];
     protected $casts = ['date_validation' => 'datetime', 'cinetpay_api_key' => 'encrypted'];
     // Identifiants du compte marchand CinetPay de l'entreprise : jamais renvoyés au frontend.

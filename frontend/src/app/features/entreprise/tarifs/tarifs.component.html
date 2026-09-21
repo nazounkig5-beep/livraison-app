@@ -1,0 +1,25 @@
+<div class="entreprise-tarifs" *ngIf="!chargement">
+  <p class="succes" *ngIf="enregistrementReussi">Tarifs mis à jour avec succès !</p>
+
+  <form [formGroup]="form" (ngSubmit)="enregistrer()">
+    <label>
+      Frais de base (FCFA)
+      <input type="number" formControlName="frais_base" min="0" />
+    </label>
+    <label>
+      Prix par kilomètre (FCFA/km)
+      <input type="number" formControlName="prix_par_km" min="0" />
+    </label>
+
+    <p><strong>Position exacte de l'entreprise</strong></p>
+    <p class="info-discrete">
+      Cliquez sur la carte à l'emplacement précis de votre entreprise. Ce point sert de départ
+      automatique pour le calcul de la distance sur les demandes de type « livraison ».
+    </p>
+    <div #carteConteneur class="carte-suivi carte-cliquable"></div>
+    <p class="succes" *ngIf="positionChoisie">✓ Position enregistrée.</p>
+    <p class="erreur" *ngIf="!positionChoisie">Aucune position placée — cliquez sur la carte ci-dessus.</p>
+
+    <button type="submit" [disabled]="form.invalid">Enregistrer</button>
+  </form>
+</div>

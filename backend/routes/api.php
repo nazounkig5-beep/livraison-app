@@ -87,6 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::put('/paiement', [EntrepriseProfilController::class, 'mettreAJourPaiement']);
         Route::post('/paiement/envoyer', [EntrepriseProfilController::class, 'envoyerQrLivreurs']);
+        Route::put('/tarifs', [EntrepriseProfilController::class, 'mettreAJourTarifs']);
     });
 
     // --- LIVREUR ---

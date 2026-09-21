@@ -95,4 +95,13 @@ export class EntrepriseService {
   envoyerQrLivreurs(): Observable<{ message: string; nombre_livreurs: number }> {
     return this.http.post<{ message: string; nombre_livreurs: number }>(`${this.apiUrl}/paiement/envoyer`, {});
   }
+
+  mettreAJourTarifs(
+    latitude: number | null,
+    longitude: number | null,
+    frais_base: number | null,
+    prix_par_km: number | null
+  ): Observable<Entreprise> {
+    return this.http.put<Entreprise>(`${this.apiUrl}/tarifs`, { latitude, longitude, frais_base, prix_par_km });
+  }
 }
