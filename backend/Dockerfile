@@ -5,10 +5,12 @@
 # l'appli desktop et que les tests manuels de ce projet.
 FROM php:8.2-cli
 
+# Pas de "gd" : aucune manipulation d'image côté PHP dans ce projet (les QR codes sont générés
+# côté navigateur via la lib JS "qrcode", pas côté serveur) — inutile d'installer freetype/jpeg
+# et de configurer l'extension gd (source d'un échec de build lié à pkg-config sur cette image).
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libpq-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev unzip git \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_pgsql mbstring zip gd \
+        libpq-dev libzip-dev unzip git \
+    && docker-php-ext-install pdo_pgsql mbstring zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
