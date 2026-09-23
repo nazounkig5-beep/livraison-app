@@ -51,6 +51,7 @@ export interface PointPosition {
   latitude: number;
   longitude: number;
   timestamp: string;
+  evenement?: string | null;
 }
 
 export interface SuiviPosition {
@@ -59,6 +60,12 @@ export interface SuiviPosition {
   livreur_nom?: string | null;
   position: PointPosition | null;
   trajet: PointPosition[];
+  // Présents uniquement côté suivi entreprise (cf. "Signaler une panne").
+  en_panne?: boolean;
+  panne_depuis?: string | null;
+  panne_description?: string | null;
+  position_panne?: PointPosition | null;
+  duree_panne_minutes?: number | null;
 }
 
 export interface StatistiquesClient {
@@ -74,6 +81,9 @@ export interface Mission {
   id_livreur: number;
   id_vehicule: number | null;
   statut_prise_en_charge: 'EN_ATTENTE' | 'EN_COURS' | 'TERMINEE';
+  en_panne: boolean;
+  panne_depuis: string | null;
+  panne_description: string | null;
   demande?: DemandeLivraison;
   livreur?: Livreur;
   vehicule?: Vehicule;

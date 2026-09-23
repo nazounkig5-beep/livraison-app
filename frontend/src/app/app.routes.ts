@@ -96,6 +96,12 @@ export const routes: Routes = [
       import('./features/entreprise/demandes/demandes.component').then((m) => m.DemandesComponent),
   },
   {
+    path: 'entreprise/demandes/:id/suivi',
+    canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
+    data: { title: 'entreprise.suivi.titrePage' },
+    loadComponent: () => import('./features/entreprise/suivi/suivi.component').then((m) => m.EntrepriseSuiviComponent),
+  },
+  {
     path: 'entreprise/vehicules',
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
     data: { title: 'entreprise.vehicules.titrePage' },

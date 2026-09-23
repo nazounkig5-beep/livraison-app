@@ -25,6 +25,9 @@
         <ng-template #pasDePaiement>—</ng-template>
       </td>
       <td>
+        <a *ngIf="demande.statut === 'EN_COURS'" [routerLink]="['/entreprise/demandes', demande.id, 'suivi']">
+          {{ 'entreprise.historique.voirLeSuivi' | translate }}
+        </a>
         <button
           type="button"
           *ngIf="demande.paiement?.mode === 'CASH' && demande.paiement?.statut === 'EN_ATTENTE'"

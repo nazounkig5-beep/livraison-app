@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { DemandeLivraison } from '../../../core/models/demande.model';
@@ -8,7 +9,7 @@ import { DemandeLivraison } from '../../../core/models/demande.model';
 @Component({
   selector: 'app-entreprise-historique',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './historique.component.html',
 })
 export class HistoriqueComponent implements OnInit {

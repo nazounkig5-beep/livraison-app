@@ -35,6 +35,44 @@
     </p>
   </section>
 
+  <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'" class="panne-bloc">
+    <ng-container *ngIf="!mission.en_panne">
+      <button type="button" class="bouton-panne" (click)="ouvrirFormulairePanne()" *ngIf="!enPanneOuverte">
+        {{ 'livreur.missionDetail.boutonSignalerPanne' | translate }}
+      </button>
+      <div *ngIf="enPanneOuverte" class="panne-formulaire">
+        <label>
+          {{ 'livreur.missionDetail.descriptionPanneLabel' | translate }}
+          <textarea
+            [(ngModel)]="descriptionPanne"
+            name="descriptionPanne"
+            rows="2"
+            [attr.placeholder]="'livreur.missionDetail.descriptionPannePlaceholder' | translate"
+          ></textarea>
+        </label>
+        <div class="panne-formulaire-actions">
+          <button type="button" (click)="signalerPanne()" [disabled]="panneEnCours">
+            {{ 'livreur.missionDetail.boutonConfirmerPanne' | translate }}
+          </button>
+          <button type="button" (click)="annulerFormulairePanne()">{{ 'commun.action.annuler' | translate }}</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="mission.en_panne" class="panne-alerte">
+      <p><strong>{{ 'livreur.missionDetail.panneEnCours' | translate }}</strong></p>
+      <p *ngIf="mission.panne_description">{{ mission.panne_description }}</p>
+      <p *ngIf="dureeEnPanneMinutes() !== null">
+        {{ 'livreur.missionDetail.panneDepuis' | translate: { minutes: dureeEnPanneMinutes() } }}
+      </p>
+      <button type="button" (click)="resoudrePanne()" [disabled]="panneEnCours">
+        {{ 'livreur.missionDetail.boutonDepannageTermine' | translate }}
+      </button>
+    </div>
+
+    <p class="erreur" *ngIf="erreurPanne">{{ erreurPanne | translate }}</p>
+  </section>
+
   <section *ngIf="mission.statut_prise_en_charge === 'EN_COURS'">
     <h2>{{ 'livreur.missionDetail.paiement' | translate }}</h2>
     <button type="button" *ngIf="mission.demande?.entreprise?.numero_orange" (click)="afficherQrPaiement('ORANGE')">

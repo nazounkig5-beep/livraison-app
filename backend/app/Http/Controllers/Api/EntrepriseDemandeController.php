@@ -7,6 +7,7 @@ use App\Models\DemandeLivraison;
 use App\Models\Livreur;
 use App\Models\Mission;
 use App\Models\Notification;
+use App\Models\SuiviLivraison;
 use Illuminate\Http\Request;
 
 class EntrepriseDemandeController extends Controller
@@ -14,8 +15,11 @@ class EntrepriseDemandeController extends Controller
     /** Cas d'utilisation : "Consulter demandes" (côté entreprise) */
     public function index(Request $request)
     {
+        // EN_COURS incluse : une fois le livreur assigné, la livraison reste une affaire "active"
+        // (l'entreprise doit pouvoir en suivre la position et être alertée d'une panne), pas
+        // seulement visible plus tard dans l'historique une fois terminée.
         $demandes = DemandeLivraison::where('id_entreprise', $request->user()->id)
-            ->whereIn('statut', ['EN_ATTENTE', 'ACCEPTEE', 'PROGRAMMEE'])
+            ->whereIn('statut', ['EN_ATTENTE', 'ACCEPTEE', 'PROGRAMMEE', 'EN_COURS'])
             ->with(['client.utilisateur', 'typeService', 'paiement'])
             ->orderBy('date_creation')
             ->get();
@@ -131,6 +135,68 @@ class EntrepriseDemandeController extends Controller
         Notification::envoyer($demande->id_client, "Un livreur a été assigné à votre demande #{$demande->id}, la livraison est en cours.");
 
         return response()->json($mission->load('livreur.utilisateur', 'vehicule'), 201);
+    }
+
+    /**
+     * Cas d'utilisation Entreprise : "Suivre une livraison en temps réel"
+     * Même logique que le suivi côté client (DemandeLivraisonController::suivi), avec en plus
+     * l'état de panne éventuel : position exacte de l'arrêt et durée du dépannage, pour que
+     * l'entreprise sache où envoyer de l'aide et depuis combien de temps le livreur est bloqué.
+     */
+    public function suivi(Request $request, DemandeLivraison $demande)
+    {
+        $this->autoriser($request, $demande);
+
+        $mission = $demande->mission()->with('livreur.utilisateur')->first();
+
+        if (!$mission) {
+            return response()->json(['statut_demande' => $demande->statut, 'statut_mission' => null, 'position' => null]);
+        }
+
+        $suivis = SuiviLivraison::where('id_mission', $mission->id)->orderBy('id')->get();
+        $dernierSuivi = $suivis->last();
+        $dernierePanne = $suivis->where('evenement', 'panne')->last();
+        $dernierePanneResolue = $suivis->where('evenement', 'panne_resolue')->last();
+
+        // Durée du dépannage : en direct si la panne est toujours en cours, sinon celle de la
+        // dernière panne effectivement résolue (pour garder une trace même après la reprise).
+        // Calcul volontairement fait à la main sur des timestamps Unix (plutôt que via
+        // diffInMinutes()) : le signe et l'arrondi de diffInMinutes() varient selon la version de
+        // Carbon (absolu ou signé, entier ou flottant) — ici on veut toujours un entier positif.
+        $dureePanneMinutes = null;
+        if ($mission->en_panne && $mission->panne_depuis) {
+            $secondes = abs(now()->getTimestamp() - $mission->panne_depuis->getTimestamp());
+            $dureePanneMinutes = intdiv($secondes, 60);
+        } elseif ($dernierePanne && $dernierePanneResolue && $dernierePanneResolue->id > $dernierePanne->id) {
+            $secondes = abs($dernierePanneResolue->timestamp->getTimestamp() - $dernierePanne->timestamp->getTimestamp());
+            $dureePanneMinutes = intdiv($secondes, 60);
+        }
+
+        return response()->json([
+            'statut_demande' => $demande->statut,
+            'statut_mission' => $mission->statut_prise_en_charge,
+            'livreur_nom' => $mission->livreur?->utilisateur?->nom,
+            'position' => $dernierSuivi ? [
+                'latitude' => (float) $dernierSuivi->latitude,
+                'longitude' => (float) $dernierSuivi->longitude,
+                'timestamp' => $dernierSuivi->timestamp,
+            ] : null,
+            'trajet' => $suivis->map(fn (SuiviLivraison $s) => [
+                'latitude' => (float) $s->latitude,
+                'longitude' => (float) $s->longitude,
+                'timestamp' => $s->timestamp,
+                'evenement' => $s->evenement,
+            ])->values(),
+            'en_panne' => (bool) $mission->en_panne,
+            'panne_depuis' => $mission->panne_depuis,
+            'panne_description' => $mission->panne_description,
+            'position_panne' => $dernierePanne ? [
+                'latitude' => (float) $dernierePanne->latitude,
+                'longitude' => (float) $dernierePanne->longitude,
+                'timestamp' => $dernierePanne->timestamp,
+            ] : null,
+            'duree_panne_minutes' => $dureePanneMinutes,
+        ]);
     }
 
     /** Cas d'utilisation : "Confirmer un paiement en espèces" (le livreur encaisse pour le compte de l'entreprise) */

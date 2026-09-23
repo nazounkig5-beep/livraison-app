@@ -39,6 +39,11 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
   codeSaisi = '';
   erreurCode: string | null = null;
 
+  enPanneOuverte = false;
+  descriptionPanne = '';
+  panneEnCours = false;
+  erreurPanne: string | null = null;
+
   suiviActif = false;
   erreurGps: string | null = null;
   dernierePosition: PositionConnue | null = null;
@@ -199,6 +204,95 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
 
   private enRadians(degres: number): number {
     return (degres * Math.PI) / 180;
+  }
+
+  ouvrirFormulairePanne(): void {
+    this.enPanneOuverte = true;
+    this.erreurPanne = null;
+  }
+
+  annulerFormulairePanne(): void {
+    this.enPanneOuverte = false;
+    this.descriptionPanne = '';
+  }
+
+  /** Fige la position exacte de l'arrêt (réutilise la dernière position GPS connue si déjà en suivi). */
+  signalerPanne(): void {
+    if (!this.mission) return;
+    this.erreurPanne = null;
+    const idMission = this.mission.id;
+    const description = this.descriptionPanne.trim() || undefined;
+
+    const envoyer = (latitude: number, longitude: number) => {
+      this.panneEnCours = true;
+      this.missionService.signalerPanne(idMission, latitude, longitude, description).subscribe({
+        next: () => {
+          this.panneEnCours = false;
+          this.enPanneOuverte = false;
+          this.descriptionPanne = '';
+          this.charger();
+        },
+        error: () => {
+          this.panneEnCours = false;
+          this.erreurPanne = 'livreur.missionDetail.erreurPanne';
+        },
+      });
+    };
+
+    if (this.dernierePosition) {
+      envoyer(this.dernierePosition.latitude, this.dernierePosition.longitude);
+      return;
+    }
+    if (!navigator.geolocation) {
+      this.erreurPanne = 'livreur.missionDetail.erreurGpsIndisponible';
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => envoyer(pos.coords.latitude, pos.coords.longitude),
+      () => (this.erreurPanne = 'livreur.missionDetail.erreurGpsRefuse'),
+      { timeout: 8000 }
+    );
+  }
+
+  resoudrePanne(): void {
+    if (!this.mission) return;
+    this.erreurPanne = null;
+    const idMission = this.mission.id;
+
+    const envoyer = (latitude: number, longitude: number) => {
+      this.panneEnCours = true;
+      this.missionService.resoudrePanne(idMission, latitude, longitude).subscribe({
+        next: () => {
+          this.panneEnCours = false;
+          this.charger();
+        },
+        error: () => {
+          this.panneEnCours = false;
+          this.erreurPanne = 'livreur.missionDetail.erreurPanne';
+        },
+      });
+    };
+
+    if (this.dernierePosition) {
+      envoyer(this.dernierePosition.latitude, this.dernierePosition.longitude);
+      return;
+    }
+    if (!navigator.geolocation) {
+      this.erreurPanne = 'livreur.missionDetail.erreurGpsIndisponible';
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => envoyer(pos.coords.latitude, pos.coords.longitude),
+      () => (this.erreurPanne = 'livreur.missionDetail.erreurGpsRefuse'),
+      { timeout: 8000 }
+    );
+  }
+
+  /** Recalculée à chaque cycle de détection (le suivi GPS déclenche déjà un rafraîchissement régulier). */
+  dureeEnPanneMinutes(): number | null {
+    if (!this.mission?.en_panne || !this.mission.panne_depuis) return null;
+    const debut = new Date(this.mission.panne_depuis).getTime();
+    return Math.max(0, Math.round((Date.now() - debut) / 60000));
   }
 
   /** Affiche au client (via l'écran du livreur) le QR code de paiement mobile money de l'entreprise. */

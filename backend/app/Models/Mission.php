@@ -9,8 +9,9 @@ class Mission extends Model
     protected $table = 'missions';
     protected $fillable = [
         'id_demande', 'id_livreur', 'id_vehicule', 'date_acceptation', 'statut_prise_en_charge',
+        'en_panne', 'panne_depuis', 'panne_description',
     ];
-    protected $casts = ['date_acceptation' => 'datetime'];
+    protected $casts = ['date_acceptation' => 'datetime', 'panne_depuis' => 'datetime', 'en_panne' => 'boolean'];
 
     public function demande()
     {

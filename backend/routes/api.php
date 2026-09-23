@@ -75,6 +75,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/demandes/{demande}/programmer', [EntrepriseDemandeController::class, 'programmer']);
         Route::post('/demandes/{demande}/assigner', [EntrepriseDemandeController::class, 'assigner']);
         Route::post('/demandes/{demande}/confirmer-paiement', [EntrepriseDemandeController::class, 'confirmerPaiement']);
+        Route::get('/demandes/{demande}/suivi', [EntrepriseDemandeController::class, 'suivi']);
         Route::get('/livreurs', [EntrepriseDemandeController::class, 'livreurs']);
 
         Route::get('/vehicules', [VehiculeController::class, 'index']);
@@ -98,6 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/missions/{mission}', [MissionController::class, 'show']);
         Route::post('/missions/{mission}/prendre-en-charge', [MissionController::class, 'prendreEnCharge']);
         Route::post('/missions/{mission}/position', [MissionController::class, 'mettreAJourPosition']);
+        Route::post('/missions/{mission}/panne', [MissionController::class, 'signalerPanne']);
+        Route::post('/missions/{mission}/panne/resoudre', [MissionController::class, 'resoudrePanne']);
         Route::post('/missions/{mission}/verifier-code', [MissionController::class, 'verifierCode']);
         Route::post('/missions/{mission}/livrer', [MissionController::class, 'livrer']);
     });

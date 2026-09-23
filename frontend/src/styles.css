@@ -1003,6 +1003,66 @@ ul.erreurs {
   box-shadow: 0 0 0 2px var(--couleur-danger), 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
+/* Marqueur "panne" (Signaler une panne / suivi entreprise) : ambre, distinct du bleu (livreur en
+   mouvement) et du rouge (destination), pour repérer d'un coup d'œil l'arrêt sur la carte. */
+.marqueur-panne-point {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d97706;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #d97706, 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Signalement de panne (livreur) / alerte panne (suivi entreprise) ---------- */
+
+.panne-bloc {
+  margin: 1rem 0;
+}
+
+.bouton-panne {
+  background: #d97706;
+  color: #fff;
+  border: none;
+}
+
+.bouton-panne:hover {
+  background: #b45309;
+}
+
+.panne-formulaire {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border-radius: var(--rayon);
+  border: 1px solid var(--couleur-bordure);
+  background: var(--couleur-fond);
+}
+
+.panne-formulaire textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.panne-formulaire-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.panne-alerte {
+  margin: 0.75rem 0;
+  padding: 1rem;
+  border-radius: var(--rayon);
+  border: 1px solid var(--couleur-danger);
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--couleur-danger-fonce);
+}
+
+.panne-alerte p {
+  margin: 0.25rem 0;
+}
+
 /* ---------- Paiement mobile money (USSD / QR code) ---------- */
 
 .paiement-mobile-money-choix {

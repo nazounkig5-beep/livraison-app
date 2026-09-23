@@ -28,6 +28,9 @@
         >
           {{ 'entreprise.demandes.confirmerLePaiement' | translate }}
         </button>
+        <a *ngIf="demande.statut === 'EN_COURS'" [routerLink]="['/entreprise/demandes', demande.id, 'suivi']">
+          {{ 'entreprise.demandes.voirLeSuivi' | translate }}
+        </a>
         <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="accepter(demande)">{{ 'entreprise.demandes.accepter' | translate }}</button>
         <button type="button" *ngIf="demande.statut === 'EN_ATTENTE'" (click)="refuser(demande)">{{ 'entreprise.demandes.refuser' | translate }}</button>
         <button

@@ -46,6 +46,14 @@ export const LIVREUR_FR = {
     erreurGpsRefuse:
       'Autorisez la géolocalisation dans les paramètres de votre navigateur/appareil pour partager votre position avec le client.',
     erreurGpsAutre: "Impossible d'obtenir votre position pour le moment. Nouvelle tentative automatique en cours…",
+    boutonSignalerPanne: 'Signaler une panne',
+    descriptionPanneLabel: 'Que se passe-t-il ? (optionnel)',
+    descriptionPannePlaceholder: 'Ex : crevaison, moteur en surchauffe…',
+    boutonConfirmerPanne: 'Confirmer la panne',
+    panneEnCours: 'Panne en cours — votre position exacte a été transmise à l\'entreprise.',
+    panneDepuis: 'En panne depuis {{minutes}} min.',
+    boutonDepannageTermine: 'Dépannage terminé, reprendre la course',
+    erreurPanne: "Une erreur est survenue, veuillez réessayer.",
   },
   paiement: {
     titrePage: 'QR code de paiement',

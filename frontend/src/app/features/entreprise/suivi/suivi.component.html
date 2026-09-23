@@ -1,0 +1,32 @@
+<div class="entreprise-suivi" *ngIf="!chargement">
+  <p><a routerLink="/entreprise/demandes">{{ 'entreprise.suivi.retour' | translate }}</a></p>
+
+  <ng-container *ngIf="suivi?.statut_mission; else pasDeMission">
+    <ul>
+      <li *ngIf="suivi?.livreur_nom">{{ 'entreprise.suivi.livreur' | translate }} {{ suivi?.livreur_nom }}</li>
+      <li>{{ 'entreprise.suivi.statutMission' | translate }} {{ ('livreur.missions.statutMission.' + suivi?.statut_mission) | translate }}</li>
+    </ul>
+
+    <div *ngIf="suivi?.en_panne" class="panne-alerte">
+      <p><strong>{{ 'entreprise.suivi.panneEnCours' | translate }}</strong></p>
+      <p *ngIf="suivi?.panne_description">{{ suivi?.panne_description }}</p>
+      <p *ngIf="suivi?.duree_panne_minutes !== null">
+        {{ 'entreprise.suivi.dureePanne' | translate: { minutes: suivi?.duree_panne_minutes } }}
+      </p>
+      <p *ngIf="suivi?.position_panne as positionPanne" class="info-discrete">
+        {{ 'entreprise.suivi.positionPanne' | translate: { latitude: (positionPanne.latitude | number: '1.5-5'), longitude: (positionPanne.longitude | number: '1.5-5') } }}
+      </p>
+    </div>
+
+    <div *ngIf="!suivi?.en_panne && suivi?.duree_panne_minutes !== null" class="succes">
+      {{ 'entreprise.suivi.panneResolue' | translate: { minutes: suivi?.duree_panne_minutes } }}
+    </div>
+
+    <div #carteConteneur class="carte-suivi" [class.carte-suivi-vide]="!suivi?.position"></div>
+    <p *ngIf="!suivi?.position" class="info-discrete">{{ 'entreprise.suivi.positionIndisponible' | translate }}</p>
+  </ng-container>
+
+  <ng-template #pasDeMission>
+    <p>{{ 'entreprise.suivi.aucuneMission' | translate }}</p>
+  </ng-template>
+</div>

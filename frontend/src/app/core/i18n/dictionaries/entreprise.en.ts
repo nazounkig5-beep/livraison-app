@@ -46,6 +46,7 @@ export const ENTREPRISE_EN = {
     aucun: 'None',
     erreurProgrammationDefaut: 'Unable to schedule this date.',
     aucuneDemande: 'No requests for now.',
+    voirLeSuivi: 'View tracking',
   },
   vehicules: {
     titrePage: 'My vehicles',
@@ -87,6 +88,7 @@ export const ENTREPRISE_EN = {
     paiementEnAttente: 'Pending',
     confirmerLePaiement: 'Confirm payment',
     aucuneDemande: 'No requests in the history.',
+    voirLeSuivi: 'View tracking',
   },
   paiement: {
     titrePage: 'Payment numbers & QR Code',
@@ -136,5 +138,17 @@ export const ENTREPRISE_EN = {
     erreurGeolocalisationIndisponible: 'Geolocation is not available on this device.',
     erreurGeolocalisationEchec:
       'Unable to get your location. Allow geolocation then try again.',
+  },
+  suivi: {
+    titrePage: 'Real-time tracking',
+    retour: '← Received requests',
+    livreur: 'Courier:',
+    statutMission: 'Mission status:',
+    panneEnCours: '⚠ The courier has broken down.',
+    dureePanne: 'For {{minutes}} min.',
+    positionPanne: 'Exact stop location: {{latitude}}, {{longitude}}',
+    panneResolue: 'Last breakdown resolved after {{minutes}} min.',
+    positionIndisponible: 'No position received yet.',
+    aucuneMission: 'No courier has been assigned to this request yet.',
   },
 };

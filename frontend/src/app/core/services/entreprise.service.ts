@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DemandeLivraison } from '../models/demande.model';
+import { DemandeLivraison, SuiviPosition } from '../models/demande.model';
 import { Vehicule } from '../models/vehicule.model';
 import { Livreur } from '../models/livreur.model';
 import { Entreprise } from '../models/entreprise.model';
@@ -44,6 +44,11 @@ export class EntrepriseService {
 
   confirmerPaiement(id: number) {
     return this.http.post(`${this.apiUrl}/demandes/${id}/confirmer-paiement`, {});
+  }
+
+  /** Cas d'utilisation : "Suivre une livraison en temps réel" (position du livreur + alerte panne). */
+  suivi(id: number): Observable<SuiviPosition> {
+    return this.http.get<SuiviPosition>(`${this.apiUrl}/demandes/${id}/suivi`);
   }
 
   livreurs(): Observable<Livreur[]> {

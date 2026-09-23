@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { DemandeLivraison } from '../../../core/models/demande.model';
@@ -11,7 +12,7 @@ import { Vehicule } from '../../../core/models/vehicule.model';
 @Component({
   selector: 'app-entreprise-demandes',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './demandes.component.html',
 })
 export class DemandesComponent implements OnInit {

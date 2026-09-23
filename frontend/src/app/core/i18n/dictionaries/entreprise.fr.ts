@@ -46,6 +46,7 @@ export const ENTREPRISE_FR = {
     aucun: 'Aucun',
     erreurProgrammationDefaut: 'Impossible de programmer cette date.',
     aucuneDemande: 'Aucune demande pour le moment.',
+    voirLeSuivi: 'Voir le suivi',
   },
   vehicules: {
     titrePage: 'Mes véhicules',
@@ -87,6 +88,7 @@ export const ENTREPRISE_FR = {
     paiementEnAttente: 'En attente',
     confirmerLePaiement: 'Confirmer le paiement',
     aucuneDemande: "Aucune demande dans l'historique.",
+    voirLeSuivi: 'Voir le suivi',
   },
   paiement: {
     titrePage: 'Numéros de paiement & QR Code',
@@ -136,5 +138,17 @@ export const ENTREPRISE_FR = {
     erreurGeolocalisationIndisponible: "La géolocalisation n'est pas disponible sur cet appareil.",
     erreurGeolocalisationEchec:
       "Impossible d'obtenir votre position. Autorisez la géolocalisation puis réessayez.",
+  },
+  suivi: {
+    titrePage: 'Suivi en temps réel',
+    retour: '← Demandes reçues',
+    livreur: 'Livreur :',
+    statutMission: 'Statut de la mission :',
+    panneEnCours: '⚠ Le livreur est en panne.',
+    dureePanne: 'Depuis {{minutes}} min.',
+    positionPanne: "Position exacte de l'arrêt : {{latitude}}, {{longitude}}",
+    panneResolue: 'Dernière panne résolue après {{minutes}} min.',
+    positionIndisponible: 'Aucune position reçue pour le moment.',
+    aucuneMission: "Aucun livreur n'est encore assigné à cette demande.",
   },
 };

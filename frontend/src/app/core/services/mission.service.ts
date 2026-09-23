@@ -32,6 +32,15 @@ export class MissionService {
     return this.http.post(`${this.apiUrl}/${id}/position`, { latitude, longitude });
   }
 
+  /** Fige la position exacte de l'arrêt et prévient l'entreprise, pour qu'elle organise le dépannage. */
+  signalerPanne(id: number, latitude: number, longitude: number, description?: string): Observable<Mission> {
+    return this.http.post<Mission>(`${this.apiUrl}/${id}/panne`, { latitude, longitude, description });
+  }
+
+  resoudrePanne(id: number, latitude: number, longitude: number): Observable<Mission> {
+    return this.http.post<Mission>(`${this.apiUrl}/${id}/panne/resoudre`, { latitude, longitude });
+  }
+
   verifierCode(id: number, code: string) {
     return this.http.post<{ valide: boolean }>(`${this.apiUrl}/${id}/verifier-code`, { code });
   }

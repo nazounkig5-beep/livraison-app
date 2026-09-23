@@ -46,6 +46,14 @@ export const LIVREUR_EN = {
     erreurGpsRefuse:
       'Allow geolocation in your browser/device settings to share your position with the client.',
     erreurGpsAutre: 'Unable to get your position right now. Automatically retrying…',
+    boutonSignalerPanne: 'Report a breakdown',
+    descriptionPanneLabel: "What's going on? (optional)",
+    descriptionPannePlaceholder: 'E.g.: flat tire, engine overheating…',
+    boutonConfirmerPanne: 'Confirm the breakdown',
+    panneEnCours: 'Breakdown in progress — your exact position has been sent to the company.',
+    panneDepuis: 'Broken down for {{minutes}} min.',
+    boutonDepannageTermine: 'Repair done, resume the delivery',
+    erreurPanne: 'Something went wrong, please try again.',
   },
   paiement: {
     titrePage: 'Payment QR code',
