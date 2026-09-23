@@ -8,8 +8,10 @@ FROM php:8.2-cli
 # Pas de "gd" : aucune manipulation d'image côté PHP dans ce projet (les QR codes sont générés
 # côté navigateur via la lib JS "qrcode", pas côté serveur) — inutile d'installer freetype/jpeg
 # et de configurer l'extension gd (source d'un échec de build lié à pkg-config sur cette image).
+# libonig-dev : requis pour compiler mbstring (sinon "Package requirements (oniguruma) were not
+# met"), autre dépendance système que docker-php-ext-install ne vérifie pas lui-même.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        libpq-dev libzip-dev unzip git \
+        libpq-dev libzip-dev libonig-dev unzip git \
     && docker-php-ext-install pdo_pgsql mbstring zip \
     && rm -rf /var/lib/apt/lists/*
 
