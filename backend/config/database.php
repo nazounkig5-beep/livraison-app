@@ -94,7 +94,9 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            // Neon (et la plupart des Postgres hébergés) exigent une connexion chiffrée ;
+            // configurable via DB_SSLMODE pour ne pas casser l'environnement local (WAMP, sans SSL).
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
         'sqlsrv' => [

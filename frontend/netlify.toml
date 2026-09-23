@@ -1,0 +1,14 @@
+# Configuration Netlify pour le build "web" (PWA), distinct du build "production" utilisé par
+# l'appli desktop Electron. Si le site Netlify est créé en pointant la racine du dépôt, réglez
+# "Base directory" = frontend dans le tableau de bord Netlify (ce fichier vit dans frontend/,
+# donc les chemins ci-dessous sont relatifs à ce dossier).
+[build]
+  command = "npm run build:web"
+  publish = "dist/livraison-app-frontend-web/browser"
+
+# Toutes les routes doivent retomber sur index.html : c'est Angular (le routeur côté client) qui
+# décide ensuite quelle page afficher, pas Netlify.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
