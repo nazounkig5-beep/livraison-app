@@ -61,6 +61,9 @@
       <input type="datetime-local" formControlName="date_programmee" />
     </label>
     <p class="erreur" *ngIf="erreur">{{ erreur }}</p>
+    <p class="erreur" *ngIf="form.invalid && champsManquants.length">
+      Champs manquants ou invalides : {{ champsManquants.join(', ') }}
+    </p>
     <button type="submit" [disabled]="form.invalid || envoiEnCours">{{ 'client.creerDemande.boutonValider' | translate }}</button>
   </form>
 </div>

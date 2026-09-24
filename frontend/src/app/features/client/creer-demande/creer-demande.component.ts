@@ -219,6 +219,26 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /** Diagnostic affiché à l'écran quand le bouton est désactivé, pour voir immédiatement quel champ bloque. */
+  get champsManquants(): string[] {
+    const labels: Record<string, string> = {
+      id_entreprise: 'Entreprise',
+      id_type_service: 'Type de service',
+      adresse_depart: 'Adresse de départ',
+      adresse_arrivee: "Adresse d'arrivée",
+      latitude_depart: 'Position de départ (carte)',
+      longitude_depart: 'Position de départ (carte)',
+      latitude_arrivee: "Position d'arrivée (carte)",
+      longitude_arrivee: "Position d'arrivée (carte)",
+    };
+    const manquants: string[] = [];
+    for (const nom of Object.keys(labels)) {
+      const c = this.form.get(nom)!;
+      if (c.invalid && labels[nom] && !manquants.includes(labels[nom])) manquants.push(labels[nom]);
+    }
+    return manquants;
+  }
+
   soumettre(): void {
     if (this.form.invalid) return;
 
