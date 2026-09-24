@@ -24,12 +24,14 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 EXPOSE 8000
 
-# Ne lance PAS "php artisan migrate" ici : sur Render, ce CMD redémarre à chaque réveil du
-# conteneur après mise en veille (plan gratuit), pas seulement à chaque déploiement. Y ajouter une
-# dépendance réseau vers Neon avant même d'écouter le port faisait échouer/ralentir le réveil et
-# provoquait des 504 (le proxy Render abandonne si le conteneur ne répond pas assez vite). Les
-# migrations doivent être lancées une fois par déploiement via le champ "Pre-Deploy Command" du
-# tableau de bord Render (php artisan migrate --force) — pas au démarrage du conteneur.
-# Disque de travail réglé sur public/ : obligatoire pour ce routeur (getcwd() doit valoir public/,
-# pas la racine du projet).
-CMD ["sh", "-c", "cd public && php -S 0.0.0.0:${PORT:-8000} ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
+# "Pre-Deploy Command" (qui aurait été l'endroit idéal pour lancer les migrations une seule fois
+# par déploiement réel) est verrouillé sur le plan gratuit de Render. À la place : la migration est
+# lancée en ARRIÈRE-PLAN (le "&" final) puis le serveur démarre immédiatement au premier plan, sans
+# l'attendre. Ça évite le vrai problème rencontré (le conteneur mettait trop de temps à écouter le
+# port après un réveil de mise en veille, tant qu'il attendait la fin de la migration — le proxy
+# Render abandonnait alors avec un 504 sur toutes les requêtes en attente). Les migrations restent
+# idempotentes (ne réappliquent pas ce qui est déjà en base), donc les relancer à chaque réveil ne
+# fait rien d'utile la plupart du temps, mais ne coûte que quelques secondes en arrière-plan sans
+# bloquer le service. Disque de travail réglé sur public/ pour le serveur : obligatoire pour ce
+# routeur (getcwd() doit valoir public/, pas la racine du projet).
+CMD ["sh", "-c", "(php artisan migrate --force || true) & cd public && php -S 0.0.0.0:${PORT:-8000} ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
