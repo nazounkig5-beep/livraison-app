@@ -239,6 +239,13 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     return manquants;
   }
 
+  /** Diagnostic temporaire pour trouver un bug precis : etat brut derriere le message ci-dessus. */
+  get diagnosticBrut(): string {
+    const idType = this.form.value.id_type_service;
+    const type = this.typesService.find((t) => t.id === idType);
+    return `id_type_service=${idType} (type trouve: ${type?.nom ?? 'AUCUN'}) | typeServiceEstLivraison=${this.typeServiceEstLivraison} | adresse_depart validators actifs=${!!this.form.get('adresse_depart')!.validator} | nb typesService charges=${this.typesService.length}`;
+  }
+
   soumettre(): void {
     if (this.form.invalid) return;
 

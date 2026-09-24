@@ -64,6 +64,7 @@
     <p class="erreur" *ngIf="form.invalid && champsManquants.length">
       Champs manquants ou invalides : {{ champsManquants.join(', ') }}
     </p>
+    <p class="info-discrete" style="font-family: monospace; font-size: 0.75rem;">{{ diagnosticBrut }}</p>
     <button type="submit" [disabled]="form.invalid || envoiEnCours">{{ 'client.creerDemande.boutonValider' | translate }}</button>
   </form>
 </div>
