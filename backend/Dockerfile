@@ -24,7 +24,12 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 EXPOSE 8000
 
-# Migre la base (idempotent — ne réapplique pas les migrations déjà passées) puis démarre le
-# serveur avec le disque de travail réglé sur public/ (obligatoire pour ce routeur, cf. commentaire
-# ci-dessus : getcwd() doit valoir public/, pas la racine du projet).
-CMD ["sh", "-c", "php artisan migrate --force && cd public && php -S 0.0.0.0:${PORT:-8000} ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
+# Ne lance PAS "php artisan migrate" ici : sur Render, ce CMD redémarre à chaque réveil du
+# conteneur après mise en veille (plan gratuit), pas seulement à chaque déploiement. Y ajouter une
+# dépendance réseau vers Neon avant même d'écouter le port faisait échouer/ralentir le réveil et
+# provoquait des 504 (le proxy Render abandonne si le conteneur ne répond pas assez vite). Les
+# migrations doivent être lancées une fois par déploiement via le champ "Pre-Deploy Command" du
+# tableau de bord Render (php artisan migrate --force) — pas au démarrage du conteneur.
+# Disque de travail réglé sur public/ : obligatoire pour ce routeur (getcwd() doit valoir public/,
+# pas la racine du projet).
+CMD ["sh", "-c", "cd public && php -S 0.0.0.0:${PORT:-8000} ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"]
