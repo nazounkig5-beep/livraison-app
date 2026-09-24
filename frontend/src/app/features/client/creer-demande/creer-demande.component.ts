@@ -62,10 +62,26 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.parametreService.typesService().subscribe((data) => (this.typesService = data));
-    this.parametreService.entreprisesActives().subscribe((data) => (this.entreprises = data));
-
     this.form.get('id_type_service')!.valueChanges.subscribe(() => this.ajusterSelonTypeService());
+
+    // Un <select> HTML sans option explicitement "selected" affiche visuellement le premier
+    // élément non désactivé (ici, le premier type de service / la première entreprise chargée),
+    // même si la valeur du formulaire Angular, elle, reste null tant que l'utilisateur n'a pas
+    // cliqué dans le menu. Résultat : le formulaire semblait rempli à l'écran mais restait invalide
+    // en interne — bloquant "Valider la demande" sans aucun message d'erreur visible. On fait donc
+    // correspondre la valeur réelle du formulaire à ce qui est déjà affiché, dès le chargement.
+    this.parametreService.typesService().subscribe((data) => {
+      this.typesService = data;
+      if (data.length && this.form.value.id_type_service === null) {
+        this.form.patchValue({ id_type_service: data[0].id });
+      }
+    });
+    this.parametreService.entreprisesActives().subscribe((data) => {
+      this.entreprises = data;
+      if (data.length && this.form.value.id_entreprise === null) {
+        this.form.patchValue({ id_entreprise: data[0].id });
+      }
+    });
   }
 
   /**
