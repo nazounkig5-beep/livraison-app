@@ -72,13 +72,13 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
     // correspondre la valeur réelle du formulaire à ce qui est déjà affiché, dès le chargement.
     this.parametreService.typesService().subscribe((data) => {
       this.typesService = data;
-      if (data.length && this.form.value.id_type_service === null) {
+      if (data.length && this.form.get('id_type_service')!.value === null) {
         this.form.patchValue({ id_type_service: data[0].id });
       }
     });
     this.parametreService.entreprisesActives().subscribe((data) => {
       this.entreprises = data;
-      if (data.length && this.form.value.id_entreprise === null) {
+      if (data.length && this.form.get('id_entreprise')!.value === null) {
         this.form.patchValue({ id_entreprise: data[0].id });
       }
     });
@@ -91,7 +91,13 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
    * le point de départ.
    */
   get typeServiceEstLivraison(): boolean {
-    const id = this.form.value.id_type_service;
+    // Lire this.form.get('id_type_service')!.value plutôt que this.form.value.id_type_service :
+    // ce dernier est un instantané mis en cache par le FormGroup parent, qui n'est PAS encore
+    // rafraîchi au moment où l'écouteur valueChanges du champ se déclenche pendant un patchValue()
+    // (FormGroup.patchValue appelle chaque enfant avec {onlySelf: true}, donc le parent ne
+    // recalcule son propre instantané qu'à la toute fin, une fois tous les champs traités). La
+    // valeur du CONTRÔLE lui-même, elle, est déjà à jour dès sa propre affectation.
+    const id = this.form.get('id_type_service')!.value;
     return this.typesService.find((t) => t.id === id)?.nom === 'livraison';
   }
 
@@ -237,13 +243,6 @@ export class CreerDemandeComponent implements OnInit, AfterViewInit {
       if (c.invalid && labels[nom] && !manquants.includes(labels[nom])) manquants.push(labels[nom]);
     }
     return manquants;
-  }
-
-  /** Diagnostic temporaire pour trouver un bug precis : etat brut derriere le message ci-dessus. */
-  get diagnosticBrut(): string {
-    const idType = this.form.value.id_type_service;
-    const type = this.typesService.find((t) => t.id === idType);
-    return `id_type_service=${idType} (type trouve: ${type?.nom ?? 'AUCUN'}) | typeServiceEstLivraison=${this.typeServiceEstLivraison} | adresse_depart validators actifs=${!!this.form.get('adresse_depart')!.validator} | nb typesService charges=${this.typesService.length}`;
   }
 
   soumettre(): void {
