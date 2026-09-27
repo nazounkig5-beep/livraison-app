@@ -144,6 +144,7 @@ export const ENTREPRISE_FR = {
     retour: '← Demandes reçues',
     livreur: 'Livreur :',
     statutMission: 'Statut de la mission :',
+    distanceRestante: "Distance jusqu'à la position du client :",
     panneEnCours: '⚠ Le livreur est en panne.',
     dureePanne: 'Depuis {{minutes}} min.',
     positionPanne: "Position exacte de l'arrêt : {{latitude}}, {{longitude}}",

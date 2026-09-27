@@ -5,6 +5,10 @@
     <ul>
       <li *ngIf="suivi?.livreur_nom">{{ 'entreprise.suivi.livreur' | translate }} {{ suivi?.livreur_nom }}</li>
       <li>{{ 'entreprise.suivi.statutMission' | translate }} {{ ('livreur.missions.statutMission.' + suivi?.statut_mission) | translate }}</li>
+      <li *ngIf="distanceRestanteKm !== null">
+        {{ 'entreprise.suivi.distanceRestante' | translate }}
+        {{ distanceRestanteKm! < 1 ? (distanceRestanteKm! * 1000 | number: '1.0-0') + ' m' : (distanceRestanteKm! | number: '1.1-1') + ' km' }}
+      </li>
     </ul>
 
     <div *ngIf="suivi?.en_panne" class="panne-alerte">

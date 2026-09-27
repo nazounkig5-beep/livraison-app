@@ -196,6 +196,12 @@ class EntrepriseDemandeController extends Controller
                 'timestamp' => $dernierePanne->timestamp,
             ] : null,
             'duree_panne_minutes' => $dureePanneMinutes,
+            // Position exacte de livraison (destination du client) : permet à l'entreprise de voir,
+            // comme le livreur, la distance restante se réduire au fur et à mesure qu'il approche.
+            'destination' => ($demande->latitude_arrivee !== null && $demande->longitude_arrivee !== null) ? [
+                'latitude' => (float) $demande->latitude_arrivee,
+                'longitude' => (float) $demande->longitude_arrivee,
+            ] : null,
         ]);
     }
 

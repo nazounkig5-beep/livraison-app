@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { SuiviPosition } from '../../../core/models/demande.model';
 import { estPositionValide } from '../../../core/utils/position.util';
+import { distanceKm } from '../../../core/utils/distance.util';
 
 const INTERVALLE_SUIVI_MS = 5000;
 
@@ -26,10 +27,12 @@ export class EntrepriseSuiviComponent implements OnInit, AfterViewInit, OnDestro
 
   suivi: SuiviPosition | null = null;
   chargement = true;
+  distanceRestanteKm: number | null = null;
 
   private minuteur: ReturnType<typeof setInterval> | null = null;
   private carte: L.Map | null = null;
   private marqueurLivreur: L.Marker | null = null;
+  private marqueurDestination: L.Marker | null = null;
   private marqueurPanne: L.Marker | null = null;
   private traceParcours: L.Polyline | null = null;
   private vueInitialisee = false;
@@ -84,6 +87,25 @@ export class EntrepriseSuiviComponent implements OnInit, AfterViewInit, OnDestro
       });
       this.marqueurLivreur = L.marker([latitude, longitude], { icon: iconeLivreur }).addTo(this.carte);
       this.traceParcours = L.polyline([], { color: '#2563eb', weight: 4, opacity: 0.7 }).addTo(this.carte);
+
+      // Position exacte de livraison (destination du client) : mêmes convention et icône que côté
+      // livreur, pour que l'entreprise voie aussi le point d'arrivée et la distance qui se réduit.
+      const destination = this.suivi.destination;
+      if (destination) {
+        const iconeDestination = L.divIcon({
+          className: 'marqueur-destination',
+          html: '<span class="marqueur-destination-point"></span>',
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+        this.marqueurDestination = L.marker([destination.latitude, destination.longitude], {
+          icon: iconeDestination,
+        }).addTo(this.carte);
+        this.carte.fitBounds(L.latLngBounds([latitude, longitude], [destination.latitude, destination.longitude]), {
+          padding: [40, 40],
+          maxZoom: 17,
+        });
+      }
       setTimeout(() => this.carte?.invalidateSize(), 200);
     } else {
       this.marqueurLivreur!.setLatLng([latitude, longitude]);
@@ -96,7 +118,14 @@ export class EntrepriseSuiviComponent implements OnInit, AfterViewInit, OnDestro
       .map((p) => [p.latitude, p.longitude]);
     this.traceParcours!.setLatLngs(points);
 
+    this.calculerDistanceRestante(latitude, longitude);
     this.mettreAJourMarqueurPanne();
+  }
+
+  /** Distance à vol d'oiseau entre la position actuelle du livreur et celle du client. */
+  private calculerDistanceRestante(latitude: number, longitude: number): void {
+    const destination = this.suivi?.destination;
+    this.distanceRestanteKm = destination ? distanceKm(latitude, longitude, destination.latitude, destination.longitude) : null;
   }
 
   /** Marqueur distinct (orange) à l'emplacement exact où le livreur s'est arrêté en panne. */
