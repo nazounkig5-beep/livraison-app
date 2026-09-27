@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { DemandeService } from '../../../core/services/demande.service';
 import { DemandeLivraison, SuiviPosition } from '../../../core/models/demande.model';
+import { estPositionValide } from '../../../core/utils/position.util';
 
 const INTERVALLE_SUIVI_MS = 5000;
 const INTERVALLE_PAIEMENT_MS = 4000;
@@ -137,7 +138,12 @@ export class DemandeDetailComponent implements OnInit, AfterViewInit, OnDestroy 
       this.carte.panTo([latitude, longitude]);
     }
 
-    const points: L.LatLngExpression[] = this.suivi.trajet.map((p) => [p.latitude, p.longitude]);
+    // Filtre défensif : d'anciens enregistrements ont pu être créés sans position réelle (avant
+    // correction côté serveur), retombant sur (0, 0) — un point fantôme au large du golfe de
+    // Guinée qui faisait partir le tracé depuis l'océan au lieu du trajet réel.
+    const points: L.LatLngExpression[] = this.suivi.trajet
+      .filter((p) => estPositionValide(p.latitude, p.longitude))
+      .map((p) => [p.latitude, p.longitude]);
     this.traceParcours!.setLatLngs(points);
   }
 

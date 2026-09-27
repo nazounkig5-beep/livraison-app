@@ -38,13 +38,20 @@ class MissionController extends Controller
 
         $mission->update(['statut_prise_en_charge' => 'EN_COURS']);
 
-        SuiviLivraison::create([
-            'id_mission' => $mission->id,
-            'latitude' => $request->input('latitude', 0),
-            'longitude' => $request->input('longitude', 0),
-            'timestamp' => now(),
-            'evenement' => 'prise_en_charge',
-        ]);
+        // Le frontend n'envoie pas toujours de position ici (GPS refusé/indisponible au moment
+        // précis du clic — cf. mission-detail.component.ts, confirmer() sans coordonnées dans ce
+        // cas). Ne créer un point de suivi QUE si une position réelle a été fournie : un défaut à
+        // (0, 0) créait un point fantôme au large du Ghana ("Null Island"), faisant partir le tracé
+        // du trajet depuis l'océan au lieu du point de départ réel sur la carte.
+        if ($request->filled('latitude') && $request->filled('longitude')) {
+            SuiviLivraison::create([
+                'id_mission' => $mission->id,
+                'latitude' => $request->input('latitude'),
+                'longitude' => $request->input('longitude'),
+                'timestamp' => now(),
+                'evenement' => 'prise_en_charge',
+            ]);
+        }
 
         return response()->json($mission);
     }
@@ -167,13 +174,19 @@ class MissionController extends Controller
         $mission->update(['statut_prise_en_charge' => 'TERMINEE']);
         $mission->demande->update(['statut' => 'LIVREE']);
 
-        SuiviLivraison::create([
-            'id_mission' => $mission->id,
-            'latitude' => $request->input('latitude', $mission->livreur->latitude ?? 0),
-            'longitude' => $request->input('longitude', $mission->livreur->longitude ?? 0),
-            'timestamp' => now(),
-            'evenement' => 'livree',
-        ]);
+        // Même précaution que prendreEnCharge() : ne jamais retomber sur (0, 0) si aucune position
+        // réelle n'est disponible (ni fournie par la requête, ni connue sur le profil du livreur).
+        $latitude = $request->input('latitude', $mission->livreur->latitude);
+        $longitude = $request->input('longitude', $mission->livreur->longitude);
+        if ($latitude !== null && $longitude !== null) {
+            SuiviLivraison::create([
+                'id_mission' => $mission->id,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'timestamp' => now(),
+                'evenement' => 'livree',
+            ]);
+        }
 
         Notification::envoyer($mission->demande->id_client, "Votre demande #{$mission->id_demande} a été livrée avec succès.");
 

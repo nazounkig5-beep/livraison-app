@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import * as L from 'leaflet';
 import { EntrepriseService } from '../../../core/services/entreprise.service';
 import { SuiviPosition } from '../../../core/models/demande.model';
+import { estPositionValide } from '../../../core/utils/position.util';
 
 const INTERVALLE_SUIVI_MS = 5000;
 
@@ -89,7 +90,10 @@ export class EntrepriseSuiviComponent implements OnInit, AfterViewInit, OnDestro
       this.carte.panTo([latitude, longitude]);
     }
 
-    const points: L.LatLngExpression[] = this.suivi.trajet.map((p) => [p.latitude, p.longitude]);
+    // Filtre défensif contre les anciens points fantômes à (0, 0) — cf. MissionController::prendreEnCharge().
+    const points: L.LatLngExpression[] = this.suivi.trajet
+      .filter((p) => estPositionValide(p.latitude, p.longitude))
+      .map((p) => [p.latitude, p.longitude]);
     this.traceParcours!.setLatLngs(points);
 
     this.mettreAJourMarqueurPanne();
