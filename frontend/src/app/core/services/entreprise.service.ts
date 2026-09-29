@@ -6,6 +6,7 @@ import { Vehicule } from '../models/vehicule.model';
 import { Livreur } from '../models/livreur.model';
 import { Entreprise } from '../models/entreprise.model';
 import { EntrepriseDashboardStats } from '../models/dashboard.model';
+import { StatistiquesNotesLivreur } from '../models/notation.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -53,6 +54,11 @@ export class EntrepriseService {
 
   livreurs(): Observable<Livreur[]> {
     return this.http.get<Livreur[]>(`${this.apiUrl}/livreurs`);
+  }
+
+  /** Cas d'utilisation : "Consulter les notes de mes livreurs" (par livraison, moyenne, meilleure note par mois). */
+  notesLivreurs(): Observable<StatistiquesNotesLivreur[]> {
+    return this.http.get<StatistiquesNotesLivreur[]>(`${this.apiUrl}/notes-livreurs`);
   }
 
   vehicules(): Observable<Vehicule[]> {

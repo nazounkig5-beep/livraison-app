@@ -1,0 +1,53 @@
+<div class="livreur-notes" *ngIf="stats">
+  <div class="stats-grid">
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.note_moyenne ?? '—' }}<span *ngIf="stats.note_moyenne !== null"> / 5</span></span>
+      <span class="stat-libelle">{{ 'livreur.notes.noteMoyenne' | translate }}</span>
+    </div>
+    <div class="stat-carte">
+      <span class="stat-valeur">{{ stats.nombre_notes }}</span>
+      <span class="stat-libelle">{{ 'livreur.notes.nombreNotes' | translate }}</span>
+    </div>
+  </div>
+
+  <h2>{{ 'livreur.notes.parMois' | translate }}</h2>
+  <table *ngIf="stats.notes_par_mois.length; else aucunParMois">
+    <thead>
+      <tr>
+        <th>{{ 'livreur.notes.mois' | translate }}</th>
+        <th>{{ 'livreur.notes.moyenneDuMois' | translate }}</th>
+        <th>{{ 'livreur.notes.meilleureNoteDuMois' | translate }}</th>
+        <th>{{ 'livreur.notes.nombreDuMois' | translate }}</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let m of stats.notes_par_mois">
+      <td>{{ m.mois }}</td>
+      <td>{{ m.note_moyenne }} / 5</td>
+      <td>{{ m.note_max }} / 5</td>
+      <td>{{ m.nombre }}</td>
+    </tr>
+  </table>
+  <ng-template #aucunParMois>
+    <p>{{ 'livreur.notes.aucuneNote' | translate }}</p>
+  </ng-template>
+
+  <h2>{{ 'livreur.notes.parLivraison' | translate }}</h2>
+  <table *ngIf="stats.notes.length">
+    <thead>
+      <tr>
+        <th>{{ 'livreur.notes.demande' | translate }}</th>
+        <th>{{ 'livreur.notes.trajet' | translate }}</th>
+        <th>{{ 'livreur.notes.note' | translate }}</th>
+        <th>{{ 'livreur.notes.commentaire' | translate }}</th>
+        <th>{{ 'livreur.notes.date' | translate }}</th>
+      </tr>
+    </thead>
+    <tr *ngFor="let n of stats.notes">
+      <td>#{{ n.id_demande }}</td>
+      <td>{{ n.trajet }}</td>
+      <td>{{ n.note }} / 5</td>
+      <td>{{ n.commentaire || '—' }}</td>
+      <td>{{ n.date | date: 'dd/MM/yyyy' }}</td>
+    </tr>
+  </table>
+</div>

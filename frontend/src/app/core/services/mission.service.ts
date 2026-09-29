@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Mission } from '../models/demande.model';
 import { Entreprise } from '../models/entreprise.model';
+import { StatistiquesNotes } from '../models/notation.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +23,11 @@ export class MissionService {
   /** L'entreprise employeuse (livreur EMPLOYE uniquement) et son QR code de paiement. */
   monEntreprise(): Observable<Entreprise> {
     return this.http.get<Entreprise>(`${environment.apiUrl}/livreur/mon-entreprise`);
+  }
+
+  /** Cas d'utilisation : "Consulter mes notes" (par livraison, moyenne, meilleure note par mois). */
+  mesNotes(): Observable<StatistiquesNotes> {
+    return this.http.get<StatistiquesNotes>(`${environment.apiUrl}/livreur/mes-notes`);
   }
 
   prendreEnCharge(id: number, latitude?: number, longitude?: number) {

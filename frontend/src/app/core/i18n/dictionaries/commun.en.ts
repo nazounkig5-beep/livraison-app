@@ -57,6 +57,8 @@ export const COMMUN_EN = {
     employes: 'Employees',
     historique: 'History',
     tarifs: 'Rates',
+    mesNotes: 'My ratings',
+    notesLivreurs: 'Courier ratings',
     entreprises: 'Companies',
     utilisateurs: 'Users',
     parametres: 'Settings',

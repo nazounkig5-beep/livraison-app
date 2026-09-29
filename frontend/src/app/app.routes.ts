@@ -79,6 +79,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/livreur/paiement/paiement.component').then((m) => m.LivreurPaiementComponent),
   },
+  {
+    path: 'livreur/notes',
+    canActivate: [authGuard, roleGuard(['LIVREUR'])],
+    data: { title: 'livreur.notes.titrePage' },
+    loadComponent: () => import('./features/livreur/notes/notes.component').then((m) => m.LivreurNotesComponent),
+  },
 
   // --- ENTREPRISE ---
   {
@@ -133,6 +139,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
     data: { title: 'entreprise.tarifs.titrePage' },
     loadComponent: () => import('./features/entreprise/tarifs/tarifs.component').then((m) => m.TarifsComponent),
+  },
+  {
+    path: 'entreprise/notes',
+    canActivate: [authGuard, roleGuard(['ENTREPRISE'])],
+    data: { title: 'entreprise.notes.titrePage' },
+    loadComponent: () => import('./features/entreprise/notes/notes.component').then((m) => m.EntrepriseNotesComponent),
   },
 
   // --- ADMIN ---

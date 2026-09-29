@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\EntrepriseProfilController;
 use App\Http\Controllers\Api\IncidentController;
 use App\Http\Controllers\Api\LivreurProfilController;
 use App\Http\Controllers\Api\MissionController;
+use App\Http\Controllers\Api\NotationController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaiementWebhookController;
 use App\Http\Controllers\Api\PhotoController;
@@ -77,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/demandes/{demande}/confirmer-paiement', [EntrepriseDemandeController::class, 'confirmerPaiement']);
         Route::get('/demandes/{demande}/suivi', [EntrepriseDemandeController::class, 'suivi']);
         Route::get('/livreurs', [EntrepriseDemandeController::class, 'livreurs']);
+        Route::get('/notes-livreurs', [NotationController::class, 'notesLivreurs']);
 
         Route::get('/vehicules', [VehiculeController::class, 'index']);
         Route::post('/vehicules', [VehiculeController::class, 'store']);
@@ -95,6 +97,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // --- LIVREUR ---
     Route::middleware('role:LIVREUR')->prefix('livreur')->group(function () {
         Route::get('/mon-entreprise', [LivreurProfilController::class, 'monEntreprise']);
+        Route::get('/mes-notes', [NotationController::class, 'mesNotes']);
         Route::get('/missions', [MissionController::class, 'index']);
         Route::get('/missions/{mission}', [MissionController::class, 'show']);
         Route::post('/missions/{mission}/prendre-en-charge', [MissionController::class, 'prendreEnCharge']);

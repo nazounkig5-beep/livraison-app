@@ -57,6 +57,8 @@ export const COMMUN_FR = {
     employes: 'Employés',
     historique: 'Historique',
     tarifs: 'Tarifs',
+    mesNotes: 'Mes notes',
+    notesLivreurs: 'Notes des livreurs',
     entreprises: 'Entreprises',
     utilisateurs: 'Utilisateurs',
     parametres: 'Paramètres',

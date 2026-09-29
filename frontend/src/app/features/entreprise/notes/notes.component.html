@@ -1,0 +1,65 @@
+<div class="entreprise-notes" *ngIf="!chargement">
+  <p *ngIf="!statsParLivreur.length">{{ 'entreprise.notes.aucunLivreurNote' | translate }}</p>
+
+  <section *ngFor="let s of statsParLivreur" class="carte-livreur-notes">
+    <h2>{{ s.nom }}</h2>
+    <div class="stats-grid">
+      <div class="stat-carte">
+        <span class="stat-valeur">{{ s.note_moyenne ?? '—' }}<span *ngIf="s.note_moyenne !== null"> / 5</span></span>
+        <span class="stat-libelle">{{ 'entreprise.notes.noteMoyenne' | translate }}</span>
+      </div>
+      <div class="stat-carte">
+        <span class="stat-valeur">{{ s.nombre_notes }}</span>
+        <span class="stat-libelle">{{ 'entreprise.notes.nombreNotes' | translate }}</span>
+      </div>
+      <div class="stat-carte" *ngIf="s.notes_par_mois[0] as moisEnCours">
+        <span class="stat-valeur">{{ moisEnCours.note_max }} / 5</span>
+        <span class="stat-libelle">{{ 'entreprise.notes.meilleureNoteDuMois' | translate }} ({{ moisEnCours.mois }})</span>
+      </div>
+    </div>
+
+    <button type="button" (click)="basculerDetail(s.id_livreur)">
+      {{ (livreurDeplie === s.id_livreur ? 'entreprise.notes.masquerDetail' : 'entreprise.notes.voirDetail') | translate }}
+    </button>
+
+    <div *ngIf="livreurDeplie === s.id_livreur">
+      <h3>{{ 'entreprise.notes.parMois' | translate }}</h3>
+      <table *ngIf="s.notes_par_mois.length">
+        <thead>
+          <tr>
+            <th>{{ 'entreprise.notes.mois' | translate }}</th>
+            <th>{{ 'entreprise.notes.moyenneDuMois' | translate }}</th>
+            <th>{{ 'entreprise.notes.meilleureNoteDuMoisCourte' | translate }}</th>
+            <th>{{ 'entreprise.notes.nombreDuMois' | translate }}</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let m of s.notes_par_mois">
+          <td>{{ m.mois }}</td>
+          <td>{{ m.note_moyenne }} / 5</td>
+          <td>{{ m.note_max }} / 5</td>
+          <td>{{ m.nombre }}</td>
+        </tr>
+      </table>
+
+      <h3>{{ 'entreprise.notes.parLivraison' | translate }}</h3>
+      <table *ngIf="s.notes.length">
+        <thead>
+          <tr>
+            <th>{{ 'entreprise.notes.demande' | translate }}</th>
+            <th>{{ 'entreprise.notes.trajet' | translate }}</th>
+            <th>{{ 'entreprise.notes.note' | translate }}</th>
+            <th>{{ 'entreprise.notes.commentaire' | translate }}</th>
+            <th>{{ 'entreprise.notes.date' | translate }}</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let n of s.notes">
+          <td>#{{ n.id_demande }}</td>
+          <td>{{ n.trajet }}</td>
+          <td>{{ n.note }} / 5</td>
+          <td>{{ n.commentaire || '—' }}</td>
+          <td>{{ n.date | date: 'dd/MM/yyyy' }}</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+</div>
