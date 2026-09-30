@@ -1050,6 +1050,35 @@ ul.erreurs {
   margin-top: 0.5rem;
 }
 
+.panne-photo-label {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.panne-photo-apercu {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.panne-photo-apercu img {
+  max-width: 160px;
+  border-radius: var(--rayon);
+  border: 1px solid var(--couleur-bordure);
+}
+
+.panne-photo-lien {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.panne-photo-apercu-entreprise {
+  max-width: 220px;
+  border-radius: var(--rayon);
+  border: 1px solid var(--couleur-danger);
+}
+
 .panne-alerte {
   margin: 0.75rem 0;
   padding: 1rem;

@@ -49,6 +49,7 @@ export const LIVREUR_EN = {
     boutonSignalerPanne: 'Report a breakdown',
     descriptionPanneLabel: "What's going on? (optional)",
     descriptionPannePlaceholder: 'E.g.: flat tire, engine overheating…',
+    photoPanneLabel: 'Breakdown photo (optional)',
     boutonConfirmerPanne: 'Confirm the breakdown',
     panneEnCours: 'Breakdown in progress — your exact position has been sent to the company.',
     panneDepuis: 'Broken down for {{minutes}} min.',

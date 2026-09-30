@@ -8,7 +8,7 @@ class SuiviLivraison extends Model
 {
     protected $table = 'suivi_livraisons';
     public $timestamps = false;
-    protected $fillable = ['id_mission', 'latitude', 'longitude', 'timestamp', 'evenement'];
+    protected $fillable = ['id_mission', 'latitude', 'longitude', 'timestamp', 'evenement', 'photo'];
     protected $casts = ['timestamp' => 'datetime'];
 
     public function mission()

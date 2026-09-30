@@ -95,6 +95,9 @@ class MissionController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'description' => 'nullable|string',
+            // Photo optionnelle (prise directement avec l'appareil photo côté livreur) pour que
+            // l'entreprise voie exactement de quoi il s'agit avant d'envoyer de l'aide.
+            'photo' => 'nullable|image|max:5120',
         ]);
 
         $mission->update([
@@ -103,12 +106,18 @@ class MissionController extends Controller
             'panne_description' => $data['description'] ?? null,
         ]);
 
+        // Même disque/dossier que les photos de profil (cf. PhotoController) : la route publique
+        // /photos/{nomFichier} sert déjà n'importe quel fichier de ce dossier par son nom généré
+        // (unique), pas besoin d'une route ou d'un contrôleur dédiés.
+        $cheminPhoto = $request->hasFile('photo') ? $request->file('photo')->store('photos', 'public') : null;
+
         SuiviLivraison::create([
             'id_mission' => $mission->id,
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
             'timestamp' => now(),
             'evenement' => 'panne',
+            'photo' => $cheminPhoto,
         ]);
 
         $demande = $mission->demande;

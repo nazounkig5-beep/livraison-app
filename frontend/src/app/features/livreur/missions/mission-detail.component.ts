@@ -41,6 +41,8 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
 
   enPanneOuverte = false;
   descriptionPanne = '';
+  photoPanne: File | null = null;
+  apercuPhotoPanne: string | null = null;
   panneEnCours = false;
   erreurPanne: string | null = null;
 
@@ -67,6 +69,7 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.arreterSuiviGps();
     this.carte?.remove();
+    if (this.apercuPhotoPanne) URL.revokeObjectURL(this.apercuPhotoPanne);
   }
 
   charger(): void {
@@ -214,6 +217,25 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
   annulerFormulairePanne(): void {
     this.enPanneOuverte = false;
     this.descriptionPanne = '';
+    this.retirerPhotoPanne();
+  }
+
+  /**
+   * `capture="environment"` (posé sur l'input dans le template) fait ouvrir directement l'appareil
+   * photo sur mobile plutôt qu'un sélecteur de fichiers — le livreur prend la photo sur le moment.
+   */
+  choisirPhotoPanne(evenement: Event): void {
+    const fichier = (evenement.target as HTMLInputElement).files?.[0] ?? null;
+    this.photoPanne = fichier;
+
+    if (this.apercuPhotoPanne) URL.revokeObjectURL(this.apercuPhotoPanne);
+    this.apercuPhotoPanne = fichier ? URL.createObjectURL(fichier) : null;
+  }
+
+  retirerPhotoPanne(): void {
+    if (this.apercuPhotoPanne) URL.revokeObjectURL(this.apercuPhotoPanne);
+    this.photoPanne = null;
+    this.apercuPhotoPanne = null;
   }
 
   /** Fige la position exacte de l'arrêt (réutilise la dernière position GPS connue si déjà en suivi). */
@@ -222,14 +244,16 @@ export class MissionDetailComponent implements OnInit, OnDestroy {
     this.erreurPanne = null;
     const idMission = this.mission.id;
     const description = this.descriptionPanne.trim() || undefined;
+    const photo = this.photoPanne ?? undefined;
 
     const envoyer = (latitude: number, longitude: number) => {
       this.panneEnCours = true;
-      this.missionService.signalerPanne(idMission, latitude, longitude, description).subscribe({
+      this.missionService.signalerPanne(idMission, latitude, longitude, description, photo).subscribe({
         next: () => {
           this.panneEnCours = false;
           this.enPanneOuverte = false;
           this.descriptionPanne = '';
+          this.retirerPhotoPanne();
           this.charger();
         },
         error: () => {

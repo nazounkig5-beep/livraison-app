@@ -196,6 +196,9 @@ class EntrepriseDemandeController extends Controller
                 'timestamp' => $dernierePanne->timestamp,
             ] : null,
             'duree_panne_minutes' => $dureePanneMinutes,
+            // Photo prise par le livreur au moment du signalement (même mécanisme de stockage
+            // que les photos de profil), pour que l'entreprise voie exactement de quoi il s'agit.
+            'panne_photo_url' => $dernierePanne?->photo ? route('photos.show', ['nomFichier' => basename($dernierePanne->photo)]) : null,
             // Position exacte de livraison (destination du client) : permet à l'entreprise de voir,
             // comme le livreur, la distance restante se réduire au fur et à mesure qu'il approche.
             'destination' => ($demande->latitude_arrivee !== null && $demande->longitude_arrivee !== null) ? [

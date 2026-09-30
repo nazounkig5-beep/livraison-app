@@ -66,6 +66,7 @@ export interface SuiviPosition {
   panne_description?: string | null;
   position_panne?: PointPosition | null;
   duree_panne_minutes?: number | null;
+  panne_photo_url?: string | null;
   // Position exacte de livraison (destination du client), pour afficher la distance restante.
   destination?: { latitude: number; longitude: number } | null;
 }

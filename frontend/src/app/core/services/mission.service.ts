@@ -38,9 +38,22 @@ export class MissionService {
     return this.http.post(`${this.apiUrl}/${id}/position`, { latitude, longitude });
   }
 
-  /** Fige la position exacte de l'arrêt et prévient l'entreprise, pour qu'elle organise le dépannage. */
-  signalerPanne(id: number, latitude: number, longitude: number, description?: string): Observable<Mission> {
-    return this.http.post<Mission>(`${this.apiUrl}/${id}/panne`, { latitude, longitude, description });
+  /**
+   * Fige la position exacte de l'arrêt et prévient l'entreprise, pour qu'elle organise le
+   * dépannage. La photo est optionnelle ; envoi en FormData (pas en JSON) dès qu'un fichier est
+   * fourni, seul format que le serveur accepte pour un upload de fichier.
+   */
+  signalerPanne(id: number, latitude: number, longitude: number, description?: string, photo?: File): Observable<Mission> {
+    if (!photo) {
+      return this.http.post<Mission>(`${this.apiUrl}/${id}/panne`, { latitude, longitude, description });
+    }
+
+    const donnees = new FormData();
+    donnees.append('latitude', String(latitude));
+    donnees.append('longitude', String(longitude));
+    if (description) donnees.append('description', description);
+    donnees.append('photo', photo);
+    return this.http.post<Mission>(`${this.apiUrl}/${id}/panne`, donnees);
   }
 
   resoudrePanne(id: number, latitude: number, longitude: number): Observable<Mission> {

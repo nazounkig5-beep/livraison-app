@@ -148,6 +148,7 @@ export const ENTREPRISE_EN = {
     panneEnCours: '⚠ The courier has broken down.',
     dureePanne: 'For {{minutes}} min.',
     positionPanne: 'Exact stop location: {{latitude}}, {{longitude}}',
+    photoPanne: 'Breakdown photo',
     panneResolue: 'Last breakdown resolved after {{minutes}} min.',
     positionIndisponible: 'No position received yet.',
     aucuneMission: 'No courier has been assigned to this request yet.',

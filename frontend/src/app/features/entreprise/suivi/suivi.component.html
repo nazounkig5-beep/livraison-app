@@ -20,6 +20,9 @@
       <p *ngIf="suivi?.position_panne as positionPanne" class="info-discrete">
         {{ 'entreprise.suivi.positionPanne' | translate: { latitude: (positionPanne.latitude | number: '1.5-5'), longitude: (positionPanne.longitude | number: '1.5-5') } }}
       </p>
+      <a *ngIf="suivi?.panne_photo_url" [href]="suivi?.panne_photo_url" target="_blank" rel="noopener" class="panne-photo-lien">
+        <img [src]="suivi?.panne_photo_url" [alt]="'entreprise.suivi.photoPanne' | translate" class="panne-photo-apercu-entreprise" />
+      </a>
     </div>
 
     <div *ngIf="!suivi?.en_panne && suivi?.duree_panne_minutes !== null" class="succes">

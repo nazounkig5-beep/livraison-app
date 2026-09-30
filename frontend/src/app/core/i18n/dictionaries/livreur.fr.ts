@@ -49,6 +49,7 @@ export const LIVREUR_FR = {
     boutonSignalerPanne: 'Signaler une panne',
     descriptionPanneLabel: 'Que se passe-t-il ? (optionnel)',
     descriptionPannePlaceholder: 'Ex : crevaison, moteur en surchauffe…',
+    photoPanneLabel: 'Photo de la panne (optionnel)',
     boutonConfirmerPanne: 'Confirmer la panne',
     panneEnCours: 'Panne en cours — votre position exacte a été transmise à l\'entreprise.',
     panneDepuis: 'En panne depuis {{minutes}} min.',

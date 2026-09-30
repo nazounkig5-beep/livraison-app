@@ -148,6 +148,7 @@ export const ENTREPRISE_FR = {
     panneEnCours: '⚠ Le livreur est en panne.',
     dureePanne: 'Depuis {{minutes}} min.',
     positionPanne: "Position exacte de l'arrêt : {{latitude}}, {{longitude}}",
+    photoPanne: 'Photo de la panne',
     panneResolue: 'Dernière panne résolue après {{minutes}} min.',
     positionIndisponible: 'Aucune position reçue pour le moment.',
     aucuneMission: "Aucun livreur n'est encore assigné à cette demande.",

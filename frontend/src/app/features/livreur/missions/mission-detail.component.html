@@ -50,6 +50,14 @@
             [attr.placeholder]="'livreur.missionDetail.descriptionPannePlaceholder' | translate"
           ></textarea>
         </label>
+        <label class="panne-photo-label">
+          {{ 'livreur.missionDetail.photoPanneLabel' | translate }}
+          <input type="file" accept="image/*" capture="environment" (change)="choisirPhotoPanne($event)" />
+        </label>
+        <div class="panne-photo-apercu" *ngIf="apercuPhotoPanne">
+          <img [src]="apercuPhotoPanne" alt="" />
+          <button type="button" (click)="retirerPhotoPanne()">{{ 'commun.action.supprimer' | translate }}</button>
+        </div>
         <div class="panne-formulaire-actions">
           <button type="button" (click)="signalerPanne()" [disabled]="panneEnCours">
             {{ 'livreur.missionDetail.boutonConfirmerPanne' | translate }}
